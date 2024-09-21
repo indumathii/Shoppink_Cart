@@ -10,10 +10,6 @@ import { Context } from './App';
 const Login = () => {
 
     const { contextvalues, setcontextvalues } = useContext(Context);
-    useEffect(() => {
-        window.localStorage.setItem("shoppink-states", JSON.stringify(contextvalues));
-        console.log("inside app.jsx contextvalues", contextvalues)
-    }, [contextvalues]);
 
 
     const [login_userdetails, setlogin_userdetails] = useState([{ username: '', password: '' }]);

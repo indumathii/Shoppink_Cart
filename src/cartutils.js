@@ -1,14 +1,6 @@
 import httpclient from './Axios';
 //export const handleproductsdesc = (setproductsdesc, p_id, navigate, setcurrentpid)
 export const handleproductsdesc = (setcontextvalues, p_id, navigate) => {
-    /*window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-    });*/
-    /*console.log("inside handleproducts cartutils")
-    contextvalues.productsdesc(true)
-    setcurrentpid(p_id)*/
-    /*navigate(`/productsdesc/${p_id}`);*/
 
     setcontextvalues(prev => ({
         ...prev, productsdesc: true, currentpid: p_id
