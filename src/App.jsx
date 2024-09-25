@@ -24,7 +24,7 @@ function App() {
     login: false,
     signup: false,
     productsdesc: false,
-    currentuser: [],
+    currentuser: {},
     cartcount: 0,
     showcart: false,
     currentpid: false,
@@ -249,15 +249,19 @@ function App() {
   },
 ]*/
 
-
   const [contextvalues, setcontextvalues] = useState(() => {
-    const savedState = window.localStorage.getItem("shoppink-states");
-    return savedState ? JSON.parse(savedState) : defaultvalues;
-
+    const savedCurrentUser = window.localStorage.getItem('currentuser');
+    if (savedCurrentUser) {
+      const currentUser = JSON.parse(savedCurrentUser);
+      const savedState = window.localStorage.getItem(`shoppink-state-${currentUser.id}`);
+      return savedState ? JSON.parse(savedState) : defaultvalues; // Use saved state or default values
+    } else {
+      return defaultvalues;
+    }
   });
 
   useEffect(() => {
-    window.localStorage.setItem("shoppink-states", JSON.stringify(contextvalues));
+    window.localStorage.setItem(`$contextvalues.currentuser.id`, JSON.stringify(contextvalues));
   }, [contextvalues]);
 
 

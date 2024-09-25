@@ -147,26 +147,31 @@ export const loginfunc = async (values, contextvalues, setcontextvalues) => {
 
         // Find the user based on the provided email
         const userFound = users.find(user => user.email === values.email);
-
-        // Update context with users and the found user
-        setcontextvalues(prev => {
-            const newContext = { ...prev, users: users, currentuser: userFound };
-            console.log("Updated currentuser", newContext.currentuser); // Log updated user
-            return newContext;
-        });
-
-        // Check if the user was found
+        console.log("userfound", userFound)
         if (!userFound) {
             console.log("User not Found");
-            return 1;
-        } else if (userFound.password === values.password) {
+            return [1, userFound.id];
+        }
+        else if (userFound.password === values.password) {
             console.log("Password matched");
-            console.log(contextvalues.currentuser.firstname)
-            return 2;
+            setcontextvalues(prev => {
+                const newContext = { ...prev, users: users, currentuser: userFound };
+                console.log("Updated currentuser", newContext.currentuser);
+                window.localStorage.setItem(`shoppink-state-${userFound.id}`, JSON.stringify(newContext));
+                return newContext;
+            });
+
+            const savedState = window.localStorage.getItem(`shoppink-state-${userFound.id}`);
+            console.log("Saved state after update", savedState);
+
+
+            return [2, userFound.id];
         } else {
             console.log("Invalid Password");
-            return 0;
+            return [0, userFound.id];
         }
+
+
     } catch (error) {
         console.error("Error fetching users:", error);
     }

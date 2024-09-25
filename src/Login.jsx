@@ -46,18 +46,34 @@ const Login = () => {
         }))
 
 
-        const usercheck = await cartUtils.loginfunc(values, contextvalues, setcontextvalues)
+        const [usercheck, c_id] = await cartUtils.loginfunc(values, contextvalues, setcontextvalues)
         if (usercheck === 1 || usercheck === 0) {
             console.log("usercheck if", usercheck)
             setcontextvalues(prev => ({ ...prev, login: true, logsubmit: false }))
 
+
         }
         else {
-            console.log("usercheck else", usercheck)
-            setcontextvalues(prev => ({ ...prev, login: false, logsubmit: true }))
+            console.log("usercheck else", usercheck);
+            const savedStateString = window.localStorage.getItem(`shoppink-state-${c_id}`);
+            const savedState = savedStateString ? JSON.parse(savedStateString) : {};
+            console.log("Saved state inside login", savedState)
+            // Use savedState directly to set context
+            setcontextvalues(prev => {
+                const newContext = {
+                    ...prev,
+                    login: false,
+                    logsubmit: true,
+                    currentuser: savedState.currentuser || null,
+                };
+                console.log("New context:", newContext); // Log the updated context here
+                window.localStorage.setItem(`shoppink-state-${c_id}`, JSON.stringify(newContext));
+                return newContext;
+            });
+            const updatedUser = JSON.parse(window.localStorage.getItem(`shoppink-state-${c_id}`));
+            console.log("updated user context in login", updatedUser.currentuser.id)
+            setcontextvalues(prev => ({ ...prev, currentuser: updatedUser.currentuser }));
         }
-
-        console.log("inside login handlesubmit", contextvalues.currentuser.firstname)
     }
     const handlesignup = () => {
 
@@ -69,6 +85,9 @@ const Login = () => {
 
     }
 
+    useEffect(() => {
+        console.log("Updated contextvalues:", contextvalues);
+    }, [contextvalues]);
 
     return (
         <>

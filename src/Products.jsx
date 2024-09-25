@@ -12,31 +12,38 @@ const Products = () => {
     const navigate = useNavigate();
 
     const { contextvalues, setcontextvalues } = useContext(Context);
-
     useEffect(() => {
+
+
         const fetchProducts = async () => {
+            const updatedUser = JSON.parse(window.localStorage.getItem(`shoppink-state-${contextvalues.currentuser.id}`));
+            console.log("updateduser", contextvalues)
+
+            if (updatedUser) {
+                setcontextvalues(prev => ({
+                    ...prev,
+                    currentuser: updatedUser.currentuser || null,
+                }));
+            }
             const response = await httpclient.get('products');
             const products = response.data;
-            console.log("context products type", typeof (contextvalues.productitems))
-            console.log("products type", typeof (products))
+
             const updatedDefaultValues = {
                 ...contextvalues,
                 productitems: products
             };
             setcontextvalues(updatedDefaultValues);
-            console.log("product after  updation", contextvalues.productitems)
-            window.localStorage.setItem("shoppink-states", JSON.stringify(updatedDefaultValues));
-            console.log("product after  updation", contextvalues.productitems)
+            console.log("Saved state in products", updatedUser)
+            console.log("Products after update", updatedDefaultValues);
         };
 
         fetchProducts();
-    }, []);
+    }, [contextvalues.currentuser, setcontextvalues]);
 
 
     useEffect(() => {
-        console.log("prodcuts contextvalues:", contextvalues);
-    }, [contextvalues]);
-
+        console.log("product.jsx useffect final", contextvalues)
+    }, [setcontextvalues]);
 
     const handlebanner = (category) => {
         setcontextvalues(prev => ({ ...prev, iscategorylist: category, login: false, productdesc: false, signup: false, showcart: false, placeorder: false, ishome: false }))
@@ -133,7 +140,7 @@ const Products = () => {
                                     <div className='flex p-2 h-full w-full flex-col items-start  justify-center'>
                                         {
                                             /* <img className='object-cover hover:scale-105 w-[10rem] ml-5 h-full pb-75' src={product.image_link} alt='image not available' />*/
-                                            console.log("product.category", product.category)
+
                                         }
                                         <img className='h-[10rem] w-[10rem] object-contain hover:scale-105 w-[10rem] ml-5' src={product.image_link} alt='image not available' />
                                         <h1 className='flex text-pink-700 font-bold  ml-1 mt-2 hover:underline'>{product.product_name}</h1>

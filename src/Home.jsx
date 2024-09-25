@@ -12,7 +12,19 @@ const Home = () => {
     const navigate = useNavigate();
 
     const { contextvalues, setcontextvalues } = useContext(Context);
-    console.log("inside home.jsx initial", contextvalues)
+    useEffect(() => {
+
+        const savedStateString = window.localStorage.getItem(`shoppink-state-${contextvalues.currentuser.id}`);
+        const savedState = savedStateString ? JSON.parse(savedStateString) : null;
+        console.log("Saved state in home", savedState)
+        if (savedState) {
+            setcontextvalues(prev => ({
+                ...prev,
+                currentuser: savedState.currentuser || null,
+            }));
+        }
+        console.log("Checking Home.jsx useeffect", savedState);
+    }, [contextvalues]);
 
 
     const togglemenu = () => {
@@ -26,10 +38,7 @@ const Home = () => {
         }
     }
 
-    useEffect(() => {
-        window.localStorage.setItem("shoppink-states", JSON.stringify(contextvalues));
-        console.log("inside app.jsx contextvalues", contextvalues)
-    }, [contextvalues]);
+
 
 
 
@@ -44,7 +53,7 @@ const Home = () => {
 
     const handlelogin = () => {
 
-        setcontextvalues(prev => ({ ...prev, login: !prev.login, ismemberlist: false, productsdesc: false, placeorder: false, iscategorylist: false, showcart: false, currentuser: null }))
+        setcontextvalues(prev => ({ ...prev, login: !prev.login, ismemberlist: false, productsdesc: false, placeorder: false, iscategorylist: false, showcart: false }))
 
     }
     const handlecart = () => {
