@@ -14,14 +14,14 @@ export const addtocart = (setcontextvalues, p_id) => {
     setcontextvalues(prevState => ({
         ...prevState,
         productitems: prevState.productitems.map(item => {
-            if (item.p_id === p_id) {
-                const newStatus = item.p_status === 'Add to Cart' ? 'Remove from Cart' : 'Add to Cart';
+            if (item.product_id === p_id) {
+                const newStatus = item.cart_status === 'Add to Cart' ? 'Remove from Cart' : 'Add to Cart';
                 console.log("inside addtocart function in cartutils")
-                console.log("items", item.p_id)
+                console.log("items", item.product_id)
                 console.log("newStatus", newStatus)
                 return {
                     ...item,
-                    p_status: newStatus,
+                    cart_status: newStatus,
                     quantity: newStatus !== 'Add to Cart' ? 1 : 0
                 };
             }
@@ -77,7 +77,7 @@ export const incrementquantity = (setcontextvalues, p_id) => {
     setcontextvalues(prevState => ({
         ...prevState,
         productitems: prevState.productitems.map(item => {
-            if (item.p_id === p_id) {
+            if (item.product_id === p_id) && (item.usertxn.user_id ===) {
                 if (item.quantity >= 5) {
                     alert("Sorry, you have reached the maximum limit!");
                     return item;
@@ -98,7 +98,7 @@ export const decrementquantity = (setcontextvalues, p_id) => {
     setcontextvalues(prevState => ({
         ...prevState,
         productitems: prevState.productitems.map(item => {
-            if (item.p_id === p_id) {
+            if (item.product_id === p_id) {
                 const newQuantity = item.quantity - 1;
                 const updatedQuantity = newQuantity < 0 ? 0 : newQuantity;
                 const newStatus = updatedQuantity === 0 ? 'Add to Cart' : item.p_status;

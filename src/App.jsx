@@ -37,7 +37,8 @@ function App() {
     iscategorylist: false,
     logsubmit: false,
     signupsubmit: false,
-    productitems: []
+    productitems: [],
+    usertxn: []
   })
   /*{
     p_id: 1,

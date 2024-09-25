@@ -128,23 +128,27 @@ const Products = () => {
 
                         contextvalues.productitems.map(product => (
 
-                            <div key={product.product_id} className="flex flex-col border border-2 border-pink-500  h-[20rem] w-[14rem] items-center sm:w-[17rem] md:h-[20rem] md:w-[13rem] lg:w-[12rem] xl:w-[15rem] rounded rounded-md bg-[#F8F4FF] " >
-                                <div className='flex mt-3 w-full justify-center items-start hover:cursor-pointer flex-col' onClick={() => cartUtils.handleproductsdesc(setcontextvalues, product.product_id, navigate)}>
+                            <div key={product.product_id} className="flex flex-col border-2 border-pink-500 h-[25rem] w-[14rem] items-center sm:w-[17rem] md:h-[25rem] md:w-[13rem] lg:w-[12rem] xl:w-[15rem] rounded rounded-md bg-[#F8F4FF] " >
+                                <div className='flex mt-3 h-[20rem] w-full justify-center items-start hover:cursor-pointer flex-col' onClick={() => cartUtils.handleproductsdesc(setcontextvalues, product.product_id, navigate)}>
                                     <div className='flex p-2 h-full w-full flex-col items-start  justify-center'>
-                                        <img className='object-cover hover:scale-105 w-[10rem] ml-5' src={product.image_link} alt='image not available' />
-                                        <h1 className='flex text-red-700 font-bold  ml-1 mt-2'>{product.product_name}</h1>
+                                        {
+                                            /* <img className='object-cover hover:scale-105 w-[10rem] ml-5 h-full pb-75' src={product.image_link} alt='image not available' />*/
+                                            console.log("product.category", product.category)
+                                        }
+                                        <img className='h-[10rem] w-[10rem] object-contain hover:scale-105 w-[10rem] ml-5' src={product.image_link} alt='image not available' />
+                                        <h1 className='flex text-pink-700 font-bold  ml-1 mt-2 hover:underline'>{product.product_name}</h1>
 
                                     </div>
                                 </div>
                                 <div className='flex flex-row w-full justify-center items-center -mt-[1rem] h-full'>
                                     <h1 className='flex text-black text-xl font-medium top[-3rem] md:ml-[1rem] -mt-[0.5rem] ml-1'>{product.price}</h1>
                                     {
-                                        product.p_status === 'Add to Cart' && (
+                                        product.cart_status === 'Add to Cart' && (
                                             <button className='flex bg-white border ml-[2rem] justify-center md:text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-sm shadow-md border-1 border-black text-black font-medium rounded rounded-md p-1' onClick={() => cartUtils.addtocart(setcontextvalues, product.product_id)}>Add to Cart</button>
                                         )
                                     }
                                     {
-                                        product.p_status === 'Remove from Cart' && (
+                                        product.cart_status === 'Remove from Cart' && (
                                             <div className='flex flex-row justify-between ml-[2rem] gap-2 w-[3rem] h-[2rem]  items-center'>
                                                 <button className='flex text-3xl -mt-[0.5rem]' onClick={() => cartUtils.decrementquantity(setcontextvalues, product.product_id)} >-</button>
                                                 <input type="text" className='flex text-md h-[1.5rem] w-[2rem] border border-black text-center' value={product.stock_quantity} />
