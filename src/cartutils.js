@@ -77,7 +77,7 @@ export const incrementquantity = (setcontextvalues, p_id) => {
     setcontextvalues(prevState => ({
         ...prevState,
         productitems: prevState.productitems.map(item => {
-            if (item.product_id === p_id) && (item.usertxn.user_id ===) {
+            if (item.product_id === p_id) {
                 if (item.quantity >= 5) {
                     alert("Sorry, you have reached the maximum limit!");
                     return item;
