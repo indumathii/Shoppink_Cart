@@ -1,4 +1,5 @@
 import httpclient from './Axios';
+
 //export const handleproductsdesc = (setproductsdesc, p_id, navigate, setcurrentpid)
 export const handleproductsdesc = (setcontextvalues, p_id, navigate) => {
 
@@ -116,10 +117,19 @@ export const decrementquantity = (setcontextvalues, p_id) => {
 
 //export const cartcountcalc = (productitems, cartcount, setcartcount) => {
 export const cartcountcalc = (contextvalues, setcontextvalues) => {
-    console.log(contextvalues.productitems)
-    const inCartItems = contextvalues.productitems.filter(product => product.p_status === 'Remove from Cart');
-    console.log("inCartItems", inCartItems)
-    setcontextvalues(prev => ({ ...prev, cartcount: inCartItems.length }))
+    const temp_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
+    console.log("Cartcount calculation 1", temp_state.currentuser)
+    console.log("Cartcount calculation 2", contextvalues.currentuser)
+    console.log("Cartcount calculation 3", temp_state.usertxn)
+    const current_cart_items = temp_state.usertxn.filter(txn => txn.cart_status === 'Remove from Cart');
+    const cartvalues = {
+        ...temp_state,
+        cartcount: current_cart_items.length
+
+    };
+    setcontextvalues(cartvalues)
+    console.log("updated cart count values", cartvalues)
+    window.localStorage.setItem('shoppink-state', JSON.stringify(cartvalues))
 
 }
 
@@ -133,6 +143,7 @@ export const carttotalvalue = (contextvalues, setcontextvalues) => {
         return total + (tempprice * product.quantity);
     }, 0);
     setcontextvalues(prev => ({ ...prev, totalcartvalue: totalvalue }))
+
 
 }
 
@@ -173,8 +184,7 @@ export const loginfunc = async (values, contextvalues, setcontextvalues) => {
             //const saved_state = window.localStorage.getItem('shoppink-state');
             const saved_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
             console.log("context values from localstorage updated in cartutils", saved_state);
-            const inCartItems = contextvalues.productitems.filter(product => product.p_status === 'Remove from Cart');
-
+            cartcountcalc(contextvalues, setcontextvalues)
 
 
             return [2, userFound.id];

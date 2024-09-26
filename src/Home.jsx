@@ -75,7 +75,8 @@ const Home = () => {
             usertxn: [],
             users: [],
             isloggedin: false,
-            currentTime: new Date().toLocaleTimeString()
+            currentTime: new Date().toLocaleTimeString(),
+            cartcount: 0
         };
         setcontextvalues(up_values)
         window.localStorage.setItem('shoppink-state', JSON.stringify(up_values));
@@ -162,7 +163,7 @@ const Home = () => {
 
         }
 
-        //cartUtils.cartcountcalc(contextvalues, setcontextvalues)
+        // cartUtils.cartcountcalc(contextvalues, setcontextvalues)
         console.log(contextvalues.isMenuVisible)
 
 
