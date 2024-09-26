@@ -14,17 +14,13 @@ const Home = () => {
     const { contextvalues, setcontextvalues } = useContext(Context);
     useEffect(() => {
 
-        const savedStateString = window.localStorage.getItem(`shoppink-state-${contextvalues.currentuser.id}`);
-        const savedState = savedStateString ? JSON.parse(savedStateString) : null;
-        console.log("Saved state in home", savedState)
-        if (savedState) {
-            setcontextvalues(prev => ({
-                ...prev,
-                currentuser: savedState.currentuser || null,
-            }));
-        }
-        console.log("Checking Home.jsx useeffect", savedState);
-    }, [contextvalues]);
+        const savedStateString = window.localStorage.getItem('shoppink-state');
+        const savedState = savedStateString ? JSON.parse(savedStateString) : contextvalues;
+        console.log("context values in home.jsx", savedState)
+        setcontextvalues(savedState)
+        window.localStorage.setItem('shoppink-state', JSON.stringify(contextvalues));
+
+    }, [setcontextvalues]);
 
 
     const togglemenu = () => {
@@ -135,7 +131,7 @@ const Home = () => {
                 behavior: 'smooth',
             });
             navigate('/home')
-            setcontextvalues(prev => ({ ...prev, currentpid: null }))
+            //setcontextvalues(prev => ({ ...prev, currentpid: null }))
 
 
         }
@@ -146,12 +142,12 @@ const Home = () => {
                 behavior: 'smooth',
             });
             navigate('/home');
-            setcontextvalues(prev => ({ ...prev, currentpid: null }))
+            //setcontextvalues(prev => ({ ...prev, currentpid: null }))
 
 
         }
 
-        cartUtils.cartcountcalc(contextvalues, setcontextvalues)
+        //cartUtils.cartcountcalc(contextvalues, setcontextvalues)
         console.log(contextvalues.isMenuVisible)
 
 

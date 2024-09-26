@@ -16,29 +16,24 @@ const Products = () => {
 
 
         const fetchProducts = async () => {
-            const updatedUser = JSON.parse(window.localStorage.getItem(`shoppink-state-${contextvalues.currentuser.id}`));
-            console.log("updateduser", contextvalues)
+            const updatatedvalues = JSON.parse(window.localStorage.getItem('shoppink-state'));
+            console.log("updatatedvalues in products", updatatedvalues)
 
-            if (updatedUser) {
-                setcontextvalues(prev => ({
-                    ...prev,
-                    currentuser: updatedUser.currentuser || null,
-                }));
-            }
             const response = await httpclient.get('products');
             const products = response.data;
 
             const updatedDefaultValues = {
-                ...contextvalues,
+                ...updatatedvalues,
                 productitems: products
             };
             setcontextvalues(updatedDefaultValues);
-            console.log("Saved state in products", updatedUser)
-            console.log("Products after update", updatedDefaultValues);
+            window.localStorage.setItem('shoppink-state', JSON.stringify(updatedDefaultValues));
+
+            console.log("Products after update in Products.jsx", updatedDefaultValues);
         };
 
         fetchProducts();
-    }, [contextvalues.currentuser, setcontextvalues]);
+    }, [setcontextvalues]);
 
 
     useEffect(() => {
