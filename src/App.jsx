@@ -44,7 +44,6 @@ function App() {
   })
 
   const [contextvalues, setcontextvalues] = useState(() => {
-    window.localStorage.removeItem('shoppink-state');
     const savedState = window.localStorage.getItem('shoppink-state');
     console.log("saved state in app.jsx", savedState)
     console.log("default values in app.jsx", defaultvalues)

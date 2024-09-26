@@ -155,12 +155,17 @@ export const loginfunc = async (values, contextvalues, setcontextvalues) => {
         else if (userFound.password === values.password) {
             console.log("Password matched");
             console.log("Context values inot cartutils", contextvalues)
+            const res = await httpclient.get('txns');
+            const usr_txns = res.data;
+            console.log("usr_txn", usr_txns);
+
             const updatedDefaultValues = {
                 ...contextvalues,
                 users: users,
                 currentuser: userFound,
                 isloggedin: true,
-                currentTime: new Date().toLocaleTimeString()
+                currentTime: new Date().toLocaleTimeString(),
+                usertxn: usr_txns
             };
             setcontextvalues(updatedDefaultValues);
             console.log("Setting updated default value in cartutil", updatedDefaultValues)
