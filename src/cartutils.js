@@ -154,18 +154,18 @@ export const loginfunc = async (values, contextvalues, setcontextvalues) => {
         }
         else if (userFound.password === values.password) {
             console.log("Password matched");
-            console.log("Context values inot cartutils", contextvalues)
+            console.log("Context values into cartutils", contextvalues)
             const res = await httpclient.get('txns');
             const usr_txns = res.data;
             console.log("usr_txn", usr_txns);
-
+            const currentuser_txn = usr_txns.filter(txn => txn.user_id === userFound.id);
             const updatedDefaultValues = {
                 ...contextvalues,
                 users: users,
                 currentuser: userFound,
                 isloggedin: true,
                 currentTime: new Date().toLocaleTimeString(),
-                usertxn: usr_txns
+                usertxn: currentuser_txn
             };
             setcontextvalues(updatedDefaultValues);
             console.log("Setting updated default value in cartutil", updatedDefaultValues)
@@ -173,6 +173,10 @@ export const loginfunc = async (values, contextvalues, setcontextvalues) => {
             //const saved_state = window.localStorage.getItem('shoppink-state');
             const saved_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
             console.log("context values from localstorage updated in cartutils", saved_state);
+            const inCartItems = contextvalues.productitems.filter(product => product.p_status === 'Remove from Cart');
+
+
+
             return [2, userFound.id];
         } else {
             console.log("Invalid Password");
