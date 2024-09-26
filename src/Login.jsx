@@ -64,7 +64,7 @@ const Login = () => {
                     ...prev,
                     login: false,
                     logsubmit: true,
-                    currentuser: savedState.currentuser || null,
+                    currentuser: savedState.currentuser || null
                 };
                 console.log("New context:", newContext); // Log the updated context here
                 window.localStorage.setItem(`shoppink-state-${c_id}`, JSON.stringify(newContext));
