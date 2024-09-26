@@ -27,11 +27,16 @@ const Products = () => {
                 productitems: products,
                 currentTime: new Date().toLocaleTimeString()
             };
-
+            const productvalues1 = JSON.parse(window.localStorage.getItem('shoppink-state'));
             window.localStorage.setItem('shoppink-state', JSON.stringify(productDefaultValues));
-            setcontextvalues(productDefaultValues);
-            console.log("Products after update in Products.jsx1", productvalues);
-            console.log("Products after update in Products.jsx", productDefaultValues);
+            const productDefaultValues1 = {
+                ...productvalues1,
+                productitems: products,
+                currentTime: new Date().toLocaleTimeString()
+            };
+            setcontextvalues(productDefaultValues1);
+            console.log("Products after update in Products.jsx1", productvalues1);
+            console.log("Products after update in Products.jsx", productDefaultValues1);
         };
 
         fetchProducts();
