@@ -38,7 +38,8 @@ function App() {
     logsubmit: false,
     signupsubmit: false,
     productitems: [],
-    usertxn: []
+    usertxn: [],
+    isloggedin: false
   })
 
   const [contextvalues, setcontextvalues] = useState(() => {

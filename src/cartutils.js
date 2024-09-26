@@ -156,12 +156,14 @@ export const loginfunc = async (values, contextvalues, setcontextvalues) => {
             console.log("Password matched");
             const updatedDefaultValues = {
                 ...contextvalues,
-                users: users, currentuser: userFound
+                users: users,
+                currentuser: userFound,
+                isloggedin: true
             };
             setcontextvalues(updatedDefaultValues);
             window.localStorage.setItem('shoppink-state', JSON.stringify(updatedDefaultValues))
             const saved_state = window.localStorage.getItem('shoppink-state');
-            console.log("context values from localstorage updated in cartutils", saved_state);
+            console.log("context values from localstorage updated in cartutils", saved_state.currentuser);
             return [2, userFound.id];
         } else {
             console.log("Invalid Password");
