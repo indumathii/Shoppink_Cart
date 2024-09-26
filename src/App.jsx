@@ -61,7 +61,11 @@ function App() {
     <Router>
       <Context.Provider value={{ contextvalues, setcontextvalues }}>
         {/*
-
+<Route path="/shoppink/signup" element={<SignupForm />} />
+          <Route path="/shoppink/categories/:item" element={<Categorieslist />} />
+          <Route path="productsdesc/:p_id" element={<ProductsDescription />} />
+          <Route path="/shoppink/cart" element={<Cart />} />
+          <Route path="/shoppink/orders" element={<Orders />} />
         */
           console.log("contextvalues in app.jsx return", contextvalues)
         }
@@ -71,11 +75,7 @@ function App() {
         <Routes>
           <Route path="/shoppink/login" element={<Login />} />
           <Route path="/home" element={<Products />} />
-          <Route path="/shoppink/signup" element={<SignupForm />} />
-          <Route path="/shoppink/categories/:item" element={<Categorieslist />} />
-          <Route path="productsdesc/:p_id" element={<ProductsDescription />} />
-          <Route path="/shoppink/cart" element={<Cart />} />
-          <Route path="/shoppink/orders" element={<Orders />} />
+
           {/*
           
           

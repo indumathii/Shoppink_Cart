@@ -31,22 +31,19 @@ const Home = () => {
 
     const handlehome = () => {
         if (contextvalues) {
-            setcontextvalues(prev => ({ ...prev, ishome: true, productsdesc: false, signup: false, placeorder: false, iscategorylist: false, showcart: false }))
+
+            const update_values = {
+                ...contextvalues,
+                productsdesc: false,
+                signup: false,
+                placeorder: false, iscategorylist: false, showcart: false,
+                currentTime: new Date().toLocaleTimeString(), ishome: true
+            };
+            setcontextvalues(update_values)
+            window.localStorage.setItem('shoppink-state', JSON.stringify(update_values));
         }
     }
 
-
-
-
-
-    /*useEffect(() => {
-
-        return () => {
-            setIsMenuVisible(false)
-
-
-        };
-    }, []);*/
 
     const handlelogin = () => {
 
