@@ -16,20 +16,22 @@ const Products = () => {
 
 
         const fetchProducts = async () => {
-            const updatatedvalues = JSON.parse(window.localStorage.getItem('shoppink-state'));
-            console.log("updatatedvalues in products", updatatedvalues)
+            const productvalues = JSON.parse(window.localStorage.getItem('shoppink-state'));
+            console.log("updatatedvalues in products", productvalues)
 
             const response = await httpclient.get('products');
             const products = response.data;
 
-            const updatedDefaultValues = {
-                ...updatatedvalues,
-                productitems: products
+            const productDefaultValues = {
+                ...productvalues,
+                productitems: products,
+                currentTime: new Date().toLocaleTimeString()
             };
-            setcontextvalues(updatedDefaultValues);
-            window.localStorage.setItem('shoppink-state', JSON.stringify(updatedDefaultValues));
 
-            console.log("Products after update in Products.jsx", updatedDefaultValues);
+            window.localStorage.setItem('shoppink-state', JSON.stringify(productDefaultValues));
+            setcontextvalues(productDefaultValues);
+            console.log("Products after update in Products.jsx1", productvalues);
+            console.log("Products after update in Products.jsx", productDefaultValues);
         };
 
         fetchProducts();

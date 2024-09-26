@@ -39,7 +39,8 @@ function App() {
     signupsubmit: false,
     productitems: [],
     usertxn: [],
-    isloggedin: false
+    isloggedin: false,
+    currentTime: new Date().toLocaleTimeString()
   })
 
   const [contextvalues, setcontextvalues] = useState(() => {

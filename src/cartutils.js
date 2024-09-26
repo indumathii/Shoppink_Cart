@@ -159,7 +159,8 @@ export const loginfunc = async (values, contextvalues, setcontextvalues) => {
                 ...contextvalues,
                 users: users,
                 currentuser: userFound,
-                isloggedin: true
+                isloggedin: true,
+                currentTime: new Date().toLocaleTimeString()
             };
             setcontextvalues(updatedDefaultValues);
             console.log("Setting updated default value in cartutil", updatedDefaultValues)

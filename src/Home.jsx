@@ -131,6 +131,7 @@ const Home = () => {
                 top: 0,
                 behavior: 'smooth',
             });
+            console.log("navigating to home 1")
             navigate('/home')
             //setcontextvalues(prev => ({ ...prev, currentpid: null }))
 
@@ -142,7 +143,10 @@ const Home = () => {
                 top: 0,
                 behavior: 'smooth',
             });
+            console.log("navigating to home")
             navigate('/home');
+
+
             //setcontextvalues(prev => ({ ...prev, currentpid: null }))
 
 

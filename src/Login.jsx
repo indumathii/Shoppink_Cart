@@ -55,17 +55,17 @@ const Login = () => {
         }
         else {
             console.log("usercheck else", usercheck);
-            const savedStateString = window.localStorage.getItem('shoppink-state');
-            const savedState = savedStateString ? JSON.parse(savedStateString) : {};
+            const savedState = JSON.parse(window.localStorage.getItem('shoppink-state'))
             const updatedDefaultValues = {
                 ...savedState,
                 login: false,
                 logsubmit: true
 
             };
-            setcontextvalues(updatedDefaultValues);
+
             console.log("context values after updated in login", updatedDefaultValues)
             window.localStorage.setItem('shoppink-state', JSON.stringify(updatedDefaultValues));
+            setcontextvalues(updatedDefaultValues);
 
         }
     }
