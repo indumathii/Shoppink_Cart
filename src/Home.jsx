@@ -69,8 +69,17 @@ const Home = () => {
 
     }
     const handlesignout = () => {
+        const up_values = {
+            ...contextvalues,
+            ismemberlist: false, currentuser: {},
+            usertxn: [],
+            users: [],
+            isloggedin: false,
+            currentTime: new Date().toLocaleTimeString()
+        };
+        setcontextvalues(up_values)
+        window.localStorage.setItem('shoppink-state', JSON.stringify(up_values));
 
-        setcontextvalues(prev => ({ ...prev, ismemberlist: false, currentuser: null }))
 
 
     }
