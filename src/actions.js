@@ -24,6 +24,8 @@ export const HANDLE_SUBMIT = 'HANDLE_SUBMIT';
 export const SET_INITIAL_STATE = 'SET_INITIAL_STATE';
 export const HANDLE_MEMBER_LIST = 'HANDLE_MEMBER_LIST';
 export const HANDLE_SIGNOUT = 'HANDLE-SIGNOUT';
+export const PRODUCTS_DISPATCH = 'PRODUCTS_DISPATCH';
+export const ADD_TO_CART = 'ADD_TO_CART';
 
 export const loginsuccess = (payload) => ({
     type: LOGIN_SUCCESS,
@@ -58,5 +60,17 @@ export const handlememberlists = (payload) => ({
 
 export const handlesign_out = (payload) => ({
     type: HANDLE_SIGNOUT,
+    payload,
+})
+
+
+export const products_dispatch = (payload) => ({
+    type: PRODUCTS_DISPATCH,
+    payload,
+})
+
+
+export const add_to_carts = (payload) => ({
+    type: ADD_TO_CART,
     payload,
 })

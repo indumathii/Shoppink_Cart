@@ -5,76 +5,37 @@ import * as cartUtils from './cartutils';
 import Slider from "react-slick";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import httpclient from './Axios'
+import httpclient from './Axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { products_dispatch } from './actions';
 
 const Products = () => {
     const navigate = useNavigate();
-
-    //const { contextvalues, setcontextvalues } = useContext(Context);
-
+    const currentstate = useSelector((state) => state)
+    const dispatch = useDispatch();
     useEffect(() => {
-
-
         const fetchProducts = async () => {
-            const productvalues = JSON.parse(window.localStorage.getItem('shoppink-state'));
+            const productvalues = JSON.parse(window.localStorage.getItem('shoppink-store'));
             console.log("updatatedvalues in products", productvalues)
             const response = await httpclient.get('products');
             const products = response.data;
-
-
-
             const productDefaultValues = {
                 ...productvalues,
                 productitems: products,
-                currentTime: new Date().toLocaleTimeString()
+
             };
-            const productvalues1 = JSON.parse(window.localStorage.getItem('shoppink-state'));
-            window.localStorage.setItem('shoppink-state', JSON.stringify(productDefaultValues));
-            const productDefaultValues1 = {
-                ...productvalues1,
-                productitems: products,
-                currentTime: new Date().toLocaleTimeString()
-            };
-            setcontextvalues(productDefaultValues1);
-            console.log("Products after update in Products.jsx1", productvalues1);
-            console.log("Products after update in Products.jsx", productDefaultValues1);
-            console.log("Context values in products after login", contextvalues)
+            console.log("Products after update in Products.jsx", productDefaultValues);
+            dispatch(products_dispatch(productDefaultValues))
+
         };
 
         fetchProducts();
-    }, [setcontextvalues]);
+    }, []);
 
-    /*const isproductincart = (product_id) => {
-        const isproductvalues = JSON.parse(window.localStorage.getItem('shoppink-state'));
-        //const temp = isproductvalues.usertxn.find(txn => txn.product_id === product_id)?.order_quantity || 0
-        //console.log("printing temp in isproductincart", temp)
-        const user_txns = isproductvalues.usertxn
-        if (user_txns.length > 0) {
-            const current_prd_txn = user_txns.find(txn => txn.product_id === product_id);
 
-            if (current_prd_txn) {
-
-                if (Object.keys(current_prd_txn).length > 0) {
-
-                    return current_prd_txn.order_quantity
-                }
-            }
-            else
-                return null
-
-        }
-        else {
-            return null
-        }
-    }*/
-
-    useEffect(() => {
-        console.log("product.jsx useffect final", contextvalues)
-    }, [setcontextvalues]);
-
-    const handlebanner = (category) => {
+    /*const handlebanner = (category) => {
         setcontextvalues(prev => ({ ...prev, iscategorylist: category, login: false, productdesc: false, signup: false, showcart: false, placeorder: false, ishome: false }))
-    }
+    }*/
     const bannerimages = [
         {
             category: 'w-dress',
@@ -135,7 +96,7 @@ const Products = () => {
 
 
     return (
-        <div className={`${contextvalues.login ? 'fixed -z-10' : contextvalues.isMenuVisible ? 'relative -z-10' : contextvalues.ismemberlist ? 'relative -z-10' : 'relative'
+        <div className={`${currentstate.login ? 'fixed -z-10' : currentstate.isMenuVisible ? 'relative -z-10' : currentstate.ismemberlist ? 'relative -z-10' : 'relative'
             } `}>
             <div className='h-[30vh] mt-[4.5rem] md:mt-[2rem] bg-blue-500 w-full'   >
                 <Slider {...settings}>
@@ -160,7 +121,7 @@ const Products = () => {
                 <div className=' w-[90vw] grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 top-[5rem] p-4 place-items-center gap-4 border border-black mx-auto'>
                     {
 
-                        contextvalues.productitems.map((product, index) => (
+                        currentstate.productitems.map((product, index) => (
 
                             <div key={product.product_id} className="flex flex-col border-2 border-pink-500 h-[25rem] w-[14rem] items-center sm:w-[17rem] md:h-[25rem] md:w-[13rem] lg:w-[12rem] xl:w-[15rem] rounded rounded-md bg-[#F8F4FF] " >
                                 <div className='flex mt-3 h-[20rem] w-full justify-center items-start hover:cursor-pointer flex-col' onClick={() => cartUtils.handleproductsdesc(setcontextvalues, product.product_id, navigate)}>
@@ -178,15 +139,15 @@ const Products = () => {
                                     <h1 className='flex text-black text-xl font-medium top[-3rem] md:ml-[1rem] -mt-[0.5rem] ml-1'>{product.price}</h1>
                                     {
 
-                                        (contextvalues.usertxn.find(txn => txn.product_id === product.product_id)?.order_quantity > 0) ? (
+                                        (currentstate.usertxn.find(txn => txn.product_id === product.product_id)?.order_quantity > 0) ? (
                                             <div className='flex flex-row justify-between ml-[2rem] gap-2 w-[3rem] h-[2rem]  items-center'>
                                                 <button className='flex text-3xl -mt-[0.5rem]' onClick={() => cartUtils.decrementquantity(setcontextvalues, product.product_id)} >-</button>
-                                                <input type="text" className='flex text-md h-[1.5rem] w-[2rem] border border-black text-center' value={contextvalues.usertxn.find(txn => txn.product_id === product.product_id)?.order_quantity || 0} />
+                                                <input type="text" className='flex text-md h-[1.5rem] w-[2rem] border border-black text-center' value={currentstate.usertxn.find(txn => txn.product_id === product.product_id)?.order_quantity || 0} />
                                                 <button className='flex text-2xl -mt-[0.5rem]' onClick={() => cartUtils.incrementquantity(setcontextvalues, product.product_id)}>+</button>
                                             </div>
                                         ) : (
 
-                                            <button className='flex bg-white border ml-[2rem] justify-center md:text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-sm shadow-md border-1 border-black text-black font-medium rounded rounded-md p-1' onClick={() => cartUtils.addtocart(setcontextvalues, product.product_id)}>{(contextvalues.usertxn.find(txn => txn.product_id === product.product_id)?.order_quantity > 0) ? 'Remove from Cart' : 'Add to Cart'}</button>
+                                            <button className='flex bg-white border ml-[2rem] justify-center md:text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-sm shadow-md border-1 border-black text-black font-medium rounded rounded-md p-1' onClick={() => cartUtils.addtocart(currentstate, product.product_id, dispatch)}>{(currentstate.usertxn.find(txn => txn.product_id === product.product_id)?.order_quantity > 0) ? 'Remove from Cart' : 'Add to Cart'}</button>
                                         )
 
 

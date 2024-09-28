@@ -1,5 +1,5 @@
 //import { ADD_TO_CART, REMOVE_FROM_CART, UPDATE_CART_QUANTITY } from './actions';
-import { HANDLE_LOGIN, HANDLE_MEMBER_LIST, HANDLE_SIGNOUT, HANDLE_SUBMIT, LOGIN_FAILURE, LOGIN_SUCCESS, SET_INITIAL_STATE } from './actions';
+import { ADD_TO_CART, HANDLE_LOGIN, HANDLE_MEMBER_LIST, HANDLE_SIGNOUT, HANDLE_SUBMIT, LOGIN_FAILURE, LOGIN_SUCCESS, PRODUCTS_DISPATCH, SET_INITIAL_STATE } from './actions';
 
 const initialState = {
 
@@ -60,6 +60,16 @@ const cartReducer = (state = initialState, action) => {
                 ...action.payload,
             };
         case HANDLE_SIGNOUT:
+            return {
+                ...state,
+                ...action.payload,
+            };
+        case PRODUCTS_DISPATCH:
+            return {
+                ...state,
+                ...action.payload,
+            };
+        case ADD_TO_CART:
             return {
                 ...state,
                 ...action.payload,

@@ -41,7 +41,7 @@ function App() {
 
       <Routes>
         <Route path="/shoppink/login" element={<Login />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/home" element={<Products />} />
 
 
         {/*
