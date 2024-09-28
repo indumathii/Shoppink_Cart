@@ -60,7 +60,7 @@ const Home = () => {
 
     const handlelogin = () => {
 
-        //setcontextvalues(prev => ({ ...prev, login: !prev.login, ismemberlist: false, productsdesc: false, placeorder: false, iscategorylist: false, showcart: false }))
+
         const handle_login_values = {
             ...currentstate,
             login: !currentstate.login,
@@ -89,7 +89,7 @@ const Home = () => {
         }
         window.localStorage.setItem('shoppink-store', JSON.stringify(handle_memberlist_values));
         dispatch(handlememberlists(handle_memberlist_values));
-        //setcontextvalues(prev => ({ ...prev, ismemberlist: !prev.ismemberlist }))
+
 
     }
     const handlesignout = () => {
@@ -166,7 +166,7 @@ const Home = () => {
             });
             console.log("navigating to home 1")
             navigate('/home')
-            //setcontextvalues(prev => ({ ...prev, currentpid: null }))
+
 
 
         }
@@ -185,7 +185,7 @@ const Home = () => {
 
         }
 
-        //cartUtils.cartcountcalc(contextvalues, setcontextvalues)
+        //cartUtils.cartcountcalc(currentstate, dispatch)
         console.log(currentstate.isMenuVisible)
 
 

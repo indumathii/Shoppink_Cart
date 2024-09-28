@@ -1,4 +1,4 @@
-import { add_to_carts, decrements_quantity, increments_quantity, loginfailure, loginsuccess, setinitialstate } from './actions';
+import { add_to_carts, cartcountcalculation, decrements_quantity, increments_quantity, loginfailure, loginsuccess, setinitialstate } from './actions';
 import httpclient from './Axios';
 
 
@@ -79,10 +79,11 @@ export const incrementquantity = (currentstate, p_id, dispatch) => {
         };
 
         dispatch(increments_quantity(updated_state))
+        //cartcountcalc(currentstate, dispatch)
         window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));
         const saved_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
         console.log("context values from localstorage updated in increment quantity", saved_state);
-
+        cartcountcalc(currentstate, dispatch)
     }
 
 
@@ -119,17 +120,18 @@ export const decrementquantity = (currentstate, p_id, dispatch) => {
             usertxn: updated_user_txn
         };
         dispatch(decrements_quantity(updated_state))
+        //cartcountcalc(currentstate, dispatch)
         window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));
         const saved_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
         console.log("context values from localstorage updated in decrement quantity", saved_state);
-
+        cartcountcalc(currentstate, dispatch)
 
 
     }
 }
 
 
-export const cartcountcalc = (setcontextvalues) => {
+export const cartcountcalc = (currentstate, dispatch) => {
     const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
 
     const current_cart_items = temp_state.usertxn.filter(txn => txn.cart_status === 'Remove from Cart');
@@ -139,7 +141,7 @@ export const cartcountcalc = (setcontextvalues) => {
         cartcount: current_cart_items.length
 
     };
-    setcontextvalues(cartvalues)
+    dispatch(cartcountcalculation(cartvalues))
     console.log("updated cart count values", cartvalues)
     window.localStorage.setItem('shoppink-store', JSON.stringify(cartvalues))
 
@@ -192,9 +194,11 @@ export const addtocart = (currentstate, p_id, dispatch) => {
 
 
             dispatch(add_to_carts(new_State));
+            //
             window.localStorage.setItem('shoppink-store', JSON.stringify(new_State))
             const saved_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
             console.log("context values from localstorage updated afted addtocart", saved_state);
+            cartcountcalc(currentstate, dispatch)
             //cartcountcalc(contextvalues, setcontextvalues)
         }
         else if (temp_usertxn[selected_txn_index].cart_status === 'Add to Cart') {
@@ -219,9 +223,11 @@ export const addtocart = (currentstate, p_id, dispatch) => {
                     usertxn: updated_user_txn
                 };
                 dispatch(add_to_carts(updated_state));
+                //cartcountcalc(currentstate, dispatch)
 
                 //cartcountcalc(setcontextvalues)
                 window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));
+                cartcountcalc(currentstate, dispatch)
 
 
             }

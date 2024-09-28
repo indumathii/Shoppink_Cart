@@ -28,6 +28,7 @@ export const PRODUCTS_DISPATCH = 'PRODUCTS_DISPATCH';
 export const ADD_TO_CART = 'ADD_TO_CART';
 export const INCREMENT_QUANTITY = 'INCREMENT_QUANTITY';
 export const DECREMENT_QUANTITY = 'DECREMENT_QUANTITY';
+export const CART_COUNT_CALCULATION = 'CART_COUNT_CALCULATION';
 
 export const loginsuccess = (payload) => ({
     type: LOGIN_SUCCESS,
@@ -86,5 +87,11 @@ export const increments_quantity = (payload) => ({
 
 export const decrements_quantity = (payload) => ({
     type: DECREMENT_QUANTITY,
+    payload,
+})
+
+
+export const cartcountcalculation = (payload) => ({
+    type: CART_COUNT_CALCULATION,
     payload,
 })
