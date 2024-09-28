@@ -43,6 +43,7 @@ export const addtocart = (setcontextvalues, p_id) => {
             }
             console.log("printing new State", new_State)
             setcontextvalues(new_State)
+
             cartcountcalc(setcontextvalues)
             window.localStorage.setItem('shoppink-state', JSON.stringify(new_State))
             const saved_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
@@ -71,6 +72,7 @@ export const addtocart = (setcontextvalues, p_id) => {
                     usertxn: updated_user_txn
                 };
                 setcontextvalues(updated_state)
+
                 cartcountcalc(setcontextvalues)
                 window.localStorage.setItem('shoppink-state', JSON.stringify(updated_state));
 
@@ -155,6 +157,7 @@ export const incrementquantity = (setcontextvalues, p_id) => {
             usertxn: updated_user_txn
         };
         setcontextvalues(updated_state)
+
         cartcountcalc(setcontextvalues)
         window.localStorage.setItem('shoppink-state', JSON.stringify(updated_state));
         const saved_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
@@ -212,6 +215,7 @@ export const decrementquantity = (setcontextvalues, p_id) => {
             usertxn: updated_user_txn
         };
         setcontextvalues(updated_state)
+
         cartcountcalc(setcontextvalues)
         window.localStorage.setItem('shoppink-state', JSON.stringify(updated_state));
         const saved_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
@@ -285,6 +289,7 @@ export const loginfunc = async (values, contextvalues, setcontextvalues) => {
                 usertxn: currentuser_txn
             };
             setcontextvalues(updatedDefaultValues);
+
             console.log("Setting updated default value in cartutil", updatedDefaultValues)
             window.localStorage.setItem('shoppink-state', JSON.stringify(updatedDefaultValues))
             //const saved_state = window.localStorage.getItem('shoppink-state');

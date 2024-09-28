@@ -25,7 +25,7 @@ const Home = () => {
         //window.localStorage.setItem('shoppink-state', JSON.stringify(savedState));
 
 
-    }, [setcontextvalues.usertxn]);
+    }, [setcontextvalues]);
 
 
     const togglemenu = () => {
@@ -180,7 +180,7 @@ const Home = () => {
         window.localStorage.setItem('shoppink-state', JSON.stringify(temp_state))
         cartUtils.cartcountcalc(setcontextvalues)
 
-    }, [contextvalues.cartcount, setcontextvalues])
+    }, [contextvalues.cartcount])
     return (
         <>
             <div className={`${contextvalues.login || contextvalues.signup ? 'fixed -z-10' : 'relative'}`}>

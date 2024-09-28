@@ -45,7 +45,7 @@ const Products = () => {
         fetchProducts();
     }, [setcontextvalues]);
 
-    const isproductincart = (product_id) => {
+    /*const isproductincart = (product_id) => {
         const isproductvalues = JSON.parse(window.localStorage.getItem('shoppink-state'));
         //const temp = isproductvalues.usertxn.find(txn => txn.product_id === product_id)?.order_quantity || 0
         //console.log("printing temp in isproductincart", temp)
@@ -67,7 +67,7 @@ const Products = () => {
         else {
             return null
         }
-    }
+    }*/
 
     useEffect(() => {
         console.log("product.jsx useffect final", contextvalues)
