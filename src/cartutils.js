@@ -33,7 +33,8 @@ export const addtocart = (setcontextvalues, p_id) => {
             const new_added_txns = [...tmp_state.usertxn, txn_items]
             const new_State = {
                 ...tmp_state,
-                usertxn: new_added_txns
+                usertxn: new_added_txns,
+                cartcount: tmp_state.cartcount + 1
             }
             setcontextvalues(new_State)
             window.localStorage.setItem('shoppink-state', JSON.stringify(new_State))

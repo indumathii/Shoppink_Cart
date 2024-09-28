@@ -172,6 +172,7 @@ const Home = () => {
 
     useEffect(() => {
         const temp_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
+        setcontextvalues(temp_state)
         window.localStorage.setItem('shoppink-state', JSON.stringify(temp_state))
         cartUtils.cartcountcalc(contextvalues, setcontextvalues)
         console.log("cart count in useeffect", contextvalues)
