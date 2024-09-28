@@ -1,3 +1,4 @@
+import { loginfailure, loginsuccess, setinitialstate } from './actions';
 import httpclient from './Axios';
 
 
@@ -259,55 +260,63 @@ export const carttotalvalue = (contextvalues, setcontextvalues) => {
 
 /* Backend Data retrieval Functions */
 
-export const loginfunc = async (values, contextvalues, setcontextvalues) => {
+export const loginfunc = async (values, currentstate, dispatch) => {
+
     try {
         console.log("insideloginfunc")
         const response = await httpclient.get('signup');
-        const users = response.data; // Define users with `const`
+        const users = response.data;
         console.log("users", users);
 
-        // Find the user based on the provided email
+
         const userFound = users.find(user => user.email === values.email);
         console.log("userfound", userFound)
+
         if (!userFound) {
             console.log("User not Found");
-            return [1, userFound.id];
+            const updatedfailurevalues = {
+                ...currentstate,
+                login: true,
+                logsubmit: false
+            };
+            console.log("updated failure values")
+            dispatch(loginfailure(updatedfailurevalues));
         }
         else if (userFound.password === values.password) {
             console.log("Password matched");
-            console.log("Context values into cartutils", contextvalues)
             const res = await httpclient.get('txns');
             const usr_txns = res.data;
             console.log("usr_txn", usr_txns);
             const currentuser_txn = usr_txns.filter(txn => txn.user_id === userFound.id);
-            const updatedDefaultValues = {
-                ...contextvalues,
+
+
+            const updatedloginvalues = {
+                ...currentstate,
                 users: users,
                 currentuser: userFound,
                 isloggedin: true,
                 currentTime: new Date().toLocaleTimeString(),
-                usertxn: currentuser_txn
+                usertxn: currentuser_txn,
+                login: false,
+                logsubmit: true
             };
-            setcontextvalues(updatedDefaultValues);
 
-            console.log("Setting updated default value in cartutil", updatedDefaultValues)
-            window.localStorage.setItem('shoppink-state', JSON.stringify(updatedDefaultValues))
-            //const saved_state = window.localStorage.getItem('shoppink-state');
-            const saved_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
-            console.log("context values from localstorage updated in cartutils", saved_state);
-            cartcountcalc(setcontextvalues)
+            console.log("Setting updated login value")
+            window.localStorage.setItem('shoppink-store', JSON.stringify(updatedloginvalues))
+            const savedstate = JSON.parse(window.localStorage.getItem('shoppink-store'))
+            console.log("printing saved from localstorage in cartutils", savedstate)
+            dispatch(loginsuccess(updatedloginvalues));
 
-
-            return [2, userFound.id];
         } else {
             console.log("Invalid Password");
-            return [0, userFound.id];
+
         }
 
 
     } catch (error) {
         console.error("Error fetching users:", error);
     }
+
 
 }
 

@@ -6,35 +6,59 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import * as cartUtils from './cartutils';
 import Categories from './Categories';
 import { Context } from './App';
+import { useDispatch, useSelector } from 'react-redux';
+import { handlelogins, setinitialstate } from './actions';
 
 const Home = () => {
 
     const navigate = useNavigate();
 
-    const { contextvalues, setcontextvalues } = useContext(Context);
+    const [contextvalues, setcontextvalues] = useState();
+    const currentstate = useSelector((state) => state)
+    const dispatch = useDispatch();
+    useEffect(() => {
+        const handleStorageChange = (event) => {
+            if (event.key === 'shoppink-store') {
+                const savedState = JSON.parse(event.newValue);
+                dispatch(setinitialstate(savedState)); // Update Redux state
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, [dispatch]);
+
     useEffect(() => {
 
-        const savedStateString = window.localStorage.getItem('shoppink-state');
-        const savedState = savedStateString ? JSON.parse(savedStateString) : contextvalues;
-        console.log("context values in home.jsx", savedState)
-        setcontextvalues(prevValues => {
-            const newState = { ...savedState, ...prevValues }; // merge new state with previous values
-            window.localStorage.setItem('shoppink-state', JSON.stringify(newState));
-            return newState;
-        });
-        //window.localStorage.setItem('shoppink-state', JSON.stringify(savedState));
+        window.localStorage.setItem('shoppink-store', JSON.stringify(currentstate));
+
+    }, [currentstate]);
+    useEffect(() => {
+
+        const savedStateString = window.localStorage.getItem('shoppink-store');
+        if (savedStateString) {
+            const savedState = JSON.parse(savedStateString);
+            console.log("printing savedstate from home localstorage", savedState)
+            dispatch(setinitialstate(savedState))
+        }
+    }, []);
 
 
-    }, [setcontextvalues]);
+
+    useEffect(() => {
+        console.log("Current state updated", currentstate);
+    }, [currentstate]);
 
 
     const togglemenu = () => {
-        setcontextvalues(prev => ({ ...prev, isMenuVisible: !prev.isMenuVisible }))
-        console.log(contextvalues.isMenuVisible)
+        //setcontextvalues(prev => ({ ...prev, isMenuVisible: !prev.isMenuVisible }))
+        console.log(currentstate.isMenuVisible)
     }
 
     const handlehome = () => {
-        if (contextvalues) {
+        /*if (contextvalues) {
 
             const update_values = {
                 ...contextvalues,
@@ -45,32 +69,40 @@ const Home = () => {
             };
             setcontextvalues(update_values)
             window.localStorage.setItem('shoppink-state', JSON.stringify(update_values));
-        }
+        }*/
     }
 
 
     const handlelogin = () => {
 
-        setcontextvalues(prev => ({ ...prev, login: !prev.login, ismemberlist: false, productsdesc: false, placeorder: false, iscategorylist: false, showcart: false }))
+        //setcontextvalues(prev => ({ ...prev, login: !prev.login, ismemberlist: false, productsdesc: false, placeorder: false, iscategorylist: false, showcart: false }))
+        const handle_login_values = {
+            ...currentstate,
+            login: !currentstate.login,
+            ismemberlist: false,
+            productsdesc: false, placeorder: false, iscategorylist: false, showcart: false
+
+        }
+        dispatch(handlelogins(handle_login_values))
 
     }
     const handlecart = () => {
 
-        setcontextvalues(prev => ({
+        /*setcontextvalues(prev => ({
             ...prev, showcart: true,
             login: false, productsdesc: false, signup: false, placeorder: false, iscategorylist: false
-        }))
+        }))*/
 
 
     }
     const handlememberlist = () => {
 
-
-        setcontextvalues(prev => ({ ...prev, ismemberlist: !prev.ismemberlist }))
-
+        /*
+                setcontextvalues(prev => ({ ...prev, ismemberlist: !prev.ismemberlist }))
+        */
     }
     const handlesignout = () => {
-        const up_values = {
+        /*const up_values = {
             ...contextvalues,
             ismemberlist: false, currentuser: {},
             usertxn: [],
@@ -80,7 +112,7 @@ const Home = () => {
             cartcount: 0
         };
         setcontextvalues(up_values)
-        window.localStorage.setItem('shoppink-state', JSON.stringify(up_values));
+        window.localStorage.setItem('shoppink-state', JSON.stringify(up_values));*/
 
 
 
@@ -88,37 +120,37 @@ const Home = () => {
 
     useEffect(() => {
 
-        if (contextvalues.login) {
+        if (currentstate.login) {
 
             navigate('/shoppink/login');
         }
-        else if (contextvalues.signup) {
+        else if (currentstate.signup) {
 
             navigate('/shoppink/signup');
         }
-        else if (contextvalues.productsdesc) {
-            console.log("inside productsdesc home", contextvalues.productsdesc)
+        else if (currentstate.productsdesc) {
+            console.log("inside productsdesc home", currentstate.productsdesc)
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth',
             });
-            navigate(`/productsdesc/${contextvalues.currentpid}`);
+            navigate(`/productsdesc/${currentstate.currentpid}`);
 
         }
-        else if (contextvalues.iscategorylist) {
+        else if (currentstate.iscategorylist) {
             console.log('inside useeffect iscategorylist')
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth',
             });
-            navigate(`/shoppink/categories/${contextvalues.iscategorylist}`)
+            navigate(`/shoppink/categories/${currentstate.iscategorylist}`)
 
         }
-        else if (contextvalues.cartcount > 0 && contextvalues.showcart) {
+        else if (currentstate.cartcount > 0 && currentstate.showcart) {
 
             console.log("inside showcart home")
 
-            setcontextvalues(prev => ({ ...prev, productsdesc: false }))
+            //setcontextvalues(prev => ({ ...prev, productsdesc: false }))
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth',
@@ -128,7 +160,7 @@ const Home = () => {
 
 
         }
-        else if (contextvalues.placeorder) {
+        else if (currentstate.placeorder) {
             console.log("inside useeffect placeorder")
             window.scrollTo({
                 top: 0,
@@ -137,7 +169,7 @@ const Home = () => {
             navigate('/shoppink/orders')
         }
 
-        else if (contextvalues.ishome) {
+        else if (currentstate.ishome) {
             console.log('inside ishome')
             window.scrollTo({
                 top: 0,
@@ -165,25 +197,25 @@ const Home = () => {
         }
 
         //cartUtils.cartcountcalc(contextvalues, setcontextvalues)
-        console.log(contextvalues.isMenuVisible)
+        console.log(currentstate.isMenuVisible)
 
 
-    }, [contextvalues.login, contextvalues.signup, contextvalues.logsubmit, contextvalues.signupsubmit, contextvalues.productsdesc, contextvalues.showcart, contextvalues.cartcount, contextvalues.ishome, contextvalues.productitems, contextvalues.settotalcartvalue, contextvalues.totalcartvalue, contextvalues.placeorder, contextvalues.iscategorylist]);
+    }, [currentstate.login, currentstate.signup, currentstate.logsubmit, currentstate.signupsubmit, currentstate.productsdesc, currentstate.showcart, currentstate.cartcount, currentstate.ishome, currentstate.productitems, currentstate.settotalcartvalue, currentstate.totalcartvalue, currentstate.placeorder, currentstate.iscategorylist]);
 
     const handleuserorders = () => {
 
     }
 
-    useEffect(() => {
+    /*useEffect(() => {
         const temp_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
         setcontextvalues(temp_state)
         window.localStorage.setItem('shoppink-state', JSON.stringify(temp_state))
-        cartUtils.cartcountcalc(setcontextvalues)
+        //cartUtils.cartcountcalc(setcontextvalues)
 
-    }, [contextvalues.cartcount])
+    }, [currentstate.cartcount])*/
     return (
         <>
-            <div className={`${contextvalues.login || contextvalues.signup ? 'fixed -z-10' : 'relative'}`}>
+            <div className={`${currentstate.login || currentstate.signup ? 'fixed -z-10' : 'relative'}`}>
                 <div className='flex  -ml-[2rem]'>
                     <nav className='flex h-[100px] z-10 w-full fixed top-0 left-0 bg-slate-900 sm:h-14 md:h-14 items-start md:items-center '>
                         <div className='flex flex-col w-full ml-2'>
@@ -202,9 +234,9 @@ const Home = () => {
                                         {
 
 
-                                            contextvalues.currentuser && contextvalues.currentuser.firstname ? (
+                                            currentstate.currentuser && currentstate.currentuser.firstname ? (
                                                 <>
-                                                    <li className='flex mr-1 mt-1 text-pink-500  '>{contextvalues.currentuser.firstname}</li>
+                                                    <li className='flex mr-1 mt-1 text-pink-500  '>{currentstate.currentuser.firstname}</li>
                                                     <li className='flex mr-6 text-pink-500 cursor-pointer' onClick={handlememberlist}> <FontAwesomeIcon icon={faUser} size="2x" /> </li>
                                                 </>
                                             ) : (
@@ -216,7 +248,7 @@ const Home = () => {
 
                                         <div className='flex' onClick={handlecart}>
                                             <li className='flex mx-1 hover:text-pink-500 cursor-pointer'> <FontAwesomeIcon icon={faShoppingCart} size="2x" />
-                                                {contextvalues.cartcount != 0 && (<h1 className='absolute -mt-3 ml-2 flex text-black rounded rounded-full items-center justify-center bg-pink-400 font-bold text-md h-[1.5rem] w-[1.5rem]'>{contextvalues.cartcount}</h1>)}</li>
+                                                {currentstate.cartcount != 0 && (<h1 className='absolute -mt-3 ml-2 flex text-black rounded rounded-full items-center justify-center bg-pink-400 font-bold text-md h-[1.5rem] w-[1.5rem]'>{currentstate.cartcount}</h1>)}</li>
                                         </div>
                                     </ul>
                                 </span>
@@ -227,7 +259,7 @@ const Home = () => {
                             </div>
                         </div>
                     </nav>
-                    {contextvalues.ismemberlist && (
+                    {currentstate.ismemberlist && (
 
                         <div className='flex flex-col fixed text-white mt-[4rem] md:mt-[1rem] text-sm md:text-xl ml-[12rem] md:ml-[67rem] bg-slate-900 h-[20rem] w-[11.95rem]'>
                             <div className='flex flex-row  w-full h-[45px] hover:bg-pink-500 hover:cursor-pointer items-center justify-center p-2 text-white' onClick={handlesignout}>
@@ -249,7 +281,7 @@ const Home = () => {
 
 
                     {
-                        contextvalues.isMenuVisible && (
+                        currentstate.isMenuVisible && (
 
                             <Categories />
 

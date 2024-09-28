@@ -4,13 +4,14 @@ import * as Yup from 'yup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faLock, faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons';
 import * as cartUtils from './cartutils';
-import { Context } from './App';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 const Login = () => {
 
-    const { contextvalues, setcontextvalues } = useContext(Context);
-
+    //const { contextvalues, setcontextvalues } = useContext(Context);
+    const dispatch = useDispatch();
+    const currentstate = useSelector((state) => state)
 
     const [login_userdetails, setlogin_userdetails] = useState([{ username: '', password: '' }]);
     const validationSchema1 = Yup.object({
@@ -26,62 +27,44 @@ const Login = () => {
 
     const [showpassword, setshowpassword] = useState(true);
     const [cshowpassword, csetshowpassword] = useState(true);
-    const handleTogglePassword = () => (
+    const handleTogglePassword = () => {
 
-        setshowpassword(prev => !showpassword)
-
-    )
-
-    const handlecopy = (event) => {
-        event.preventDefault();
+        // setshowpassword(prev => !showpassword)
 
     }
-    const handlesubmit = async (values, users, currentuser, setcurrentuser, setusers) => {
+
+    const handlecopy = (event) => {
+        //event.preventDefault();
+
+    }
+    const handlesubmit = async (values, currentstate, dispatch) => {
         console.log("handlesubmit clicked", values)
-        setcontextvalues(prev => ({ ...prev, login: false, signup: false }))
-        setlogin_userdetails(prev => ({
+        //setcontextvalues(prev => ({ ...prev, login: false, signup: false }))
+
+        /*setlogin_userdetails(prev => ({
             ...prev,
             email: values.email,
             password: values.password
-        }))
+        }))*/
+        console.log("dummy")
 
 
-        const [usercheck, c_id] = await cartUtils.loginfunc(values, contextvalues, setcontextvalues)
-        if (usercheck === 1 || usercheck === 0) {
-            console.log("usercheck if", usercheck)
-            setcontextvalues(prev => ({ ...prev, login: true, logsubmit: false }))
+        cartUtils.loginfunc(values, currentstate, dispatch)
 
-
-        }
-        else {
-            console.log("usercheck else", usercheck);
-            const savedState = JSON.parse(window.localStorage.getItem('shoppink-state'))
-            const updatedDefaultValues = {
-                ...savedState,
-                login: false,
-                logsubmit: true
-
-            };
-
-            console.log("context values after updated in login", updatedDefaultValues)
-            window.localStorage.setItem('shoppink-state', JSON.stringify(updatedDefaultValues));
-            setcontextvalues(updatedDefaultValues);
-
-        }
     }
     const handlesignup = () => {
 
-        setcontextvalues(prev => ({ ...prev, login: false, signup: true, currentuser: null }))
+        // setcontextvalues(prev => ({ ...prev, login: false, signup: true, currentuser: null }))
     }
     const handlecancel = () => {
 
-        setcontextvalues(prev => ({ ...prev, login: false, signup: false, currentuser: null }))
+        // setcontextvalues(prev => ({ ...prev, login: false, signup: false, currentuser: null }))
 
     }
 
-    useEffect(() => {
+    /*useEffect(() => {
         console.log("Updated contextvalues:", contextvalues);
-    }, [contextvalues]);
+    }, [contextvalues]);*/
 
     return (
         <>
@@ -89,7 +72,7 @@ const Login = () => {
             <div className='flex fixed inset-0 bg-gray-200 mx-auto w-full h-full justify-center'>
 
 
-                <Formik initialValues={initialValues1} validationSchema={validationSchema1} validateOnMount={true} onSubmit={(values) => handlesubmit(values, contextvalues, setcontextvalues)}>
+                <Formik initialValues={initialValues1} validationSchema={validationSchema1} validateOnMount={true} onSubmit={(values) => handlesubmit(values, currentstate, dispatch)}>
                     {formik => {
 
                         return (

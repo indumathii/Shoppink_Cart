@@ -5,13 +5,12 @@ import * as cartUtils from './cartutils';
 import Slider from "react-slick";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { Context } from './App';
 import httpclient from './Axios'
 
 const Products = () => {
     const navigate = useNavigate();
 
-    const { contextvalues, setcontextvalues } = useContext(Context);
+    //const { contextvalues, setcontextvalues } = useContext(Context);
 
     useEffect(() => {
 

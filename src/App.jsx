@@ -16,77 +16,44 @@ import { useContext } from 'react';
 import { createContext } from 'react';
 import httpclient from './Axios'
 
+
+
 export const Context = React.createContext();
 
 function App() {
-
-  const [defaultvalues, setdefaultvalues] = useState({
-    login: false,
-    signup: false,
-    productsdesc: false,
-    currentuser: {},
-    cartcount: 0,
-    showcart: false,
-    currentpid: false,
-    totalcartvalue: false,
-    placeorder: false,
-    ismemberlist: false,
-    users: [],
-    ishome: false,
-    isMenuVisible: false,
-    iscategorylist: false,
-    logsubmit: false,
-    signupsubmit: false,
-    productitems: [],
-    usertxn: [],
-    isloggedin: false,
-    currentTime: new Date().toLocaleTimeString()
-  })
-
-  const [contextvalues, setcontextvalues] = useState(() => {
-    //window.localStorage.removeItem('shoppink-state');
-    const savedState = window.localStorage.getItem('shoppink-state');
-    console.log("saved state in app.jsx", savedState)
-    console.log("default values in app.jsx", defaultvalues)
-    return savedState ? JSON.parse(savedState) : defaultvalues;
-
-  });
-
-  useEffect(() => {
-    window.localStorage.setItem('shoppink-state', JSON.stringify(contextvalues));
-    console.log("contextvalues in app.jsx useeffect", contextvalues)
-  }, [setcontextvalues]);
-
+  window.localStorage.removeItem('shoppink-state')
 
   return (
     <Router>
-      <Context.Provider value={{ contextvalues, setcontextvalues }}>
-        {/*
+
+      {/*
 <Route path="/shoppink/signup" element={<SignupForm />} />
+
           <Route path="/shoppink/categories/:item" element={<Categorieslist />} />
           <Route path="productsdesc/:p_id" element={<ProductsDescription />} />
           <Route path="/shoppink/cart" element={<Cart />} />
           <Route path="/shoppink/orders" element={<Orders />} />
         */
-          console.log("contextvalues in app.jsx return", contextvalues)
-        }
-        <Home />
+
+      }
+      <Home />
 
 
-        <Routes>
-          <Route path="/shoppink/login" element={<Login />} />
-          <Route path="/home" element={<Products />} />
+      <Routes>
+        <Route path="/shoppink/login" element={<Login />} />
+        <Route path="/home" element={<Home />} />
 
-          {/*
+
+        {/*
           
           
           
           
           <Route path="/dummy" element={<Dummy />} />*/}
-        </Routes>
+      </Routes>
 
-        <Footer />
-      </Context.Provider>
+      <Footer />
+
     </Router>
 
 
