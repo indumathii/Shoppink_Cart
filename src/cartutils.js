@@ -12,65 +12,43 @@ export const handleproductsdesc = (setcontextvalues, p_id, navigate) => {
 
 
 export const addtocart = (setcontextvalues, p_id) => {
-    /*const tmp_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
+    console.log("addtocart clicked")
+    const tmp_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
     const temp_usertxn = tmp_state.usertxn
-    const prd_items=tmp_state.productitems
+    const prd_items = tmp_state.productitems
+    console.log("temp_usertxn", temp_usertxn)
     if (tmp_state.isloggedin) {
-        const selected_txn =temp_usertxn.filter(txns => (txns.user_id === currentuser.id) && txns.product_id=== p_id);
-        if(selected_txn){
+        console.log("user logged in")
+        const selected_txn = temp_usertxn.filter(txns => (txns.user_id === tmp_state.currentuser.id) && txns.product_id === p_id);
+        console.log("selected_txn", selected_txn)
+        if (selected_txn.length === 0) {
+            console.log("inside if loop of selected_txn", selected_txn)
             const txn_items = {
-                ...temp_usertxn,
-                user_id:tmp_state.currentuser.id,
+                user_id: tmp_state.currentuser.id,
                 product_id: p_id,
-                order_quantity:1,
-                cart_status:'Remove from Cart',
-                order_status:'New'
+                order_quantity: 1,
+                cart_status: 'Remove from Cart',
+                order_status: 'New'
             }
-            const new_State={
+            const new_added_txns = [...tmp_state.usertxn, txn_items]
+            const new_State = {
                 ...tmp_state,
-                usertxn:temp_usertxn
+                usertxn: new_added_txns
             }
             setcontextvalues(new_State)
-
-                    }
-    
-                    const updatedQuantity = item.quantity + 1;
-                    const newStatus = updatedQuantity > 0 ? 'Remove from Cart' : item.p_status;
-    
-                    return { ...item, quantity: updatedQuantity, p_status: newStatus };
-                }
-                return item;
-           
+            window.localStorage.setItem('shoppink-state', JSON.stringify(new_State))
+            const saved_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
+            console.log("context values from localstorage updated afted addtocart", saved_state);
         }
-                const newStatus = item.cart_status === 'Add to Cart' ? 'Remove from Cart' : 'Add to Cart';
-                console.log("inside addtocart function in cartutils");
-                console.log("items", item.product_id);
-                console.log("newStatus", newStatus);
+        else {
+            console.log("inside else loop of selected_txn", selected_txn)
 
-                return {
-                    ...item,
-                    cart_status: newStatus,
-                    order_quantity: newStatus !== 'Add to Cart' ? 1 : 0
-                };
-            }
-            return item;
-        });
-
-
-        const txn_items = {
-            ...tmp_state,
-            usertxn: updatedUsertxn
-        };
-
-        setcontextvalues(txn_items)
-        window.localStorage.setItem('shoppink-state', JSON.stringify(txn_items))
-        console.log("added to cart", txn_items)
-        const saved_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
-        console.log("context values from localstorage updated in addtocart", saved_state);
+        }
     }
+
     else {
         alert("Please Login to add items to cart")
-    }*/
+    }
 
 }
 

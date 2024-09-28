@@ -160,7 +160,7 @@ const Home = () => {
 
         }
 
-        // cartUtils.cartcountcalc(contextvalues, setcontextvalues)
+        //cartUtils.cartcountcalc(contextvalues, setcontextvalues)
         console.log(contextvalues.isMenuVisible)
 
 
@@ -169,6 +169,13 @@ const Home = () => {
     const handleuserorders = () => {
 
     }
+
+    useEffect(() => {
+        const temp_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
+        window.localStorage.setItem('shoppink-state', JSON.stringify(temp_state))
+        cartUtils.cartcountcalc(contextvalues, setcontextvalues)
+        console.log("cart count in useeffect", contextvalues)
+    }, [contextvalues.cartcount])
     return (
         <>
             <div className={`${contextvalues.login || contextvalues.signup ? 'fixed -z-10' : 'relative'}`}>

@@ -47,15 +47,15 @@ const Products = () => {
 
     const isproductincart = (product_id) => {
         const isproductvalues = JSON.parse(window.localStorage.getItem('shoppink-state'));
-        console.log("context values in isproductincart", isproductvalues.usertxn)
+
         const user_txns = isproductvalues.usertxn
         if (user_txns.length > 0) {
             const current_prd_txn = user_txns.find(txn => txn.product_id === product_id);
-            console.log("user transaction for curren product", current_prd_txn)
+
             if (current_prd_txn) {
-                console.log("inside current_prd_txn if loop", current_prd_txn)
+
                 if (Object.keys(current_prd_txn).length > 0) {
-                    console.log("inside current prd lenght >0 if loop", current_prd_txn)
+
                     return current_prd_txn.order_quantity
                 }
             }
