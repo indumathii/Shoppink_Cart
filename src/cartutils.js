@@ -19,11 +19,13 @@ export const addtocart = (setcontextvalues, p_id) => {
     console.log("temp_usertxn", temp_usertxn)
     if (tmp_state.isloggedin) {
         console.log("user logged in")
-        const selected_txn = temp_usertxn.filter(txns => (txns.user_id === tmp_state.currentuser.id) && txns.product_id === p_id);
+        const selected_txn = temp_usertxn.filter(txns => (txns.user_id === tmp_state.currentuser.id) && (txns.product_id === p_id) && (txns.cart_status === 'Remove from Cart'));
         console.log("selected_txn", selected_txn)
         if (selected_txn.length === 0) {
             console.log("inside if loop of selected_txn", selected_txn)
+            const maxId = temp_usertxn.length > 0 ? Math.max(...temp_usertxn.map(obj => obj.txn_id)) : 0;
             const txn_items = {
+                txn_id: maxId + 1,
                 user_id: tmp_state.currentuser.id,
                 product_id: p_id,
                 order_quantity: 1,
@@ -116,24 +118,35 @@ export const incrementquantity = (setcontextvalues, p_id) => {
 }
 
 export const decrementquantity = (setcontextvalues, p_id) => {
-    console.log("increment")
-    setcontextvalues(prevState => ({
-        ...prevState,
-        productitems: prevState.productitems.map(item => {
-            if (item.product_id === p_id) {
-                const newQuantity = item.quantity - 1;
-                const updatedQuantity = newQuantity < 0 ? 0 : newQuantity;
-                const newStatus = updatedQuantity === 0 ? 'Add to Cart' : item.p_status;
+    console.log("decrement")
+    const temp_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
+    const user_txn = temp_state.usertxn
+    const selected_txn_index = user_txn.findIndex(txn => txn.product_id === p_id);
 
-                return {
-                    ...item,
-                    quantity: updatedQuantity,
-                    p_status: newStatus
-                };
-            }
-            return item;
-        })
-    }));
+    if (selected_txn_index !== -1) {
+        const updated_txn = {
+            ...user_txn[selected_txn_index], // Keep the existing properties
+            order_quantity: user_txn[selected_txn_index].order_quantity > 0 ? user_txn[selected_txn_index].order_quantity - 1 : 0,
+            cart_status: user_txn[selected_txn_index].order_quantity > 0 ? 'Add to Cart' : 'Remove from Cart'
+        };
+        console.log("updated txn after decrement", updated_txn)
+
+        const updated_user_txn = user_txn.map((txn, index) => {
+            return index === selected_txn_index ? updated_txn : txn;
+        });
+
+        const updated_state = {
+            ...temp_state,
+            usertxn: updated_user_txn
+        };
+        setcontextvalues(updated_state)
+        window.localStorage.setItem('shoppink-state', JSON.stringify(updated_state));
+        const saved_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
+        console.log("context values from localstorage updated in decrement quantity", saved_state);
+
+
+
+    }
 }
 
 

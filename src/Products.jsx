@@ -47,7 +47,8 @@ const Products = () => {
 
     const isproductincart = (product_id) => {
         const isproductvalues = JSON.parse(window.localStorage.getItem('shoppink-state'));
-
+        //const temp = isproductvalues.usertxn.find(txn => txn.product_id === product_id)?.order_quantity || 0
+        //console.log("printing temp in isproductincart", temp)
         const user_txns = isproductvalues.usertxn
         if (user_txns.length > 0) {
             const current_prd_txn = user_txns.find(txn => txn.product_id === product_id);
@@ -181,7 +182,7 @@ const Products = () => {
                                         isproductincart(product.product_id) ? (
                                             <div className='flex flex-row justify-between ml-[2rem] gap-2 w-[3rem] h-[2rem]  items-center'>
                                                 <button className='flex text-3xl -mt-[0.5rem]' onClick={() => cartUtils.decrementquantity(setcontextvalues, product.product_id)} >-</button>
-                                                <input type="text" className='flex text-md h-[1.5rem] w-[2rem] border border-black text-center' value={isproductincart(product.product_id)} />
+                                                <input type="text" className='flex text-md h-[1.5rem] w-[2rem] border border-black text-center' value={contextvalues.usertxn.find(txn => txn.product_id === product.product_id)?.order_quantity || 0} />
                                                 <button className='flex text-2xl -mt-[0.5rem]' onClick={() => cartUtils.incrementquantity(setcontextvalues, product.product_id)}>+</button>
                                             </div>
                                         ) : (
