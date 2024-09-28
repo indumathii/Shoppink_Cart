@@ -174,9 +174,9 @@ const Home = () => {
         const temp_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
         setcontextvalues(temp_state)
         window.localStorage.setItem('shoppink-state', JSON.stringify(temp_state))
-        cartUtils.cartcountcalc(contextvalues, setcontextvalues)
-        console.log("cart count in useeffect", contextvalues)
-    }, [contextvalues.cartcount])
+        cartUtils.cartcountcalc(setcontextvalues)
+
+    }, [contextvalues.cartcount, setcontextvalues])
     return (
         <>
             <div className={`${contextvalues.login || contextvalues.signup ? 'fixed -z-10' : 'relative'}`}>

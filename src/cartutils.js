@@ -19,10 +19,12 @@ export const addtocart = (setcontextvalues, p_id) => {
     console.log("temp_usertxn", temp_usertxn)
     if (tmp_state.isloggedin) {
         console.log("user logged in")
-        const selected_txn = temp_usertxn.filter(txns => (txns.user_id === tmp_state.currentuser.id) && (txns.product_id === p_id) && (txns.cart_status === 'Remove from Cart'));
-        console.log("selected_txn", selected_txn)
-        if (selected_txn.length === 0) {
-            console.log("inside if loop of selected_txn", selected_txn)
+        //const selected_txn = temp_usertxn.filter(txns => (txns.user_id === tmp_state.currentuser.id) && (txns.product_id === p_id))// && (txns.cart_status === 'Remove from Cart'));
+        const selected_txn_index = temp_usertxn.findIndex(txns => (txns.user_id === tmp_state.currentuser.id) && (txns.product_id === p_id));
+        console.log("selected index", selected_txn_index)
+        console.log("selected index item", temp_usertxn[selected_txn_index])
+        if (selected_txn_index === -1) {
+            console.log("inside if loop of selected_txn", temp_usertxn[selected_txn_index])
             const maxId = temp_usertxn.length > 0 ? Math.max(...temp_usertxn.map(obj => obj.txn_id)) : 0;
             const txn_items = {
                 txn_id: maxId + 1,
@@ -32,19 +34,51 @@ export const addtocart = (setcontextvalues, p_id) => {
                 cart_status: 'Remove from Cart',
                 order_status: 'New'
             }
+            console.log("new added item", txn_items)
             const new_added_txns = [...tmp_state.usertxn, txn_items]
             const new_State = {
                 ...tmp_state,
                 usertxn: new_added_txns,
                 cartcount: tmp_state.cartcount + 1
             }
+            console.log("printing new State", new_State)
             setcontextvalues(new_State)
+            cartcountcalc(setcontextvalues)
             window.localStorage.setItem('shoppink-state', JSON.stringify(new_State))
             const saved_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
             console.log("context values from localstorage updated afted addtocart", saved_state);
+            //cartcountcalc(contextvalues, setcontextvalues)
+        }
+        else if (temp_usertxn[selected_txn_index].cart_status === 'Add to Cart') {
+            console.log("inside else if loop of selected_txn")
+
+            console.log("item in add to cart status", temp_usertxn[selected_txn_index])
+            if (selected_txn_index !== -1) {
+                const updated_txn = {
+                    ...temp_usertxn[selected_txn_index], // Keep the existing properties
+                    order_quantity: 1,
+                    cart_status: 'Remove from Cart'
+                };
+
+                console.log("updated txn adding to cart in else if loop", updated_txn)
+
+                const updated_user_txn = temp_usertxn.map((txn, index) => {
+                    return index === selected_txn_index ? updated_txn : txn;
+                });
+
+                const updated_state = {
+                    ...tmp_state,
+                    usertxn: updated_user_txn
+                };
+                setcontextvalues(updated_state)
+                cartcountcalc(setcontextvalues)
+                window.localStorage.setItem('shoppink-state', JSON.stringify(updated_state));
+
+
+            }
         }
         else {
-            console.log("inside else loop of selected_txn", selected_txn)
+            console.log("printing add to cart else loop")
 
         }
     }
@@ -122,17 +156,25 @@ export const decrementquantity = (setcontextvalues, p_id) => {
     const temp_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
     const user_txn = temp_state.usertxn
     const selected_txn_index = user_txn.findIndex(txn => txn.product_id === p_id);
+    console.log("before decrement", user_txn[selected_txn_index])
 
     if (selected_txn_index !== -1) {
-        const updated_txn = {
+        const updated_txn_1 = {
             ...user_txn[selected_txn_index], // Keep the existing properties
             order_quantity: user_txn[selected_txn_index].order_quantity > 0 ? user_txn[selected_txn_index].order_quantity - 1 : 0,
-            cart_status: user_txn[selected_txn_index].order_quantity > 0 ? 'Add to Cart' : 'Remove from Cart'
+
         };
-        console.log("updated txn after decrement", updated_txn)
+        const updated_txn_2 = {
+            ...user_txn[selected_txn_index], // Keep the existing properties
+            cart_status: updated_txn_1.order_quantity > 0 ? 'Remove from Cart' : 'Add to Cart',
+            order_quantity: updated_txn_1.order_quantity
+        };
+
+        console.log("updated txn after decrement", updated_txn_2)
 
         const updated_user_txn = user_txn.map((txn, index) => {
-            return index === selected_txn_index ? updated_txn : txn;
+            return index === selected_txn_index ? updated_txn_2 : txn;
+
         });
 
         const updated_state = {
@@ -140,6 +182,7 @@ export const decrementquantity = (setcontextvalues, p_id) => {
             usertxn: updated_user_txn
         };
         setcontextvalues(updated_state)
+        cartcountcalc(setcontextvalues)
         window.localStorage.setItem('shoppink-state', JSON.stringify(updated_state));
         const saved_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
         console.log("context values from localstorage updated in decrement quantity", saved_state);
@@ -150,12 +193,11 @@ export const decrementquantity = (setcontextvalues, p_id) => {
 }
 
 
-export const cartcountcalc = (contextvalues, setcontextvalues) => {
+export const cartcountcalc = (setcontextvalues) => {
     const temp_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
-    console.log("Cartcount calculation 1", temp_state.currentuser)
-    console.log("Cartcount calculation 2", contextvalues.currentuser)
-    console.log("Cartcount calculation 3", temp_state.usertxn)
+
     const current_cart_items = temp_state.usertxn.filter(txn => txn.cart_status === 'Remove from Cart');
+    console.log("printing cartcountcalc", current_cart_items.length)
     const cartvalues = {
         ...temp_state,
         cartcount: current_cart_items.length
@@ -218,7 +260,7 @@ export const loginfunc = async (values, contextvalues, setcontextvalues) => {
             //const saved_state = window.localStorage.getItem('shoppink-state');
             const saved_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
             console.log("context values from localstorage updated in cartutils", saved_state);
-            cartcountcalc(contextvalues, setcontextvalues)
+            cartcountcalc(setcontextvalues)
 
 
             return [2, userFound.id];
