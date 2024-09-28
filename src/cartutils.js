@@ -1,6 +1,6 @@
 import httpclient from './Axios';
 
-//export const handleproductsdesc = (setproductsdesc, p_id, navigate, setcurrentpid)
+
 export const handleproductsdesc = (setcontextvalues, p_id, navigate) => {
 
     setcontextvalues(prev => ({
@@ -10,29 +10,71 @@ export const handleproductsdesc = (setcontextvalues, p_id, navigate) => {
 
 }
 
-//export const addtocart = ( setproductitems, p_id) => {
+
 export const addtocart = (setcontextvalues, p_id) => {
-    setcontextvalues(prevState => ({
-        ...prevState,
-        productitems: prevState.productitems.map(item => {
-            if (item.product_id === p_id) {
+    /*const tmp_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
+    const temp_usertxn = tmp_state.usertxn
+    const prd_items=tmp_state.productitems
+    if (tmp_state.isloggedin) {
+        const selected_txn =temp_usertxn.filter(txns => (txns.user_id === currentuser.id) && txns.product_id=== p_id);
+        if(selected_txn){
+            const txn_items = {
+                ...temp_usertxn,
+                user_id:tmp_state.currentuser.id,
+                product_id: p_id,
+                order_quantity:1,
+                cart_status:'Remove from Cart',
+                order_status:'New'
+            }
+            const new_State={
+                ...tmp_state,
+                usertxn:temp_usertxn
+            }
+            setcontextvalues(new_State)
+
+                    }
+    
+                    const updatedQuantity = item.quantity + 1;
+                    const newStatus = updatedQuantity > 0 ? 'Remove from Cart' : item.p_status;
+    
+                    return { ...item, quantity: updatedQuantity, p_status: newStatus };
+                }
+                return item;
+           
+        }
                 const newStatus = item.cart_status === 'Add to Cart' ? 'Remove from Cart' : 'Add to Cart';
-                console.log("inside addtocart function in cartutils")
-                console.log("items", item.product_id)
-                console.log("newStatus", newStatus)
+                console.log("inside addtocart function in cartutils");
+                console.log("items", item.product_id);
+                console.log("newStatus", newStatus);
+
                 return {
                     ...item,
                     cart_status: newStatus,
-                    quantity: newStatus !== 'Add to Cart' ? 1 : 0
+                    order_quantity: newStatus !== 'Add to Cart' ? 1 : 0
                 };
             }
             return item;
-        })
-    })
+        });
 
-    );
+
+        const txn_items = {
+            ...tmp_state,
+            usertxn: updatedUsertxn
+        };
+
+        setcontextvalues(txn_items)
+        window.localStorage.setItem('shoppink-state', JSON.stringify(txn_items))
+        console.log("added to cart", txn_items)
+        const saved_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
+        console.log("context values from localstorage updated in addtocart", saved_state);
+    }
+    else {
+        alert("Please Login to add items to cart")
+    }*/
+
 }
-//export const emptycart = (productitems, setproductitems) => {
+
+
 export const emptycart = (setcontextvalues) => {
     alert("Order Placed Successfully")
     setcontextvalues(prevState => ({
@@ -56,7 +98,7 @@ export const emptycart = (setcontextvalues) => {
 }
 
 
-//export const orderplaced = (productitems, setproductitems) => {
+
 export const orderplaced = (contextvalues, setcontextvalues) => {
     setcontextvalues(prevState => ({
         ...prevState,
@@ -72,7 +114,7 @@ export const orderplaced = (contextvalues, setcontextvalues) => {
 
 }
 
-//export const incrementquantity = (productitems, setproductitems, p_id) => 
+
 export const incrementquantity = (setcontextvalues, p_id) => {
     console.log("increment")
     setcontextvalues(prevState => ({
@@ -93,7 +135,7 @@ export const incrementquantity = (setcontextvalues, p_id) => {
         })
     }));
 }
-//export const decrementquantity = (productitems, setproductitems, p_id) =>
+
 export const decrementquantity = (setcontextvalues, p_id) => {
     console.log("increment")
     setcontextvalues(prevState => ({
@@ -115,7 +157,7 @@ export const decrementquantity = (setcontextvalues, p_id) => {
     }));
 }
 
-//export const cartcountcalc = (productitems, cartcount, setcartcount) => {
+
 export const cartcountcalc = (contextvalues, setcontextvalues) => {
     const temp_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
     console.log("Cartcount calculation 1", temp_state.currentuser)
@@ -133,7 +175,7 @@ export const cartcountcalc = (contextvalues, setcontextvalues) => {
 
 }
 
-//export const carttotalvalue = (productitems, settotalcartvalue) => {
+
 export const carttotalvalue = (contextvalues, setcontextvalues) => {
     const inCartItems = contextvalues.productitems.filter(product => product.p_status === 'Remove from Cart');
     console.log("inCartItems", inCartItems)
@@ -148,7 +190,7 @@ export const carttotalvalue = (contextvalues, setcontextvalues) => {
 }
 
 /* Backend Data retrieval Functions */
-//export const loginfunc = async (values, users, currentuser, setcurrentuser, setusers) => {
+
 export const loginfunc = async (values, contextvalues, setcontextvalues) => {
     try {
         console.log("insideloginfunc")

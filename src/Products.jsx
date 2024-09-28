@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as cartUtils from './cartutils';
@@ -12,15 +12,17 @@ const Products = () => {
     const navigate = useNavigate();
 
     const { contextvalues, setcontextvalues } = useContext(Context);
+    const refs = useRef(contextvalues.productitems.map(() => React.createRef()));
     useEffect(() => {
 
 
         const fetchProducts = async () => {
             const productvalues = JSON.parse(window.localStorage.getItem('shoppink-state'));
             console.log("updatatedvalues in products", productvalues)
-
             const response = await httpclient.get('products');
             const products = response.data;
+
+
 
             const productDefaultValues = {
                 ...productvalues,
@@ -37,11 +39,34 @@ const Products = () => {
             setcontextvalues(productDefaultValues1);
             console.log("Products after update in Products.jsx1", productvalues1);
             console.log("Products after update in Products.jsx", productDefaultValues1);
+            console.log("Context values in products after login", contextvalues)
         };
 
         fetchProducts();
     }, [setcontextvalues]);
 
+    const isproductincart = (product_id) => {
+        const isproductvalues = JSON.parse(window.localStorage.getItem('shoppink-state'));
+        console.log("context values in isproductincart", isproductvalues.usertxn)
+        const user_txns = isproductvalues.usertxn
+        if (user_txns.length > 0) {
+            const current_prd_txn = user_txns.find(txn => txn.product_id === product_id);
+            console.log("user transaction for curren product", current_prd_txn)
+            if (current_prd_txn) {
+                console.log("inside current_prd_txn if loop", current_prd_txn)
+                if (Object.keys(current_prd_txn).length > 0) {
+                    console.log("inside current prd lenght >0 if loop", current_prd_txn)
+                    return current_prd_txn.order_quantity
+                }
+            }
+            else
+                return null
+
+        }
+        else {
+            return null
+        }
+    }
 
     useEffect(() => {
         console.log("product.jsx useffect final", contextvalues)
@@ -135,7 +160,7 @@ const Products = () => {
                 <div className=' w-[90vw] grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 top-[5rem] p-4 place-items-center gap-4 border border-black mx-auto'>
                     {
 
-                        contextvalues.productitems.map(product => (
+                        contextvalues.productitems.map((product, index) => (
 
                             <div key={product.product_id} className="flex flex-col border-2 border-pink-500 h-[25rem] w-[14rem] items-center sm:w-[17rem] md:h-[25rem] md:w-[13rem] lg:w-[12rem] xl:w-[15rem] rounded rounded-md bg-[#F8F4FF] " >
                                 <div className='flex mt-3 h-[20rem] w-full justify-center items-start hover:cursor-pointer flex-col' onClick={() => cartUtils.handleproductsdesc(setcontextvalues, product.product_id, navigate)}>
@@ -152,18 +177,19 @@ const Products = () => {
                                 <div className='flex flex-row w-full justify-center items-center -mt-[1rem] h-full'>
                                     <h1 className='flex text-black text-xl font-medium top[-3rem] md:ml-[1rem] -mt-[0.5rem] ml-1'>{product.price}</h1>
                                     {
-                                        product.cart_status === 'Add to Cart' && (
-                                            <button className='flex bg-white border ml-[2rem] justify-center md:text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-sm shadow-md border-1 border-black text-black font-medium rounded rounded-md p-1' onClick={() => cartUtils.addtocart(setcontextvalues, product.product_id)}>Add to Cart</button>
-                                        )
-                                    }
-                                    {
-                                        product.cart_status === 'Remove from Cart' && (
+
+                                        isproductincart(product.product_id) ? (
                                             <div className='flex flex-row justify-between ml-[2rem] gap-2 w-[3rem] h-[2rem]  items-center'>
                                                 <button className='flex text-3xl -mt-[0.5rem]' onClick={() => cartUtils.decrementquantity(setcontextvalues, product.product_id)} >-</button>
-                                                <input type="text" className='flex text-md h-[1.5rem] w-[2rem] border border-black text-center' value={product.stock_quantity} />
+                                                <input type="text" className='flex text-md h-[1.5rem] w-[2rem] border border-black text-center' value={isproductincart(product.product_id)} />
                                                 <button className='flex text-2xl -mt-[0.5rem]' onClick={() => cartUtils.incrementquantity(setcontextvalues, product.product_id)}>+</button>
                                             </div>
+                                        ) : (
+
+                                            <button className='flex bg-white border ml-[2rem] justify-center md:text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-sm shadow-md border-1 border-black text-black font-medium rounded rounded-md p-1' onClick={() => cartUtils.addtocart(setcontextvalues, product.product_id)}>{isproductincart(product.product_id) ? 'Remove from Cart' : 'Add to Cart'}</button>
                                         )
+
+
                                     }
                                 </div>
 
