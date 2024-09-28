@@ -17,11 +17,15 @@ const Home = () => {
         const savedStateString = window.localStorage.getItem('shoppink-state');
         const savedState = savedStateString ? JSON.parse(savedStateString) : contextvalues;
         console.log("context values in home.jsx", savedState)
-        setcontextvalues(savedState)
-        window.localStorage.setItem('shoppink-state', JSON.stringify(contextvalues));
+        setcontextvalues(prevValues => {
+            const newState = { ...savedState, ...prevValues }; // merge new state with previous values
+            window.localStorage.setItem('shoppink-state', JSON.stringify(newState));
+            return newState;
+        });
+        //window.localStorage.setItem('shoppink-state', JSON.stringify(savedState));
 
 
-    }, [setcontextvalues]);
+    }, [setcontextvalues.usertxn]);
 
 
     const togglemenu = () => {

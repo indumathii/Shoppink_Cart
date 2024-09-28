@@ -132,6 +132,36 @@ export const orderplaced = (contextvalues, setcontextvalues) => {
 
 export const incrementquantity = (setcontextvalues, p_id) => {
     console.log("increment")
+    const temp_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
+    const user_txn = temp_state.usertxn
+    const selected_txn_index = user_txn.findIndex(txn => txn.product_id === p_id);
+    console.log("before increment", user_txn[selected_txn_index])
+    if (user_txn[selected_txn_index].order_quantity >= 5) {
+        alert("Sorry, you have reached the maximum limit!");
+    }
+    else {
+        const updated_txn = {
+            ...user_txn[selected_txn_index],
+            order_quantity: user_txn[selected_txn_index].order_quantity + 1
+
+        };
+        const updated_user_txn = user_txn.map((txn, index) => {
+            return index === selected_txn_index ? updated_txn : txn;
+
+        });
+
+        const updated_state = {
+            ...temp_state,
+            usertxn: updated_user_txn
+        };
+        setcontextvalues(updated_state)
+        cartcountcalc(setcontextvalues)
+        window.localStorage.setItem('shoppink-state', JSON.stringify(updated_state));
+        const saved_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
+        console.log("context values from localstorage updated in increment quantity", saved_state);
+
+    }
+
     setcontextvalues(prevState => ({
         ...prevState,
         productitems: prevState.productitems.map(item => {
