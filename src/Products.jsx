@@ -141,9 +141,9 @@ const Products = () => {
 
                                         (currentstate.usertxn.find(txn => txn.product_id === product.product_id)?.order_quantity > 0) ? (
                                             <div className='flex flex-row justify-between ml-[2rem] gap-2 w-[3rem] h-[2rem]  items-center'>
-                                                <button className='flex text-3xl -mt-[0.5rem]' onClick={() => cartUtils.decrementquantity(setcontextvalues, product.product_id)} >-</button>
+                                                <button className='flex text-3xl -mt-[0.5rem]' onClick={() => cartUtils.decrementquantity(currentstate, product.product_id, dispatch)} >-</button>
                                                 <input type="text" className='flex text-md h-[1.5rem] w-[2rem] border border-black text-center' value={currentstate.usertxn.find(txn => txn.product_id === product.product_id)?.order_quantity || 0} />
-                                                <button className='flex text-2xl -mt-[0.5rem]' onClick={() => cartUtils.incrementquantity(setcontextvalues, product.product_id)}>+</button>
+                                                <button className='flex text-2xl -mt-[0.5rem]' onClick={() => cartUtils.incrementquantity(currentstate, product.product_id, dispatch)}>+</button>
                                             </div>
                                         ) : (
 

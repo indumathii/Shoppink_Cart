@@ -1,4 +1,4 @@
-import { add_to_carts, loginfailure, loginsuccess, setinitialstate } from './actions';
+import { add_to_carts, decrements_quantity, increments_quantity, loginfailure, loginsuccess, setinitialstate } from './actions';
 import httpclient from './Axios';
 
 
@@ -53,7 +53,7 @@ export const orderplaced = (contextvalues, setcontextvalues) => {
 }
 
 
-export const incrementquantity = (setcontextvalues, p_id) => {
+export const incrementquantity = (currentstate, p_id, dispatch) => {
     console.log("increment")
     const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
     const user_txn = temp_state.usertxn
@@ -77,35 +77,18 @@ export const incrementquantity = (setcontextvalues, p_id) => {
             ...temp_state,
             usertxn: updated_user_txn
         };
-        setcontextvalues(updated_state)
 
-        cartcountcalc(setcontextvalues)
+        dispatch(increments_quantity(updated_state))
         window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));
         const saved_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
         console.log("context values from localstorage updated in increment quantity", saved_state);
 
     }
 
-    setcontextvalues(prevState => ({
-        ...prevState,
-        productitems: prevState.productitems.map(item => {
-            if (item.product_id === p_id) {
-                if (item.quantity >= 5) {
-                    alert("Sorry, you have reached the maximum limit!");
-                    return item;
-                }
 
-                const updatedQuantity = item.quantity + 1;
-                const newStatus = updatedQuantity > 0 ? 'Remove from Cart' : item.p_status;
-
-                return { ...item, quantity: updatedQuantity, p_status: newStatus };
-            }
-            return item;
-        })
-    }));
 }
 
-export const decrementquantity = (setcontextvalues, p_id) => {
+export const decrementquantity = (currentstate, p_id, dispatch) => {
     console.log("decrement")
     const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
     const user_txn = temp_state.usertxn
@@ -135,9 +118,7 @@ export const decrementquantity = (setcontextvalues, p_id) => {
             ...temp_state,
             usertxn: updated_user_txn
         };
-        setcontextvalues(updated_state)
-
-        cartcountcalc(setcontextvalues)
+        dispatch(decrements_quantity(updated_state))
         window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));
         const saved_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
         console.log("context values from localstorage updated in decrement quantity", saved_state);

@@ -26,6 +26,8 @@ export const HANDLE_MEMBER_LIST = 'HANDLE_MEMBER_LIST';
 export const HANDLE_SIGNOUT = 'HANDLE-SIGNOUT';
 export const PRODUCTS_DISPATCH = 'PRODUCTS_DISPATCH';
 export const ADD_TO_CART = 'ADD_TO_CART';
+export const INCREMENT_QUANTITY = 'INCREMENT_QUANTITY';
+export const DECREMENT_QUANTITY = 'DECREMENT_QUANTITY';
 
 export const loginsuccess = (payload) => ({
     type: LOGIN_SUCCESS,
@@ -72,5 +74,17 @@ export const products_dispatch = (payload) => ({
 
 export const add_to_carts = (payload) => ({
     type: ADD_TO_CART,
+    payload,
+})
+
+
+export const increments_quantity = (payload) => ({
+    type: INCREMENT_QUANTITY,
+    payload,
+})
+
+
+export const decrements_quantity = (payload) => ({
+    type: DECREMENT_QUANTITY,
     payload,
 })
