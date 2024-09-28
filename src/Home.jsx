@@ -7,7 +7,7 @@ import * as cartUtils from './cartutils';
 import Categories from './Categories';
 import { Context } from './App';
 import { useDispatch, useSelector } from 'react-redux';
-import { handlelogins, setinitialstate } from './actions';
+import { handlelogins, setinitialstate, handlememberlists, handlesign_out } from './actions';
 
 const Home = () => {
 
@@ -16,19 +16,6 @@ const Home = () => {
     const [contextvalues, setcontextvalues] = useState();
     const currentstate = useSelector((state) => state)
     const dispatch = useDispatch();
-    useEffect(() => {
-        const handleStorageChange = (event) => {
-            if (event.key === 'shoppink-store') {
-                const savedState = JSON.parse(event.newValue);
-                dispatch(setinitialstate(savedState)); // Update Redux state
-            }
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-        return () => {
-            window.removeEventListener('storage', handleStorageChange);
-        };
-    }, [dispatch]);
 
     useEffect(() => {
 
@@ -44,8 +31,6 @@ const Home = () => {
             dispatch(setinitialstate(savedState))
         }
     }, []);
-
-
 
     useEffect(() => {
         console.log("Current state updated", currentstate);
@@ -97,25 +82,29 @@ const Home = () => {
     }
     const handlememberlist = () => {
 
-        /*
-                setcontextvalues(prev => ({ ...prev, ismemberlist: !prev.ismemberlist }))
-        */
+        const handle_memberlist_values = {
+            ...currentstate,
+            ismemberlist: !currentstate.ismemberlist,
+
+        }
+        window.localStorage.setItem('shoppink-store', JSON.stringify(handle_memberlist_values));
+        dispatch(handlememberlists(handle_memberlist_values));
+        //setcontextvalues(prev => ({ ...prev, ismemberlist: !prev.ismemberlist }))
+
     }
     const handlesignout = () => {
-        /*const up_values = {
-            ...contextvalues,
-            ismemberlist: false, currentuser: {},
+        const handle_signout_values = {
+            ...currentstate,
+            ismemberlist: false,
+            currentuser: {},
             usertxn: [],
             users: [],
             isloggedin: false,
             currentTime: new Date().toLocaleTimeString(),
             cartcount: 0
         };
-        setcontextvalues(up_values)
-        window.localStorage.setItem('shoppink-state', JSON.stringify(up_values));*/
-
-
-
+        window.localStorage.setItem('shoppink-store', JSON.stringify(handle_signout_values));
+        dispatch(handlesign_out(handle_signout_values))
     }
 
     useEffect(() => {

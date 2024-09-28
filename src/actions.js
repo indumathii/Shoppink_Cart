@@ -21,7 +21,9 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 export const HANDLE_LOGIN = 'HANDLE_LOGIN';
 export const HANDLE_SUBMIT = 'HANDLE_SUBMIT';
-export const SET_INITIAL_STATE = 'SET_INITIAL_STATE'
+export const SET_INITIAL_STATE = 'SET_INITIAL_STATE';
+export const HANDLE_MEMBER_LIST = 'HANDLE_MEMBER_LIST';
+export const HANDLE_SIGNOUT = 'HANDLE-SIGNOUT';
 
 export const loginsuccess = (payload) => ({
     type: LOGIN_SUCCESS,
@@ -45,5 +47,16 @@ export const handlesubmits = (payload) => ({
 
 export const setinitialstate = (payload) => ({
     type: SET_INITIAL_STATE,
+    payload,
+})
+
+export const handlememberlists = (payload) => ({
+    type: HANDLE_MEMBER_LIST,
+    payload,
+})
+
+
+export const handlesign_out = (payload) => ({
+    type: HANDLE_SIGNOUT,
     payload,
 })
