@@ -139,7 +139,7 @@ const Products = () => {
                                 <div className='flex flex-row w-full justify-center items-center -mt-[1rem] h-full'>
                                     <h1 className='flex text-black text-xl font-medium top[-3rem] md:ml-[1rem] -mt-[0.5rem] ml-1'>{product.price}</h1>
                                     {
-                                        currentstate.usertxn && currentstate.usertxn.user_id ? (
+                                        (
                                             currentstate.usertxn.find(txn =>
                                                 txn.user_id === currentstate.currentuser.id &&
                                                 txn.product_id === product.product_id
@@ -158,8 +158,6 @@ const Products = () => {
                                                     {currentstate.usertxn.find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === product.product_id)?.order_quantity > 0 && currentstate.usertxn.find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === product.product_id)?.order_status !== 'Placed' ? 'Remove from Cart' : 'Add to Cart'}
                                                 </button>
                                             )
-                                        ) : (
-                                            <div>No user transaction data available</div> // Fallback for when user_id is null
                                         )
                                     }
                                 </div>
