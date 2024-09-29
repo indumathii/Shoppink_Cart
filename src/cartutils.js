@@ -1,6 +1,31 @@
-import { add_to_carts, cartcountcalculation, decrements_quantity, increments_quantity, loginfailure, loginsuccess, setinitialstate } from './actions';
+import { add_to_carts, cart_total_value, cartcountcalculation, decrements_quantity, increments_quantity, loginfailure, loginsuccess, setinitialstate } from './actions';
 import httpclient from './Axios';
 
+
+
+export const carttotalvalue = async (currentstate, dispatch) => {
+    const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
+    const user_txn = temp_state.usertxn
+    console.log("currentstate", currentstate.currentuser.id)
+    const response = await httpclient.get(`txns/cart/${currentstate.currentuser.id}`)
+    const inCartItems = response.data;
+    console.log("inCartItems", inCartItems)
+    const addedtocart_items = inCartItems.filter(item => item.cart_status === 'Remove from Cart');
+    const totalvalue = addedtocart_items.reduce((total, product) => {
+        const tempprice = parseInt(product.price.replace('$', ''));
+        return total + (tempprice * product.order_quantity);
+    }, 0);
+
+    const cartvalues = {
+        ...temp_state,
+        totalcartvalue: totalvalue,
+        currentcart_txns: inCartItems
+    }
+
+    dispatch(cart_total_value(cartvalues))
+
+
+}
 
 export const handleproductsdesc = (setcontextvalues, p_id, navigate) => {
 
@@ -147,19 +172,6 @@ export const cartcountcalc = (currentstate, dispatch) => {
 
 }
 
-
-export const carttotalvalue = (contextvalues, setcontextvalues) => {
-    const inCartItems = contextvalues.productitems.filter(product => product.p_status === 'Remove from Cart');
-    console.log("inCartItems", inCartItems)
-
-    const totalvalue = inCartItems.reduce((total, product) => {
-        const tempprice = parseInt(product.p_price.replace('$', ''));
-        return total + (tempprice * product.quantity);
-    }, 0);
-    setcontextvalues(prev => ({ ...prev, totalcartvalue: totalvalue }))
-
-
-}
 
 export const addtocart = (currentstate, p_id, dispatch) => {
     console.log("addtocart clicked")

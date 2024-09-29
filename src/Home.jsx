@@ -7,7 +7,7 @@ import * as cartUtils from './cartutils';
 import Categories from './Categories';
 import { Context } from './App';
 import { useDispatch, useSelector } from 'react-redux';
-import { handlelogins, setinitialstate, handlememberlists, handlesign_out } from './actions';
+import { handlelogins, setinitialstate, handlememberlists, handlesign_out, show_cart } from './actions';
 
 const Home = () => {
 
@@ -73,6 +73,13 @@ const Home = () => {
     }
     const handlecart = () => {
 
+        const handle_cart_items = {
+            ...currentstate,
+            showcart: true,
+            login: false, productsdesc: false, signup: false, placeorder: false, iscategorylist: false
+
+        }
+        dispatch(show_cart(handle_cart_items))
         /*setcontextvalues(prev => ({
             ...prev, showcart: true,
             login: false, productsdesc: false, signup: false, placeorder: false, iscategorylist: false
@@ -136,10 +143,7 @@ const Home = () => {
 
         }
         else if (currentstate.cartcount > 0 && currentstate.showcart) {
-
             console.log("inside showcart home")
-
-            //setcontextvalues(prev => ({ ...prev, productsdesc: false }))
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth',
@@ -171,21 +175,9 @@ const Home = () => {
 
         }
         else {
-
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth',
-            });
             console.log("navigating to home")
             navigate('/home');
-
-
-            //setcontextvalues(prev => ({ ...prev, currentpid: null }))
-
-
         }
-
-        //cartUtils.cartcountcalc(currentstate, dispatch)
         console.log(currentstate.isMenuVisible)
 
 
@@ -195,13 +187,7 @@ const Home = () => {
 
     }
 
-    /*useEffect(() => {
-        const temp_state = JSON.parse(window.localStorage.getItem('shoppink-state'))
-        setcontextvalues(temp_state)
-        window.localStorage.setItem('shoppink-state', JSON.stringify(temp_state))
-        //cartUtils.cartcountcalc(setcontextvalues)
 
-    }, [currentstate.cartcount])*/
     return (
         <>
             <div className={`${currentstate.login || currentstate.signup ? 'fixed -z-10' : 'relative'}`}>

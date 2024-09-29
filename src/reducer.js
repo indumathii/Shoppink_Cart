@@ -1,5 +1,5 @@
 //import { ADD_TO_CART, REMOVE_FROM_CART, UPDATE_CART_QUANTITY } from './actions';
-import { ADD_TO_CART, CART_COUNT_CALCULATION, DECREMENT_QUANTITY, HANDLE_LOGIN, HANDLE_MEMBER_LIST, HANDLE_SIGNOUT, HANDLE_SUBMIT, INCREMENT_QUANTITY, LOGIN_FAILURE, LOGIN_SUCCESS, PRODUCTS_DISPATCH, SET_INITIAL_STATE } from './actions';
+import { ADD_TO_CART, CART_COUNT_CALCULATION, CART_TOTAL_VALUE, DECREMENT_QUANTITY, HANDLE_LOGIN, HANDLE_MEMBER_LIST, HANDLE_PLACE_ORDER, HANDLE_SIGNOUT, HANDLE_SUBMIT, INCREMENT_QUANTITY, LOGIN_FAILURE, LOGIN_SUCCESS, PRODUCTS_DISPATCH, SET_INITIAL_STATE, SHOW_CART } from './actions';
 
 const initialState = {
 
@@ -10,7 +10,7 @@ const initialState = {
     cartcount: 0,
     showcart: false,
     currentpid: false,
-    totalcartvalue: false,
+    totalcartvalue: 0,
     placeorder: false,
     ismemberlist: false,
     users: [],
@@ -22,6 +22,7 @@ const initialState = {
     productitems: [],
     usertxn: [],
     isloggedin: false,
+    currentcart_txns: [],
     currentTime: new Date().toLocaleTimeString()
 
 };
@@ -89,6 +90,23 @@ const cartReducer = (state = initialState, action) => {
                 ...state,
                 ...action.payload,
             };
+        case SHOW_CART:
+            return {
+                ...state,
+                ...action.payload,
+            };
+        case HANDLE_PLACE_ORDER:
+            return {
+                ...state,
+                ...action.payload,
+            };
+        case CART_TOTAL_VALUE:
+            return {
+                ...state,
+                ...action.payload,
+            };
+
+
 
 
         default:
