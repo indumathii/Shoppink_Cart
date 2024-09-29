@@ -173,7 +173,7 @@ export const cartcountcalc = (currentstate, dispatch) => {
 }
 
 
-export const addtocart = (currentstate, p_id, dispatch) => {
+export const addtocart = async (currentstate, p_id, dispatch) => {
     console.log("addtocart clicked")
     const tmp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
     const temp_usertxn = tmp_state.usertxn
@@ -206,8 +206,12 @@ export const addtocart = (currentstate, p_id, dispatch) => {
 
 
             dispatch(add_to_carts(new_State));
-            //
             window.localStorage.setItem('shoppink-store', JSON.stringify(new_State))
+            const usr_tns = await httpclient.post('txns', txn_items);
+            return usr_tns.data;
+
+            //
+
             const saved_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
             console.log("context values from localstorage updated afted addtocart", saved_state);
             cartcountcalc(currentstate, dispatch)
