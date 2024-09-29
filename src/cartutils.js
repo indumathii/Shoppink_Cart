@@ -85,10 +85,10 @@ export const emptycart = (setcontextvalues) => {
 
 export const orderplaced = async (currentstate, dispatch) => {
     alert('Order Placed Successfully')
-    const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
+    const temp_state = currentstate //JSON.parse(window.localStorage.getItem('shoppink-store'))
     const current_cart_items = temp_state.currentcart_txns.filter(txn => txn.cart_status === 'Remove from Cart');
     console.log("orders placed", current_cart_items)
-    let updated_user_txn = []
+    let updatedUsTxns = []
     for (const product of current_cart_items) {
         console.log("printing temp_state", temp_state)
         console.log("printing user txn", temp_state.usertxn)
@@ -99,24 +99,25 @@ export const orderplaced = async (currentstate, dispatch) => {
             cart_status: 'Add to Cart'
 
         }
-        console.log("updated user value in place order", updated_value)
+        /*console.log("updated user value in place order", updated_value)
 
         updatedUsTxns = [
-            ...usertxns.slice(0, selected_txn_index - 1),
-            { ...usertxns[1], ...updatedValues },
-            ...usertxns.slice(selected_txn_index)
-        ];
+            ...temp_state.usertxn.slice(0, selected_txn_index - 1),
+            { ...temp_state.usertxn[1], ...updated_value },
+            ...temp_state.usertxn.slice(selected_txn_index)
+        ];*/
 
 
         await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${product.product_id}`, updated_value);
 
 
     }
-
-    console.log("updated placed order txn", updated_user_txn)
+    const res = await httpclient.get('txns');
+    const usr_txns = res.data;
+    const currentuser_txn = usr_txns.filter(txn => txn.user_id === currentstate.currentuser.id);
     const updated_state = {
         ...temp_state,
-        usertxn: updatedUsTxns,
+        usertxn: currentuser_txn,
         showcart: false
     };
     console.log("updated user transaction in order placed", updated_state)
@@ -288,7 +289,8 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
                 const updated_txn = {
                     ...temp_usertxn[selected_txn_index], // Keep the existing properties
                     order_quantity: 1,
-                    cart_status: 'Remove from Cart'
+                    cart_status: 'Remove from Cart',
+                    order_status: 'New'
                 };
 
                 console.log("updated txn adding to cart in else if loop", updated_txn)
