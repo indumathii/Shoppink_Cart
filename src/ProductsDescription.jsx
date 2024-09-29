@@ -4,14 +4,15 @@ import * as cartUtils from './cartutils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { Context } from './App';
+import { useSelector } from 'react-redux';
 
 
 const ProductsDescription = () => {
-    const { contextvalues, setcontextvalues } = useContext(Context);
+    const currentstate = useSelector((state) => state);
     const { p_id } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
-    const product = contextvalues.productitems.find(item => item.p_id === parseInt(p_id, 10));
+    const product = currentstate.productitems.find(item => item.p_id === parseInt(p_id, 10));
     console.log("p_id", p_id);
 
     /* useEffect(() => {
@@ -35,14 +36,14 @@ const ProductsDescription = () => {
 
 
     return (
-        <div className={`${contextvalues.isMenuVisible ? 'relative -z-10' : 'relative'} `}>
+        <div className={`${currentstate.isMenuVisible ? 'relative -z-10' : 'relative'} `}>
             <div className='h-[80vh] fixed inset-0  w-[90vw] md:w-[80vw] sm:w-[80vw] md:mt-15 bg-pink-200 mx-auto mt-[7rem] md:mt-[5rem]'>
                 <div className='h-full w-full p-10 flex'>
                     <div className='flex flex-col sm:flex-col lg:flex-row items-start'>
-                        <img className='flex h-[30vh] sm:h-[25vh] md:h-[25vh] lg:h-[35vh]' src={product.p_img} alt={product.p_name} />
+                        <img className='flex h-[30vh] sm:h-[25vh] md:h-[25vh] lg:h-[35vh]' src={product.image_link} alt={product.product_name} />
                         <div className='flex flex-col ml-[2rem] items-start'>
-                            <h1 className='flex text-black text-3xl font-bold '>{product.p_name}</h1>
-                            <div className='product-rating text-xs mt-[0.5rem] text-left' id={product.p_id}>
+                            <h1 className='flex text-black text-3xl font-bold '>{product.product_name}</h1>
+                            <div className='product-rating text-xs mt-[0.5rem] text-left' id={product.product_id}>
                                 {(() => {
                                     const stars = [];
                                     for (let i = 0; i < product.p_rating; i++) {
@@ -51,12 +52,12 @@ const ProductsDescription = () => {
                                     return stars;
                                 })()}
                             </div>
-                            <h1 className='flex text-xs italic text-left'>{product.p_sales}</h1>
-                            <p className='flex mt-[1rem] text-left'>{product.p_desc}</p>
+                            <h1 className='flex text-xs italic text-left'>{product.sales}</h1>
+                            <p className='flex mt-[1rem] text-left'>{product.product_description}</p>
                             <div className='flex mt-[5rem] items-start justify-center -ml-[1rem]'>
-                                <h1 className='flex text-black text-2xl font-medium top[-3rem]  md:ml-[1rem] '>{product.p_price}</h1>
+                                <h1 className='flex text-black text-2xl font-medium top[-3rem]  md:ml-[1rem] '>{product.price}</h1>
                                 {
-                                    product.p_status === 'Add to Cart' && (
+                                    product.cart_status === 'Add to Cart' && (
                                         <button className='flex bg-white border ml-[2rem] justify-center md:text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-md shadow-md border-1 border-black text-black font-bold rounded rounded-md p-3' onClick={() => cartUtils.addtocart(setcontextvalues, product.p_id)}>Add to Cart</button>
                                     )
                                 }

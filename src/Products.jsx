@@ -7,7 +7,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import httpclient from './Axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { products_dispatch } from './actions';
+import { handle_banner, products_dispatch } from './actions';
 
 const Products = () => {
     const navigate = useNavigate();
@@ -35,32 +35,39 @@ const Products = () => {
     }, []);
 
 
-    /*const handlebanner = (category) => {
-        setcontextvalues(prev => ({ ...prev, iscategorylist: category, login: false, productdesc: false, signup: false, showcart: false, placeorder: false, ishome: false }))
-    }*/
+    const handlebanner = (category) => {
+
+        const productDefaultValues = {
+            ...currentstate,
+            iscategorylist: category, login: false, productdesc: false, signup: false, showcart: false, placeorder: false, ishome: false
+
+        };
+        dispatch(handle_banner(productDefaultValues))
+
+    }
     const bannerimages = [
         {
-            category: 'w-dress',
+            category: 'Women Dresses',
             c_img: "https://www.beyoung.in/blog/wp-content/uploads/2022/02/header-1.jpg"
         },
         {
-            category: 'm-dress',
+            category: 'Women Dresses',
             c_img: "https://myraymond.com/cdn/shop/files/PAY_DAY-_website_banner_d92cf258-7496-4178-a175-fa3a93215e87.png?v=1725535588"
         },
         {
-            category: 'furn',
+            category: 'Furnitures',
             c_img: "https://indiater.com/wp-content/uploads/2021/09/furniture-and-interior-detail-store-promotion-sale-ads-banner-on-yellow-floor-and-background-1536x592.jpg"
         },
         {
-            category: 'elect',
+            category: 'Electronics',
             c_img: "https://www.bajajmall.in/content/dam/emistoremarketplace/index/10-10-22/swami/washing-machines-diwali-offers/big-banner/WMCLP_Row4_1_BigBanner_Desk_WMGen_PLP_B2B.jpg"
         },
         {
-            category: 'groc',
+            category: 'Groceries',
             c_img: "https://media.istockphoto.com/id/516790252/vector/grocery-shopping.jpg?s=612x612&w=0&k=20&c=RjfUJ8j8StyIfTgPRA26O3qNGvL-1OyxXiDNWNmJFq8="
         },
         {
-            category: 'tys',
+            category: 'Toys',
             c_img: "https://img.freepik.com/free-vector/hand-drawn-kids-toys-sale-banner_23-2149651210.jpg"
         }
     ]

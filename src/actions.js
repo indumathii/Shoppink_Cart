@@ -35,6 +35,7 @@ export const CART_TOTAL_VALUE = 'CART_TOTAL_VALUE';
 export const HANDLE_HOME = 'HANDLE_HOME';
 export const PLACE_ORDER = 'PLACE_ORDER';
 export const YOUR_ORDERS = 'YOUR_ORDERS';
+export const HANDLE_BANNER = 'HANDLE_BANNER'
 
 export const loginsuccess = (payload) => ({
     type: LOGIN_SUCCESS,
@@ -131,5 +132,10 @@ export const place_order = (payload) => ({
 
 export const your_orders = (payload) => ({
     type: YOUR_ORDERS,
+    payload,
+})
+
+export const handle_banner = (payload) => ({
+    type: HANDLE_BANNER,
     payload,
 })
