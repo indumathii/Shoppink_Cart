@@ -7,7 +7,7 @@ import * as cartUtils from './cartutils';
 import Categories from './Categories';
 import { Context } from './App';
 import { useDispatch, useSelector } from 'react-redux';
-import { handlelogins, setinitialstate, handlememberlists, handlesign_out, show_cart, handle_home, your_orders } from './actions';
+import { handlelogins, setinitialstate, handlememberlists, handlesign_out, show_cart, handle_home, your_orders, place_order } from './actions';
 
 const Home = () => {
 
@@ -51,7 +51,8 @@ const Home = () => {
             productsdesc: false,
             signup: false,
             placeorder: false, iscategorylist: false, showcart: false,
-            currentTime: new Date().toLocaleTimeString(), ishome: true
+            currentTime: new Date().toLocaleTimeString(), ishome: true,
+            yourorders: false
         };
         dispatch(handle_home(update_values))
         window.localStorage.setItem('shoppink-store', JSON.stringify(update_values));
@@ -108,6 +109,8 @@ const Home = () => {
             currentTime: new Date().toLocaleTimeString(),
             cartcount: 0,
             showcart: false,
+            your_orders: false,
+            place_order: false
 
         };
         console.log("handle sign out values", handle_signout_values)

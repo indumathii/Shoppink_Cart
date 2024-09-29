@@ -36,7 +36,7 @@ const Orders = () => {
                                     <img className='object-cover hover:scale-105 h-[7rem] w-[6rem] md:h-[9rem] md:w-[10rem] p-2' src={product.image_link} alt={product.product_name} />
                                     <div className='flex flex-col ml-2 md:ml-5 w-full'>
                                         <h1 className='flex text-black text-md md:text-xl font-bold mt-2'>{product.product_name}</h1>
-                                        <h1 className='flex text-black text-sm font-bold text-red-600 mt-5 ml-[15rem]'>Arriving on {`${new Date(new Date().setDate(new Date().getDate() + product.days_of_delivery)).getDate()}${["th", "st", "nd", "rd"][(new Date().getDate() + product.days_of_delivery) % 10 > 3 ? 0 : (new Date().getDate() + product.days_of_delivery) % 10]} ${new Date(new Date().setDate(new Date().getDate() + product.days_of_delivery)).toLocaleString('default', { month: 'long' })}`}</h1>
+                                        <h1 className='flex italic text-black text-sm font-bold text-red-600 mt-5 ml-[15rem]'>Arriving on {`${new Date(new Date().setDate(new Date().getDate() + product.days_of_delivery)).getDate()}${["th", "st", "nd", "rd"][(new Date().getDate() + product.days_of_delivery) % 10 > 3 ? 0 : (new Date().getDate() + product.days_of_delivery) % 10]} ${new Date(new Date().setDate(new Date().getDate() + product.days_of_delivery)).toLocaleString('default', { month: 'long' })}`}</h1>
                                     </div>
                                 </div>
                             ))

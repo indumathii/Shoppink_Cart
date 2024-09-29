@@ -16,7 +16,7 @@ import { useContext } from 'react';
 import { createContext } from 'react';
 import httpclient from './Axios'
 import YourOrder from './YourOrder';
-import UserOrders from './UserOrders';
+
 
 
 
@@ -46,7 +46,7 @@ function App() {
         <Route path="/home" element={<Products />} />
         <Route path="/shoppink/cart" element={<Cart />} />
         <Route path="/shoppink/orders" element={<Orders />} />
-        <Route path="/shoppink/yourorders" element={<UserOrders />} />
+        <Route path="/shoppink/yourorders" element={<YourOrder />} />
 
 
         {/*
