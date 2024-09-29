@@ -14,7 +14,8 @@ const Cart = () => {
     useEffect(() => {
         cartUtils.carttotalvalue(currentstate, dispatch)
         console.log('orderplaced inside useeffect', currentstate.productitems)
-    }, [currentstate.totalcartvalue]);
+    }, [currentstate.carttotalvalue]);
+
     const add_cartitems = Array.isArray(currentstate.currentcart_txns) ? currentstate.currentcart_txns.filter(product => product.cart_status === 'Remove from Cart') : [];
     const handleplaceorder = () => {
         console.log("inside handleplaceorder")
@@ -51,7 +52,7 @@ const Cart = () => {
                                         <div className='flex flex-col md:flex-row justify-between w-full  md:mx-2'>
                                             <div className='flex flex-row mt-2 p-2 justify-between w-[3rem] h-[3rem] md:w-[6rem] md:mt-[2rem]'>
                                                 <button className='flex text-3xl -mt-[0.5rem] mx-1' onClick={() => cartUtils.decrementquantity(currentstate, product.product_id, dispatch)} >-</button>
-                                                <input type="text" className='flex mx-1 text-sm h-[1.5rem] w-[2rem] border border-black text-center' value={product.order_quantity} />
+                                                <input type="text" className='flex mx-1 text-sm h-[1.5rem] w-[2rem] border border-black text-center' value={currentstate.usertxn.find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === product.product_id)?.order_quantity || 0} />
                                                 <button className='flex text-2xl mx-1 -mt-[0.5rem]' onClick={() => cartUtils.incrementquantity(currentstate, product.product_id, dispatch)}>+</button>
                                             </div>
                                             <h1 className='flex text-black text-md ml-[3.75rem] mt-4 md:mt-4 mr-[1rem] md:mr-[2rem] md:text-lg font-bold  mt-2 mr-10'>Price: {product.price}</h1>

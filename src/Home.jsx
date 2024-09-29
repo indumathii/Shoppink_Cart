@@ -7,7 +7,7 @@ import * as cartUtils from './cartutils';
 import Categories from './Categories';
 import { Context } from './App';
 import { useDispatch, useSelector } from 'react-redux';
-import { handlelogins, setinitialstate, handlememberlists, handlesign_out, show_cart } from './actions';
+import { handlelogins, setinitialstate, handlememberlists, handlesign_out, show_cart, handle_home } from './actions';
 
 const Home = () => {
 
@@ -45,19 +45,18 @@ const Home = () => {
     }
 
     const handlehome = () => {
-        /*if (contextvalues) {
 
-            const update_values = {
-                ...contextvalues,
-                productsdesc: false,
-                signup: false,
-                placeorder: false, iscategorylist: false, showcart: false,
-                currentTime: new Date().toLocaleTimeString(), ishome: true
-            };
-            setcontextvalues(update_values)
-            window.localStorage.setItem('shoppink-state', JSON.stringify(update_values));
-        }*/
+        const update_values = {
+            ...currentstate,
+            productsdesc: false,
+            signup: false,
+            placeorder: false, iscategorylist: false, showcart: false,
+            currentTime: new Date().toLocaleTimeString(), ishome: true
+        };
+        dispatch(handle_home(update_values))
+        window.localStorage.setItem('shoppink-store', JSON.stringify(update_values));
     }
+
 
 
     const handlelogin = () => {
@@ -82,10 +81,7 @@ const Home = () => {
 
         }
         dispatch(show_cart(handle_cart_items))
-        /*setcontextvalues(prev => ({
-            ...prev, showcart: true,
-            login: false, productsdesc: false, signup: false, placeorder: false, iscategorylist: false
-        }))*/
+
 
 
     }

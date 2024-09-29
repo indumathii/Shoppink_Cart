@@ -1,5 +1,5 @@
 //import { ADD_TO_CART, REMOVE_FROM_CART, UPDATE_CART_QUANTITY } from './actions';
-import { ADD_TO_CART, CART_COUNT_CALCULATION, CART_TOTAL_VALUE, DECREMENT_QUANTITY, HANDLE_LOGIN, HANDLE_MEMBER_LIST, HANDLE_PLACE_ORDER, HANDLE_SIGNOUT, HANDLE_SUBMIT, INCREMENT_QUANTITY, LOGIN_FAILURE, LOGIN_SUCCESS, PRODUCTS_DISPATCH, SET_INITIAL_STATE, SHOW_CART } from './actions';
+import { ADD_TO_CART, CART_COUNT_CALCULATION, CART_TOTAL_VALUE, DECREMENT_QUANTITY, HANDLE_HOME, HANDLE_LOGIN, HANDLE_MEMBER_LIST, HANDLE_PLACE_ORDER, HANDLE_SIGNOUT, HANDLE_SUBMIT, INCREMENT_QUANTITY, LOGIN_FAILURE, LOGIN_SUCCESS, PRODUCTS_DISPATCH, SET_INITIAL_STATE, SHOW_CART } from './actions';
 
 const initialState = {
 
@@ -101,6 +101,11 @@ const cartReducer = (state = initialState, action) => {
                 ...action.payload,
             };
         case CART_TOTAL_VALUE:
+            return {
+                ...state,
+                ...action.payload,
+            };
+        case HANDLE_HOME:
             return {
                 ...state,
                 ...action.payload,

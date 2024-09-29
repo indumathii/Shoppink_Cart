@@ -9,10 +9,10 @@ export const carttotalvalue = async (currentstate, dispatch) => {
     console.log("currentstate", currentstate.currentuser.id)
     const response = await httpclient.get(`txns/cart/${currentstate.currentuser.id}`)
     const inCartItems = response.data;
-    console.log("inCartItems", inCartItems)
     const addedtocart_items = inCartItems.filter(item => item.cart_status === 'Remove from Cart');
+    console.log("products in cart", addedtocart_items)
     const totalvalue = addedtocart_items.reduce((total, product) => {
-        const tempprice = parseInt(product.price.replace('$', ''));
+        const tempprice = parseInt(product.price.replace(/[$,]/g, ''));
         return total + (tempprice * product.order_quantity);
     }, 0);
 
@@ -23,6 +23,7 @@ export const carttotalvalue = async (currentstate, dispatch) => {
     }
 
     dispatch(cart_total_value(cartvalues))
+    console.log("printing inside cartotalvalue after dispatch ", cartvalues)
 
 
 }
@@ -104,7 +105,10 @@ export const incrementquantity = async (currentstate, p_id, dispatch) => {
     //const user_txn = temp_state.usertxn
     const res = await httpclient.get('txns');
     const user_txn = res.data;
-    const selected_txn_index = user_txn.findIndex(txn => txn.product_id === p_id);
+    console.log("currentstate user id", currentstate.currentuser.id)
+    console.log("product id", p_id)
+    const selected_txn_index = user_txn.findIndex(txn => (txn.user_id === currentstate.currentuser.id) && (txn.product_id === p_id));
+    console.log("selected index", selected_txn_index)
     console.log("before increment", user_txn[selected_txn_index])
     if (user_txn[selected_txn_index].order_quantity >= 5) {
         alert("Sorry, you have reached the maximum limit!");
@@ -126,12 +130,16 @@ export const incrementquantity = async (currentstate, p_id, dispatch) => {
         };
 
         dispatch(increments_quantity(updated_state))
+        console.log("printing increment quantity states aftr dispatch", updated_state)
         //cartcountcalc(currentstate, dispatch)
         window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));
         const saved_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
         console.log("context values from localstorage updated in increment quantity", saved_state);
         const usr_tns = await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${p_id}`, updated_txn);
         cartcountcalc(currentstate, dispatch)
+        console.log("printing increment quantity after carcountcal dispatch", currentstate)
+        carttotalvalue(currentstate, dispatch)
+        console.log("printing increment quantity after cartotalvalue dispatch", currentstate)
         return usr_tns.data;
     }
 
@@ -144,7 +152,7 @@ export const decrementquantity = async (currentstate, p_id, dispatch) => {
     //const user_txn = temp_state.usertxn
     const res = await httpclient.get('txns');
     const user_txn = res.data;
-    const selected_txn_index = user_txn.findIndex(txn => txn.product_id === p_id);
+    const selected_txn_index = user_txn.findIndex(txn => txn.product_id === p_id && (txn.user_id === currentstate.currentuser.id));
     console.log("before decrement", user_txn[selected_txn_index])
 
     if (selected_txn_index !== -1) {
@@ -171,12 +179,14 @@ export const decrementquantity = async (currentstate, p_id, dispatch) => {
             usertxn: updated_user_txn
         };
         dispatch(decrements_quantity(updated_state))
+
         window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));
         const saved_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
         console.log("context values from localstorage updated in decrement quantity", saved_state);
         console.log("Current user in currenstate decrement", typeof (BigInt(currentstate.currentuser.id)))
         const usr_tns = await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${p_id}`, updated_txn_2);
         cartcountcalc(currentstate, dispatch)
+        carttotalvalue(currentstate, dispatch)
         return usr_tns.data;
 
 
@@ -227,11 +237,13 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
 
 
             dispatch(add_to_carts(new_State));
+
             window.localStorage.setItem('shoppink-store', JSON.stringify(new_State))
             const usr_tns = await httpclient.post('txns', txn_items);
             const saved_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
             console.log("context values from localstorage updated afted addtocart", saved_state);
             cartcountcalc(currentstate, dispatch)
+            carttotalvalue(currentstate, dispatch)
             return usr_tns.data;
 
             //
@@ -260,12 +272,14 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
                     usertxn: updated_user_txn
                 };
                 dispatch(add_to_carts(updated_state));
+
                 //cartcountcalc(currentstate, dispatch)
 
                 //cartcountcalc(setcontextvalues)
                 window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));
                 const usr_tns = await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${p_id}`, updated_txn);
                 cartcountcalc(currentstate, dispatch)
+                carttotalvalue(currentstate, dispatch)
                 return usr_tns.data;
 
 
@@ -277,6 +291,7 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
 
         }
         cartcountcalc(currentstate, dispatch)
+        carttotalvalue(currentstate, dispatch)
     }
 
     else {
@@ -335,6 +350,7 @@ export const loginfunc = async (values, currentstate, dispatch) => {
             console.log("printing saved from localstorage in cartutils", savedstate)
             dispatch(loginsuccess(updatedloginvalues));
             cartcountcalc(currentstate, dispatch)
+            carttotalvalue(currentstate, dispatch)
 
         } else {
             console.log("Invalid Password");
