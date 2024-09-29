@@ -118,7 +118,8 @@ export const orderplaced = async (currentstate, dispatch) => {
     const updated_state = {
         ...temp_state,
         usertxn: currentuser_txn,
-        showcart: false
+        showcart: false,
+        placeorder: true
     };
     console.log("updated user transaction in order placed", updated_state)
 

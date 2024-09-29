@@ -2,16 +2,17 @@ import React from 'react'
 import { useContext } from 'react';
 import bow from './bow.svg'
 import { Context } from './App';
+import { useSelector } from 'react-redux';
 
 const Orders = () => {
-    const { contextvalues, setcontextvalues } = useContext(Context);
-    const cartitems = contextvalues.productitems.filter(product => product.order_status === 'Placed');
+    const currentstate = useSelector((state) => state);
+    const cartitems = currentstate.usertxn.filter(product => product.order_status === 'Placed' && product.user_id === currentstate.currentuser.id);
     const address = 'B204,Happiness Towers,Pacifica Aurum,Padur,Chennai-603103.'
     const contact = '+91 6383736132'
     const username = 'Indumathi.S'
 
     return (
-        <div className={`${contextvalues.isMenuVisible ? 'relative -z-10' : 'relative'} `}>
+        <div className={`${currentstate.isMenuVisible ? 'relative -z-10' : 'relative'} `}>
             <div className='flex flex-grow relative min-h-screen min-w-screen flex-col justify-center items-center bg-[linear-gradient(45deg,_#4db6ac,_#80cbc4,_#4fc3f7,_#64b5f6,_#9575cd)] mt-[7rem] lg:mt-[3rem]'>
                 <div className="flex flex-row ribbon absolute text-center mx-auto justify-between -ml-[3rem] md:-mt-[15rem] lg:mt-[20rem]">
                     <div className='flex  text-black flex-grow text-2xl h-auto w-full font-bold -mt-[28rem] underline p-5'>Your Orders</div>
@@ -32,9 +33,9 @@ const Orders = () => {
                         {
                             cartitems.map(product => (
                                 <div className='flex flex-row bg-white border border-1 border-black m-1/2 h-[10rem] w-full '>
-                                    <img className='object-cover hover:scale-105 h-[7rem] w-[6rem] md:h-[9rem] md:w-[10rem] p-2' src={product.p_img} alt={product.p_name} />
+                                    <img className='object-cover hover:scale-105 h-[7rem] w-[6rem] md:h-[9rem] md:w-[10rem] p-2' src={product.image_link} alt={product.product_name} />
                                     <div className='flex flex-col ml-2 md:ml-5 w-full'>
-                                        <h1 className='flex text-black text-md md:text-2xl font-bold mt-2'>{product.p_name}</h1>
+                                        <h1 className='flex text-black text-md md:text-2xl font-bold mt-2'>{product.product_name}</h1>
                                     </div>
                                 </div>
                             ))
