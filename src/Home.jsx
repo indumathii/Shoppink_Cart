@@ -181,6 +181,7 @@ const Home = () => {
         console.log(currentstate.isMenuVisible)
 
 
+
     }, [currentstate.login, currentstate.signup, currentstate.logsubmit, currentstate.signupsubmit, currentstate.productsdesc, currentstate.showcart, currentstate.cartcount, currentstate.ishome, currentstate.productitems, currentstate.settotalcartvalue, currentstate.totalcartvalue, currentstate.placeorder, currentstate.iscategorylist]);
 
     const handleuserorders = () => {

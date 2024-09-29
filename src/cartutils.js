@@ -78,7 +78,7 @@ export const orderplaced = (contextvalues, setcontextvalues) => {
 }
 
 
-export const incrementquantity = (currentstate, p_id, dispatch) => {
+export const incrementquantity = async (currentstate, p_id, dispatch) => {
     console.log("increment")
     const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
     const user_txn = temp_state.usertxn
@@ -108,7 +108,9 @@ export const incrementquantity = (currentstate, p_id, dispatch) => {
         window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));
         const saved_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
         console.log("context values from localstorage updated in increment quantity", saved_state);
+        const usr_tns = await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${p_id}`, updated_txn);
         cartcountcalc(currentstate, dispatch)
+        return usr_tns.data;
     }
 
 
@@ -249,7 +251,10 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
 
                 //cartcountcalc(setcontextvalues)
                 window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));
+                const usr_tns = await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${p_id}`, updated_txn);
                 cartcountcalc(currentstate, dispatch)
+                return usr_tns.data;
+
 
 
             }
@@ -315,6 +320,7 @@ export const loginfunc = async (values, currentstate, dispatch) => {
             const savedstate = JSON.parse(window.localStorage.getItem('shoppink-store'))
             console.log("printing saved from localstorage in cartutils", savedstate)
             dispatch(loginsuccess(updatedloginvalues));
+            cartcountcalc(currentstate, dispatch)
 
         } else {
             console.log("Invalid Password");
