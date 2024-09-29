@@ -29,12 +29,14 @@ const Home = () => {
             const savedState = JSON.parse(savedStateString);
             console.log("printing savedstate from home localstorage", savedState)
             dispatch(setinitialstate(savedState))
+
         }
     }, []);
 
     useEffect(() => {
         console.log("Current state updated", currentstate);
-    }, [currentstate]);
+        cartUtils.cartcountcalc(currentstate, dispatch)
+    }, [currentstate.cartcount]);
 
 
     const togglemenu = () => {
@@ -108,8 +110,11 @@ const Home = () => {
             users: [],
             isloggedin: false,
             currentTime: new Date().toLocaleTimeString(),
-            cartcount: 0
+            cartcount: 0,
+            showcart: false,
+
         };
+        console.log("handle sign out values", handle_signout_values)
         window.localStorage.setItem('shoppink-store', JSON.stringify(handle_signout_values));
         dispatch(handlesign_out(handle_signout_values))
     }
@@ -237,7 +242,7 @@ const Home = () => {
                     </nav>
                     {currentstate.ismemberlist && (
 
-                        <div className='flex flex-col fixed text-white mt-[4rem] md:mt-[1rem] text-sm md:text-xl ml-[12rem] md:ml-[67rem] bg-slate-900 h-[20rem] w-[11.95rem]'>
+                        <div className='flex  z-10 flex-col fixed text-white mt-[4rem] md:mt-[1rem] text-sm md:text-xl ml-[12rem] md:ml-[67rem] bg-slate-900 h-[20rem] w-[11.95rem]'>
                             <div className='flex flex-row  w-full h-[45px] hover:bg-pink-500 hover:cursor-pointer items-center justify-center p-2 text-white' onClick={handlesignout}>
                                 <FontAwesomeIcon icon={faBox} className='transform mt-[0.3rem] text-sm mr-2 rotate-180 items-center' />
                                 <span className='flex'>Your Orders</span>

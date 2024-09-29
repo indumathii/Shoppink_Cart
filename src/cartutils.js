@@ -5,7 +5,7 @@ import httpclient from './Axios';
 
 export const carttotalvalue = async (currentstate, dispatch) => {
     const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
-    const user_txn = temp_state.usertxn
+    //const user_txn = temp_state.usertxn
     console.log("currentstate", currentstate.currentuser.id)
     const response = await httpclient.get(`txns/cart/${currentstate.currentuser.id}`)
     const inCartItems = response.data;
@@ -25,6 +25,26 @@ export const carttotalvalue = async (currentstate, dispatch) => {
     dispatch(cart_total_value(cartvalues))
 
 
+}
+
+
+export const cartcountcalc = async (currentstate, dispatch) => {
+    if (currentstate.isloggedin) {
+        const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
+        const res = await httpclient.get('txns');
+        const usertxn = res.data;
+        const current_cart_items = usertxn.filter(txn => (txn.cart_status === 'Remove from Cart') && (txn.user_id === currentstate.currentuser.id));
+        console.log("printing current cart items", current_cart_items)
+        console.log("printing cartcountcalc", current_cart_items.length)
+        const cartvalues = {
+            ...temp_state,
+            cartcount: current_cart_items.length
+
+        };
+        dispatch(cartcountcalculation(cartvalues))
+        console.log("updated cart count values", cartvalues)
+        window.localStorage.setItem('shoppink-store', JSON.stringify(cartvalues))
+    }
 }
 
 export const handleproductsdesc = (setcontextvalues, p_id, navigate) => {
@@ -81,7 +101,9 @@ export const orderplaced = (contextvalues, setcontextvalues) => {
 export const incrementquantity = async (currentstate, p_id, dispatch) => {
     console.log("increment")
     const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
-    const user_txn = temp_state.usertxn
+    //const user_txn = temp_state.usertxn
+    const res = await httpclient.get('txns');
+    const user_txn = res.data;
     const selected_txn_index = user_txn.findIndex(txn => txn.product_id === p_id);
     console.log("before increment", user_txn[selected_txn_index])
     if (user_txn[selected_txn_index].order_quantity >= 5) {
@@ -119,7 +141,9 @@ export const incrementquantity = async (currentstate, p_id, dispatch) => {
 export const decrementquantity = async (currentstate, p_id, dispatch) => {
     console.log("decrement")
     const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
-    const user_txn = temp_state.usertxn
+    //const user_txn = temp_state.usertxn
+    const res = await httpclient.get('txns');
+    const user_txn = res.data;
     const selected_txn_index = user_txn.findIndex(txn => txn.product_id === p_id);
     console.log("before decrement", user_txn[selected_txn_index])
 
@@ -164,31 +188,20 @@ export const decrementquantity = async (currentstate, p_id, dispatch) => {
 }
 
 
-export const cartcountcalc = (currentstate, dispatch) => {
-    const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
-
-    const current_cart_items = temp_state.usertxn.filter(txn => txn.cart_status === 'Remove from Cart');
-    console.log("printing cartcountcalc", current_cart_items.length)
-    const cartvalues = {
-        ...temp_state,
-        cartcount: current_cart_items.length
-
-    };
-    dispatch(cartcountcalculation(cartvalues))
-    console.log("updated cart count values", cartvalues)
-    window.localStorage.setItem('shoppink-store', JSON.stringify(cartvalues))
-
-}
 
 
 export const addtocart = async (currentstate, p_id, dispatch) => {
     console.log("addtocart clicked")
     const tmp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
-    const temp_usertxn = tmp_state.usertxn
+    //const temp_usertxn = tmp_state.usertxn
+    const res = await httpclient.get('txns');
+    const temp_usertxn = res.data;
     console.log("temp_usertxn", temp_usertxn)
     if (tmp_state.isloggedin) {
         console.log("user logged in")
         //const selected_txn = temp_usertxn.filter(txns => (txns.user_id === tmp_state.currentuser.id) && (txns.product_id === p_id))// && (txns.cart_status === 'Remove from Cart'));
+        console.log("printing current state", currentstate.currentuser.id)
+        console.log("printing product_id", p_id)
         const selected_txn_index = temp_usertxn.findIndex(txns => (txns.user_id === tmp_state.currentuser.id) && (txns.product_id === p_id));
         console.log("selected index", selected_txn_index)
         console.log("selected index item", temp_usertxn[selected_txn_index])
@@ -263,6 +276,7 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
             console.log("printing add to cart else loop")
 
         }
+        cartcountcalc(currentstate, dispatch)
     }
 
     else {

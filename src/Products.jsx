@@ -26,6 +26,7 @@ const Products = () => {
             };
             console.log("Products after update in Products.jsx", productDefaultValues);
             dispatch(products_dispatch(productDefaultValues))
+            cartUtils.cartcountcalc(currentstate, dispatch)
 
         };
 
@@ -139,15 +140,18 @@ const Products = () => {
                                     <h1 className='flex text-black text-xl font-medium top[-3rem] md:ml-[1rem] -mt-[0.5rem] ml-1'>{product.price}</h1>
                                     {
 
-                                        (currentstate.usertxn.find(txn => txn.product_id === product.product_id)?.order_quantity > 0) ? (
-                                            <div className='flex flex-row justify-between ml-[2rem] gap-2 w-[3rem] h-[2rem]  items-center'>
+                                        (currentstate.usertxn.find(txn =>
+                                            txn.user_id === currentstate.currentuser.id &&
+                                            txn.product_id === product.product_id
+                                        )?.order_quantity > 0) ? (
+                                            <div key={index} className='flex flex-row justify-between ml-[2rem] gap-2 w-[3rem] h-[2rem]  items-center'>
                                                 <button className='flex text-3xl -mt-[0.5rem]' onClick={() => cartUtils.decrementquantity(currentstate, product.product_id, dispatch)} >-</button>
-                                                <input type="text" className='flex text-md h-[1.5rem] w-[2rem] border border-black text-center' value={currentstate.usertxn.find(txn => txn.product_id === product.product_id)?.order_quantity || 0} />
+                                                <input type="text" className='flex text-md h-[1.5rem] w-[2rem] border border-black text-center' value={currentstate.usertxn.find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === product.product_id)?.order_quantity || 0} />
                                                 <button className='flex text-2xl -mt-[0.5rem]' onClick={() => cartUtils.incrementquantity(currentstate, product.product_id, dispatch)}>+</button>
                                             </div>
                                         ) : (
 
-                                            <button className='flex bg-white border ml-[2rem] justify-center md:text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-sm shadow-md border-1 border-black text-black font-medium rounded rounded-md p-1' onClick={() => cartUtils.addtocart(currentstate, product.product_id, dispatch)}>{(currentstate.usertxn.find(txn => txn.product_id === product.product_id)?.order_quantity > 0) ? 'Remove from Cart' : 'Add to Cart'}</button>
+                                            <button className='flex bg-white border ml-[2rem] justify-center md:text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-sm shadow-md border-1 border-black text-black font-medium rounded rounded-md p-1' onClick={() => cartUtils.addtocart(currentstate, product.product_id, dispatch)}>{currentstate.usertxn.find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === product.product_id)?.order_quantity > 0 ? 'Remove from Cart' : 'Add to Cart'}</button>
                                         )
 
 
