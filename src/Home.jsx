@@ -165,11 +165,13 @@ const Home = () => {
 
         else if (currentstate.ishome) {
             console.log('inside ishome')
-            window.scrollTo({
+            handlehome()
+            /*window.scrollTo({
                 top: 0,
                 behavior: 'smooth',
-            });
+            });*/
             console.log("navigating to home 1")
+
             navigate('/home')
 
 
@@ -177,6 +179,7 @@ const Home = () => {
         }
         else {
             console.log("navigating to home")
+            handlehome()
             navigate('/home');
         }
         console.log(currentstate.isMenuVisible)

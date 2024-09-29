@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useContext, useEffect } from 'react';
 import * as cartUtils from './cartutils';
 import { useNavigate } from 'react-router-dom';
@@ -10,13 +10,18 @@ const Cart = () => {
     const currentstate = useSelector((state) => state);
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
+    const userTransactionsString = JSON.stringify(currentstate.usertxn);
+    const currentuserTransactionsString = JSON.stringify(currentstate.currentcart_txns);
     useEffect(() => {
         cartUtils.carttotalvalue(currentstate, dispatch)
         console.log('orderplaced inside useeffect', currentstate.productitems)
-    }, [currentstate.carttotalvalue]);
+        add_cartitems = Array.isArray(currentstate.usertxn) ? currentstate.usertxn.filter(product => (product.user_id === currentstate.currentuser.id) && (product.cart_status === 'Remove from Cart')) : [];
+        add_cartitems2 = Array.isArray(currentstate.currentcart_txns) ? currentstate.currentcart_txns.filter(product => (product.user_id === currentstate.currentuser.id) && (product.cart_status === 'Remove from Cart')) : [];
+    }, [currentuserTransactionsString]);
 
-    const add_cartitems = Array.isArray(currentstate.currentcart_txns) ? currentstate.currentcart_txns.filter(product => product.cart_status === 'Remove from Cart') : [];
+    let add_cartitems = Array.isArray(currentstate.usertxn) ? currentstate.usertxn.filter(product => (product.user_id === currentstate.currentuser.id) && (product.cart_status === 'Remove from Cart')) : [];
+    let add_cartitems2 = Array.isArray(currentstate.currentcart_txns) ? currentstate.currentcart_txns.filter(product => (product.user_id === currentstate.currentuser.id) && (product.cart_status === 'Remove from Cart')) : [];
+    console.log("printing add_cart_items", add_cartitems)
     const handleplaceorder = () => {
         console.log("inside handleplaceorder")
         const place_order_values = {
@@ -25,9 +30,6 @@ const Cart = () => {
 
         }
         dispatch(handle_place_order(place_order_values))
-        /*setcontextvalues(prev => ({
-            ...prev, placeorder: true, login: false, productdesc: false, signup: false, showcart: false, iscategorylist: false, ishome: false
-        }))*/
 
         cartUtils.orderplaced(currentstate, dispatch)
         cartUtils.emptycart(currentstate, dispatch)
@@ -44,17 +46,27 @@ const Cart = () => {
                     <div className='flex flex-grow h-full w-full ml-3 bg-gradient-to-r from-white via-pink-100 to-pink-400 mx-auto mt-6 flex-col'>
 
                         {
-                            add_cartitems.map(product => (
+                            add_cartitems2.map((product, index) => (
                                 <div className='flex flex-row border border-1 border-black m-1/2 h-[10rem] w-full'>
                                     <img className='object-cover hover:scale-105 h-[7rem] w-[6rem] md:h-[9rem] md:w-[10rem] p-2' src={product.image_link} alt={product.product_name} />
                                     <div className='flex flex-col ml-2 md:ml-5 w-full'>
                                         <h1 className='flex text-black text-md md:text-2xl font-bold mt-2'>{product.product_name}</h1>
                                         <div className='flex flex-col md:flex-row justify-between w-full  md:mx-2'>
-                                            <div className='flex flex-row mt-2 p-2 justify-between w-[3rem] h-[3rem] md:w-[6rem] md:mt-[2rem]'>
-                                                <button className='flex text-3xl -mt-[0.5rem] mx-1' onClick={() => cartUtils.decrementquantity(currentstate, product.product_id, dispatch)} >-</button>
-                                                <input type="text" className='flex mx-1 text-sm h-[1.5rem] w-[2rem] border border-black text-center' value={currentstate.usertxn.find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === product.product_id)?.order_quantity || 0} />
-                                                <button className='flex text-2xl mx-1 -mt-[0.5rem]' onClick={() => cartUtils.incrementquantity(currentstate, product.product_id, dispatch)}>+</button>
-                                            </div>
+                                            {
+
+                                                (currentstate.usertxn.find(txn =>
+                                                    txn.user_id === currentstate.currentuser.id &&
+                                                    txn.product_id === product.product_id
+                                                )?.order_quantity > 0 && product.cart_status === 'Remove from cart') && (
+                                                    <div key={index} className='flex flex-row justify-between ml-[2rem] gap-2 w-[3rem] h-[2rem]  items-center'>
+                                                        <button className='flex text-3xl -mt-[0.5rem]' onClick={() => cartUtils.decrementquantity(currentstate, product.product_id, dispatch)} >-</button>
+                                                        <input type="text" className='flex text-md h-[1.5rem] w-[2rem] border border-black text-center' value={currentstate.usertxn.find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === product.product_id)?.order_quantity || 0} />
+                                                        <button className='flex text-2xl -mt-[0.5rem]' onClick={() => cartUtils.incrementquantity(currentstate, product.product_id, dispatch)}>+</button>
+                                                    </div>
+                                                )
+
+
+                                            }
                                             <h1 className='flex text-black text-md ml-[3.75rem] mt-4 md:mt-4 mr-[1rem] md:mr-[2rem] md:text-lg font-bold  mt-2 mr-10'>Price: {product.price}</h1>
                                         </div>
 

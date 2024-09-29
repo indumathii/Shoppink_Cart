@@ -32,7 +32,8 @@ export const CART_COUNT_CALCULATION = 'CART_COUNT_CALCULATION';
 export const SHOW_CART = 'SHOW_CART';
 export const HANDLE_PLACE_ORDER = 'HANDLE_PLACE_ORDER';
 export const CART_TOTAL_VALUE = 'CART_TOTAL_VALUE';
-export const HANDLE_HOME = 'HANDLE_HOME'
+export const HANDLE_HOME = 'HANDLE_HOME';
+export const PLACE_ORDER = 'PLACE_ORDER';
 
 export const loginsuccess = (payload) => ({
     type: LOGIN_SUCCESS,
@@ -119,5 +120,10 @@ export const cart_total_value = (payload) => ({
 
 export const handle_home = (payload) => ({
     type: HANDLE_HOME,
+    payload,
+})
+
+export const place_order = (payload) => ({
+    type: PLACE_ORDER,
     payload,
 })

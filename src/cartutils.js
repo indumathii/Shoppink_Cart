@@ -1,4 +1,4 @@
-import { add_to_carts, cart_total_value, cartcountcalculation, decrements_quantity, increments_quantity, loginfailure, loginsuccess, setinitialstate } from './actions';
+import { add_to_carts, cart_total_value, cartcountcalculation, decrements_quantity, place_order, increments_quantity, loginfailure, loginsuccess, setinitialstate } from './actions';
 import httpclient from './Axios';
 
 
@@ -19,7 +19,7 @@ export const carttotalvalue = async (currentstate, dispatch) => {
     const cartvalues = {
         ...temp_state,
         totalcartvalue: totalvalue,
-        currentcart_txns: inCartItems
+        currentcart_txns: inCartItems,
     }
 
     dispatch(cart_total_value(cartvalues))
@@ -60,7 +60,7 @@ export const handleproductsdesc = (setcontextvalues, p_id, navigate) => {
 
 
 export const emptycart = (setcontextvalues) => {
-    alert("Order Placed Successfully")
+    /*alert("Order Placed Successfully")
     setcontextvalues(prevState => ({
         ...prevState,
         productitems: prevState.productitems.map(item => {
@@ -76,27 +76,58 @@ export const emptycart = (setcontextvalues) => {
 
             };
         })
-    }))
+    }))*/
 
 
 }
 
 
 
-export const orderplaced = (contextvalues, setcontextvalues) => {
-    setcontextvalues(prevState => ({
-        ...prevState,
-        productitems: prevState.productitems.map(item => {
-            const new_O_Status = item.p_status === 'Remove from Cart' ? 'Placed' : 'Real';
-            console.log("new_O_Status", new_O_Status)
-            return {
-                ...item,
-                order_status: new_O_Status
-            };
-        })
-    }))
+export const orderplaced = async (currentstate, dispatch) => {
+    alert('Order Placed Successfully')
+    const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
+    const current_cart_items = temp_state.currentcart_txns.filter(txn => txn.cart_status === 'Remove from Cart');
+    console.log("orders placed", current_cart_items)
+    let updated_user_txn = []
+    for (const product of current_cart_items) {
+        console.log("printing temp_state", temp_state)
+        console.log("printing user txn", temp_state.usertxn)
+        const selected_txn_index = temp_state.usertxn.findIndex(txn => (txn.user_id === currentstate.currentuser.id) && (txn.product_id === product.product_id));
+        const updated_value = {
+            ...temp_state.usertxn[selected_txn_index],
+            order_status: 'Placed',
+            cart_status: 'Add to Cart'
+
+
+        }
+        console.log("updated user value in place order", updated_value)
+
+        updatedUsTxns = [
+            ...usertxns.slice(0, selected_txn_index - 1),
+            { ...usertxns[1], ...updatedValues },
+            ...usertxns.slice(selected_txn_index)
+        ];
+
+
+        await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${product.product_id}`, updated_value);
+
+
+    }
+
+    console.log("updated placed order txn", updated_user_txn)
+    const updated_state = {
+        ...temp_state,
+        usertxn: updatedUsTxns,
+        showcart: false
+    };
+    console.log("updated user transaction in order placed", updated_state)
+
+    dispatch(place_order(updated_state))
+    window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));
 
 }
+
+
 
 
 export const incrementquantity = async (currentstate, p_id, dispatch) => {
