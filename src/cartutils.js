@@ -114,7 +114,7 @@ export const incrementquantity = (currentstate, p_id, dispatch) => {
 
 }
 
-export const decrementquantity = (currentstate, p_id, dispatch) => {
+export const decrementquantity = async (currentstate, p_id, dispatch) => {
     console.log("decrement")
     const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
     const user_txn = temp_state.usertxn
@@ -145,11 +145,17 @@ export const decrementquantity = (currentstate, p_id, dispatch) => {
             usertxn: updated_user_txn
         };
         dispatch(decrements_quantity(updated_state))
-        //cartcountcalc(currentstate, dispatch)
         window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));
         const saved_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
         console.log("context values from localstorage updated in decrement quantity", saved_state);
+        console.log("Current user in currenstate decrement", typeof (BigInt(currentstate.currentuser.id)))
+        const usr_tns = await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${p_id}`, updated_txn_2);
         cartcountcalc(currentstate, dispatch)
+        return usr_tns.data;
+
+
+
+        //cartcountcalc(currentstate, dispatch)
 
 
     }
@@ -208,13 +214,13 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
             dispatch(add_to_carts(new_State));
             window.localStorage.setItem('shoppink-store', JSON.stringify(new_State))
             const usr_tns = await httpclient.post('txns', txn_items);
+            const saved_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
+            console.log("context values from localstorage updated afted addtocart", saved_state);
+            cartcountcalc(currentstate, dispatch)
             return usr_tns.data;
 
             //
 
-            const saved_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
-            console.log("context values from localstorage updated afted addtocart", saved_state);
-            cartcountcalc(currentstate, dispatch)
             //cartcountcalc(contextvalues, setcontextvalues)
         }
         else if (temp_usertxn[selected_txn_index].cart_status === 'Add to Cart') {
