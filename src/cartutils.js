@@ -98,7 +98,6 @@ export const orderplaced = async (currentstate, dispatch) => {
             order_status: 'Placed',
             cart_status: 'Add to Cart'
 
-
         }
         console.log("updated user value in place order", updated_value)
 
