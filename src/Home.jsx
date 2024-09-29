@@ -7,7 +7,7 @@ import * as cartUtils from './cartutils';
 import Categories from './Categories';
 import { Context } from './App';
 import { useDispatch, useSelector } from 'react-redux';
-import { handlelogins, setinitialstate, handlememberlists, handlesign_out, show_cart, handle_home } from './actions';
+import { handlelogins, setinitialstate, handlememberlists, handlesign_out, show_cart, handle_home, your_orders } from './actions';
 
 const Home = () => {
 
@@ -115,6 +115,27 @@ const Home = () => {
         dispatch(handlesign_out(handle_signout_values))
     }
 
+    const handleuserorders = () => {
+
+        const handle_yourorders_values = {
+            ...currentstate,
+            ismemberlist: false,
+            currentTime: new Date().toLocaleTimeString(),
+            yourorders: true,
+            showcart: false,
+            placeorder: false,
+            productsdesc: false,
+            ishome: false,
+            login: false,
+
+
+        };
+        console.log("handle your orders values", handle_yourorders_values)
+        window.localStorage.setItem('shoppink-store', JSON.stringify(handle_yourorders_values));
+        dispatch(your_orders(handle_yourorders_values))
+
+    }
+
     useEffect(() => {
 
         if (currentstate.login) {
@@ -162,6 +183,20 @@ const Home = () => {
             });
             navigate('/shoppink/orders')
         }
+        else if (currentstate.yourorders) {
+            console.log('inside yourorders')
+
+            /*window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+            });*/
+            console.log("navigating to your orders")
+
+            navigate('/shoppink/yourorders')
+
+
+
+        }
 
         else if (currentstate.ishome) {
             console.log('inside ishome')
@@ -188,9 +223,6 @@ const Home = () => {
 
     }, [currentstate.login, currentstate.signup, currentstate.logsubmit, currentstate.signupsubmit, currentstate.productsdesc, currentstate.showcart, currentstate.cartcount, currentstate.ishome, currentstate.productitems, currentstate.settotalcartvalue, currentstate.totalcartvalue, currentstate.placeorder, currentstate.iscategorylist]);
 
-    const handleuserorders = () => {
-
-    }
 
 
     return (
@@ -242,7 +274,7 @@ const Home = () => {
                     {currentstate.ismemberlist && (
 
                         <div className='flex  z-10 flex-col fixed text-white mt-[4rem] md:mt-[1rem] text-sm md:text-xl ml-[12rem] md:ml-[67rem] bg-slate-900 h-[20rem] w-[11.95rem]'>
-                            <div className='flex flex-row  w-full h-[45px] hover:bg-pink-500 hover:cursor-pointer items-center justify-center p-2 text-white' onClick={handlesignout}>
+                            <div className='flex flex-row  w-full h-[45px] hover:bg-pink-500 hover:cursor-pointer items-center justify-center p-2 text-white' onClick={handleuserorders}>
                                 <FontAwesomeIcon icon={faBox} className='transform mt-[0.3rem] text-sm mr-2 rotate-180 items-center' />
                                 <span className='flex'>Your Orders</span>
                             </div>

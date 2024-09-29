@@ -119,10 +119,10 @@ export const orderplaced = async (currentstate, dispatch) => {
         ...temp_state,
         usertxn: currentuser_txn,
         showcart: false,
-        placeorder: true
+        placeorder: true,
+        currentcart_txns: current_cart_items
     };
     console.log("updated user transaction in order placed", updated_state)
-
     dispatch(place_order(updated_state))
     window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));
 
