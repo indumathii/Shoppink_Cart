@@ -13,7 +13,7 @@ const Products = () => {
     const navigate = useNavigate();
     const currentstate = useSelector((state) => state)
     const dispatch = useDispatch();
-    const [loading, setisloading] = useState(false)
+
     useEffect(() => {
         const fetchProducts = async () => {
             const productvalues = JSON.parse(window.localStorage.getItem('shoppink-store'));
@@ -132,7 +132,7 @@ const Products = () => {
                         currentstate.productitems.map((product, index) => (
 
                             <div key={product.product_id} className="flex flex-col border-2 border-pink-500 h-[25rem] w-[14rem] items-center sm:w-[17rem] md:h-[25rem] md:w-[13rem] lg:w-[12rem] xl:w-[15rem] rounded rounded-md bg-[#F8F4FF] " >
-                                <div className='flex mt-3 h-[20rem] w-full justify-center items-start hover:cursor-pointer flex-col' onClick={() => cartUtils.handleproductsdesc(setcontextvalues, product.product_id, navigate)}>
+                                <div className='flex mt-3 h-[20rem] w-full justify-center items-start hover:cursor-pointer flex-col' onClick={() => cartUtils.handleproductsdesc(currentstate, dispatch, product.product_id, navigate)}>
                                     <div className='flex p-2 h-full w-full flex-col items-start  justify-center'>
                                         {
                                             /* <img className='object-cover hover:scale-105 w-[10rem] ml-5 h-full pb-75' src={product.image_link} alt='image not available' />*/

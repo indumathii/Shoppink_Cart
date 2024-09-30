@@ -20,6 +20,7 @@ const initialState = {
     logsubmit: false,
     signupsubmit: false,
     productitems: [],
+    temp_products: [],
     usertxn: [],
     isloggedin: false,
     currentcart_txns: [],

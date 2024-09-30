@@ -48,11 +48,15 @@ export const cartcountcalc = async (currentstate, dispatch) => {
     }
 }
 
-export const handleproductsdesc = (setcontextvalues, p_id, navigate) => {
+export const handleproductsdesc = (currentstate, dispatch, p_id, navigate) => {
 
-    setcontextvalues(prev => ({
-        ...prev, productsdesc: true, currentpid: p_id
-    }))
+    const cartvalues = {
+        ...currentstate,
+        productsdesc: true,
+        currentpid: p_id
+
+    };
+    dispatch(cartcountcalculation(cartvalues))
     navigate(`/productsdesc/${p_id}`);
 
 }
@@ -197,7 +201,9 @@ export const decrementquantity = async (currentstate, p_id, dispatch) => {
             ...user_txn[selected_txn_index], // Keep the existing properties
             cart_status: updated_txn_1.order_quantity > 0 ? 'Remove from Cart' : 'Add to Cart',
             order_quantity: updated_txn_1.order_quantity
+
         };
+
 
         console.log("updated txn after decrement", updated_txn_2)
 
@@ -208,7 +214,8 @@ export const decrementquantity = async (currentstate, p_id, dispatch) => {
 
         const updated_state = {
             ...temp_state,
-            usertxn: updated_user_txn
+            usertxn: updated_user_txn,
+            currentpid: updated_txn_1.order_quantity > 0 ? true : false,
         };
         dispatch(decrements_quantity(updated_state))
 
@@ -263,7 +270,8 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
             const new_State = {
                 ...tmp_state,
                 usertxn: new_added_txns,
-                cartcount: tmp_state.cartcount + 1
+                cartcount: tmp_state.cartcount + 1,
+                currentpid: false
             }
             console.log("printing new State", new_State)
 
@@ -284,39 +292,44 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
         }
         else if (temp_usertxn[selected_txn_index].cart_status === 'Add to Cart') {
             console.log("inside else if loop of selected_txn")
+            if (temp_usertxn[selected_txn_index].order_status === 'Placed') {
+                alert("You have already ordered this item, Please select any other item")
+            }
+            else {
+                console.log("item in add to cart status", temp_usertxn[selected_txn_index])
+                if (selected_txn_index !== -1) {
+                    const updated_txn = {
+                        ...temp_usertxn[selected_txn_index], // Keep the existing properties
+                        order_quantity: 1,
+                        cart_status: 'Remove from Cart',
+                        order_status: 'New'
+                    };
 
-            console.log("item in add to cart status", temp_usertxn[selected_txn_index])
-            if (selected_txn_index !== -1) {
-                const updated_txn = {
-                    ...temp_usertxn[selected_txn_index], // Keep the existing properties
-                    order_quantity: 1,
-                    cart_status: 'Remove from Cart',
-                    order_status: 'New'
-                };
+                    console.log("updated txn adding to cart in else if loop", updated_txn)
 
-                console.log("updated txn adding to cart in else if loop", updated_txn)
+                    const updated_user_txn = temp_usertxn.map((txn, index) => {
+                        return index === selected_txn_index ? updated_txn : txn;
+                    });
 
-                const updated_user_txn = temp_usertxn.map((txn, index) => {
-                    return index === selected_txn_index ? updated_txn : txn;
-                });
+                    const updated_state = {
+                        ...tmp_state,
+                        usertxn: updated_user_txn,
+                        currentpid: false
+                    };
+                    dispatch(add_to_carts(updated_state));
 
-                const updated_state = {
-                    ...tmp_state,
-                    usertxn: updated_user_txn
-                };
-                dispatch(add_to_carts(updated_state));
+                    //cartcountcalc(currentstate, dispatch)
 
-                //cartcountcalc(currentstate, dispatch)
-
-                //cartcountcalc(setcontextvalues)
-                window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));
-                const usr_tns = await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${p_id}`, updated_txn);
-                cartcountcalc(currentstate, dispatch)
-                carttotalvalue(currentstate, dispatch)
-                return usr_tns.data;
+                    //cartcountcalc(setcontextvalues)
+                    window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));
+                    const usr_tns = await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${p_id}`, updated_txn);
+                    cartcountcalc(currentstate, dispatch)
+                    carttotalvalue(currentstate, dispatch)
+                    return usr_tns.data;
 
 
 
+                }
             }
         }
         else {
