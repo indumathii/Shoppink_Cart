@@ -21,7 +21,7 @@ const Cart = () => {
 
     let add_cartitems = Array.isArray(currentstate.usertxn) ? currentstate.usertxn.filter(product => (product.user_id === currentstate.currentuser.id) && (product.cart_status === 'Remove from Cart')) : [];
     let add_cartitems2 = Array.isArray(currentstate.currentcart_txns) ? currentstate.currentcart_txns.filter(product => (product.user_id === currentstate.currentuser.id) && (product.cart_status === 'Remove from Cart')) : [];
-    console.log("printing add_cart_items", add_cartitems)
+    console.log("printing add_cart_items", add_cartitems2)
     const handleplaceorder = () => {
         console.log("inside handleplaceorder")
         const place_order_values = {
@@ -48,7 +48,7 @@ const Cart = () => {
                         {
                             add_cartitems2.map((product, index) => (
                                 <div className='flex flex-row border border-1 border-black m-1/2 h-[10rem] w-full'>
-                                    <img className='object-cover hover:scale-105 h-[7rem] w-[6rem] md:h-[9rem] md:w-[10rem] p-2' src={product.image_link} alt={product.product_name} />
+                                    <img className='object-contain hover:scale-105 h-[7rem] w-[6rem] md:h-[9rem] md:w-[10rem] p-2' src={product.image_link} alt={product.product_name} />
                                     <div className='flex flex-col ml-2 md:ml-5 w-full'>
                                         <h1 className='flex text-black text-md md:text-2xl font-bold mt-2'>{product.product_name}</h1>
                                         <div className='flex flex-col md:flex-row justify-between w-full  md:mx-2'>
@@ -57,7 +57,7 @@ const Cart = () => {
                                                 (currentstate.usertxn.find(txn =>
                                                     txn.user_id === currentstate.currentuser.id &&
                                                     txn.product_id === product.product_id
-                                                )?.order_quantity > 0 && product.cart_status === 'Remove from cart') && (
+                                                )?.order_quantity > 0) && (
                                                     <div key={index} className='flex flex-row justify-between ml-[2rem] gap-2 w-[3rem] h-[2rem]  items-center'>
                                                         <button className='flex text-3xl -mt-[0.5rem]' onClick={() => cartUtils.decrementquantity(currentstate, product.product_id, dispatch)} >-</button>
                                                         <input type="text" className='flex text-md h-[1.5rem] w-[2rem] border border-black text-center' value={currentstate.usertxn.find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === product.product_id)?.order_quantity || 0} />
