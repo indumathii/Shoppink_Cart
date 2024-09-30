@@ -215,7 +215,7 @@ export const decrementquantity = async (currentstate, p_id, dispatch) => {
         const updated_state = {
             ...temp_state,
             usertxn: updated_user_txn,
-            currentpid: updated_txn_1.order_quantity > 0 ? true : false,
+            isaddtocart: updated_txn_1.order_quantity > 0 ? false : true,
         };
         dispatch(decrements_quantity(updated_state))
 
@@ -271,7 +271,7 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
                 ...tmp_state,
                 usertxn: new_added_txns,
                 cartcount: tmp_state.cartcount + 1,
-                currentpid: false
+                isaddtocart: false
             }
             console.log("printing new State", new_State)
 
@@ -314,7 +314,7 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
                     const updated_state = {
                         ...tmp_state,
                         usertxn: updated_user_txn,
-                        currentpid: false
+                        isaddtocart: false
                     };
                     dispatch(add_to_carts(updated_state));
 
@@ -330,6 +330,12 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
 
 
                 }
+            }
+        }
+        else if (temp_usertxn[selected_txn_index].cart_status === 'Remove from Cart') {
+            console.log("inside else if if loop of selected_txn")
+            if (temp_usertxn[selected_txn_index].order_status === 'New') {
+                alert("You have already ordered this item, Please select any other item")
             }
         }
         else {

@@ -71,7 +71,7 @@ const ProductsDescription = () => {
                                     <p className='flex mt-[1rem] text-left'>{currentstate.temp_products[0].product_description}</p>
                                     <div className='flex mt-[5rem] items-start justify-center -ml-[1rem]'>
                                         <h1 className='flex text-black text-2xl font-medium md:ml-[1rem]'>{currentstate.temp_products[0].price}</h1>
-                                        {currentstate.currentpid ? (
+                                        {currentstate.isaddtocart ? (
                                             <button className='flex bg-white border ml-[2rem] justify-center md:text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-md shadow-md border-1 border-black text-black font-bold rounded p-3' onClick={() => cartUtils.addtocart(currentstate, parseInt(p_id), dispatch)}>
                                                 {currentstate.usertxn.find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === p_id)?.order_quantity > 0 && currentstate.temp_products[0].find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === parseInt(p_id))?.order_status !== 'Placed' ? 'Remove from Cart' : 'Add to Cart'}
                                             </button>

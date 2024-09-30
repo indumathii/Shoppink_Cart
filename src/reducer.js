@@ -25,7 +25,8 @@ const initialState = {
     isloggedin: false,
     currentcart_txns: [],
     currentTime: new Date().toLocaleTimeString(),
-    yourorders: false
+    yourorders: false,
+    isaddtocart: true
 
 };
 
