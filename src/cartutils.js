@@ -189,6 +189,7 @@ export const decrementquantity = async (currentstate, p_id, dispatch) => {
     const res = await httpclient.get('txns');
     const user_txn = res.data;
     const selected_txn_index = user_txn.findIndex(txn => txn.product_id === p_id && (txn.user_id === currentstate.currentuser.id));
+    const selected_txn_index_2 = currentstate.category_temp_products.findIndex(txn => txn.product_id === p_id);
     console.log("before decrement", user_txn[selected_txn_index])
 
     if (selected_txn_index !== -1) {
@@ -204,6 +205,12 @@ export const decrementquantity = async (currentstate, p_id, dispatch) => {
 
         };
 
+        const category_txn = {
+            ...currentstate.category_temp_products[selected_txn_index_2], // Keep the existing properties
+            iscategorytocart: updated_txn_1.order_quantity > 0 ? false : true
+
+        };
+
 
         console.log("updated txn after decrement", updated_txn_2)
 
@@ -212,10 +219,17 @@ export const decrementquantity = async (currentstate, p_id, dispatch) => {
 
         });
 
+        const updated_category_txn = currentstate.category_temp_products.map((txn, index) => {
+            return index === selected_txn_index_2 ? category_txn : txn;
+
+        });
+
         const updated_state = {
             ...temp_state,
             usertxn: updated_user_txn,
             isaddtocart: updated_txn_1.order_quantity > 0 ? false : true,
+            category_temp_products: updated_category_txn
+
         };
         dispatch(decrements_quantity(updated_state))
 
@@ -248,12 +262,11 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
     console.log("temp_usertxn", temp_usertxn)
     if (tmp_state.isloggedin) {
         console.log("user logged in")
-        //const selected_txn = temp_usertxn.filter(txns => (txns.user_id === tmp_state.currentuser.id) && (txns.product_id === p_id))// && (txns.cart_status === 'Remove from Cart'));
-        console.log("printing current state", currentstate.currentuser.id)
-        console.log("printing product_id", p_id)
+
         const selected_txn_index = temp_usertxn.findIndex(txns => (txns.user_id === tmp_state.currentuser.id) && (txns.product_id === p_id));
-        console.log("selected index", selected_txn_index)
-        console.log("selected index item", temp_usertxn[selected_txn_index])
+        const selected_txn_index_2 = currentstate.category_temp_products.findIndex(txn => txn.product_id === p_id);
+        console.log("selected index item 2", selected_txn_index_2)
+        console.log("selected index item 2", currentstate.category_temp_products[selected_txn_index_2])
         if (selected_txn_index === -1) {
             console.log("inside if loop of selected_txn", temp_usertxn[selected_txn_index])
             const maxId = temp_usertxn.length > 0 ? Math.max(...temp_usertxn.map(obj => obj.txn_id)) : 0;
@@ -267,11 +280,23 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
             }
             console.log("new added item", txn_items)
             const new_added_txns = [...tmp_state.usertxn, txn_items]
+
+            const category_txn = {
+                ...currentstate.category_temp_products[selected_txn_index_2],
+                iscategorytocart: false
+
+            };
+            const updated_category_txn = currentstate.category_temp_products.map((txn, index) => {
+                return index === selected_txn_index_2 ? category_txn : txn;
+
+            });
             const new_State = {
                 ...tmp_state,
                 usertxn: new_added_txns,
                 cartcount: tmp_state.cartcount + 1,
-                isaddtocart: false
+                isaddtocart: false,
+                category_temp_products: updated_category_txn
+
             }
             console.log("printing new State", new_State)
 
@@ -291,13 +316,13 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
             //cartcountcalc(contextvalues, setcontextvalues)
         }
         else if (temp_usertxn[selected_txn_index].cart_status === 'Add to Cart') {
-            console.log("inside else if loop of selected_txn")
-            if (temp_usertxn[selected_txn_index].order_status === 'Placed') {
+            console.log("inside else if loop of selected_txn_2")
+            if (temp_usertxn[selected_txn_index].order_status === 'Placed' || currentstate.category_temp_products[selected_txn_index_2].order_status === 'Placed') {
                 alert("You have already ordered this item, Please select any other item")
             }
             else {
-                console.log("item in add to cart status", temp_usertxn[selected_txn_index])
-                if (selected_txn_index !== -1) {
+                console.log("item in add to cart status", currentstate.category_temp_products[selected_txn_index_2])
+                if (selected_txn_index !== -1 || selected_txn_index_2 !== -1) {
                     const updated_txn = {
                         ...temp_usertxn[selected_txn_index], // Keep the existing properties
                         order_quantity: 1,
@@ -310,11 +335,23 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
                     const updated_user_txn = temp_usertxn.map((txn, index) => {
                         return index === selected_txn_index ? updated_txn : txn;
                     });
+                    const category_txn = {
+                        ...currentstate.category_temp_products[selected_txn_index_2],
+                        iscategorytocart: false
+
+                    };
+                    console.log("updated false category_txn in else add to cart", category_txn)
+                    const updated_category_txn = currentstate.category_temp_products.map((txn, index) => {
+                        return index === selected_txn_index_2 ? category_txn : txn;
+
+                    });
 
                     const updated_state = {
                         ...tmp_state,
                         usertxn: updated_user_txn,
-                        isaddtocart: false
+                        isaddtocart: false,
+                        category_temp_products: updated_category_txn
+
                     };
                     dispatch(add_to_carts(updated_state));
 

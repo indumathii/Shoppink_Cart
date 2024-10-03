@@ -31,7 +31,7 @@ function App() {
       {/*
 <Route path="/shoppink/signup" element={<SignupForm />} />
 
-          <Route path="/shoppink/categories/:item" element={<Categorieslist />} />
+          
           
           
           
@@ -48,6 +48,7 @@ function App() {
         <Route path="/shoppink/orders" element={<Orders />} />
         <Route path="/shoppink/yourorders" element={<YourOrder />} />
         <Route path="productsdesc/:p_id" element={<ProductsDescription />} />
+        <Route path="/shoppink/categories/:item" element={<Categorieslist />} />
 
 
         {/*

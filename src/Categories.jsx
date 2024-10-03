@@ -4,18 +4,25 @@ import { faShoppingCart, faUser, faSearch, faBars, faTimes } from '@fortawesome/
 
 import { useNavigate } from 'react-router-dom';
 import { Context } from './App';
+import { useDispatch, useSelector } from 'react-redux';
+import { handle_home } from './actions';
 
 
 
 const Categories = () => {
+    const currentstate = useSelector((state) => state);
+    const dispatch = useDispatch();
     const menus = ['Mobiles', 'Dresses', 'Electronics', 'Furnitures', 'Toys', 'Groceries']
-    const { contextvalues, setcontextvalues } = useContext(Context);
     const handlecategories = (item) => {
         console.log(item)
-        setcontextvalues(prev => ({
-            ...prev, isMenuVisible: false, showcart: false,
+        const category_values = {
+            ...currentstate,
+            isMenuVisible: false, showcart: false,
             login: false, productsdesc: false, signup: false, placeorder: false, iscategorylist: item, ishome: false
-        }))
+
+        }
+
+        dispatch(handle_home(category_values))
     }
 
     return (

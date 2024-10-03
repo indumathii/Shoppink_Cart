@@ -40,7 +40,12 @@ const Home = () => {
 
 
     const togglemenu = () => {
-        //setcontextvalues(prev => ({ ...prev, isMenuVisible: !prev.isMenuVisible }))
+        const toggle_values = {
+            currentstate,
+            isMenuVisible: !currentstate.isMenuVisible
+
+        }
+        dispatch(handle_home(toggle_values))
         console.log(currentstate.isMenuVisible)
     }
 
@@ -110,7 +115,9 @@ const Home = () => {
             cartcount: 0,
             showcart: false,
             your_orders: false,
-            place_order: false
+            place_order: false,
+            iscategorylist: null,
+            ishome: true
 
         };
         console.log("handle sign out values", handle_signout_values)

@@ -21,12 +21,15 @@ const initialState = {
     signupsubmit: false,
     productitems: [],
     temp_products: [],
+    category_temp_products: [],
     usertxn: [],
     isloggedin: false,
     currentcart_txns: [],
     currentTime: new Date().toLocaleTimeString(),
     yourorders: false,
-    isaddtocart: true
+    isaddtocart: true,
+    iscategorytocart: true,
+    isbannertocart: true
 
 };
 
