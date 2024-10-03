@@ -37,7 +37,7 @@ const Products = () => {
             dispatch(products_dispatch(productValues))
             console.log("printing current state in products", currentstate)
             window.localStorage.setItem('shoppink-store', JSON.stringify(productValues))
-            //cartUtils.cartcountcalc(currentstate, dispatch)
+            cartUtils.cartcountcalc(currentstate, dispatch)
 
         };
 

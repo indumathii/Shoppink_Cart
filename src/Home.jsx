@@ -166,7 +166,7 @@ const Home = () => {
 
         }
         else if (currentstate.iscategorylist) {
-            console.log('inside useeffect iscategorylist')
+            console.log('inside  home useeffect iscategorylist')
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth',

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Context } from './App';
 import { useDispatch, useSelector } from 'react-redux';
 import httpclient from './Axios';
-import { products_dispatch } from './actions';
+import { handle_home, products_dispatch } from './actions';
 
 const Categorieslist = () => {
     const currentstate = useSelector((state) => state);
@@ -13,7 +13,7 @@ const Categorieslist = () => {
     /* category_product = currentstate.productitems.filter(item =>
         item.category === currentstate.iscategorylist  
     );*/
-    let current_product = []
+    let current_product_1 = []
 
 
     useEffect(() => {
@@ -22,31 +22,64 @@ const Categorieslist = () => {
             console.log("current state of Categorieslist", currentstate.iscategorylist)
             //const currentstate.temp_products[0]. = currentstate.productitems.filter(item => item.product_id === product.product_id)
             const response = await httpclient.get(`txns/cart/${currentstate.currentuser.id}`)
-            const products_tmp = response.data;
-            console.log("products_tmp", products_tmp)
-            const products = products_tmp.filter(item => item.category === currentstate.iscategorylist)
-            console.log("products res data in categories list", products)
-            console.log("printing length of products", Object.keys(products).length)
-            if (Object.keys(products).length > 0) {
+            const products_json = response.data;
+            const products1 = products_json.filter(item => item.category === currentstate.iscategorylist)
+            const products2 = currentstate.productitems.filter(item => {
+                return item.category === currentstate.iscategorylist &&
+                    !products1.some(product => product.product_id === item.product_id);
+            });
+            console.log("products res data in categories list json", products1)
+            console.log("products res data in categories list products2", products2)
+            console.log("printing length of products json", Object.keys(products1).length)
+            if (Object.keys(products1).length > 0) {
                 console.log("inside if of categorilist")
-                current_product = products
-                current_product.forEach(product => product.iscategorytocart = product.order_quantity === 0 || product.cart_status === 'Add to Cart');
-                console.log("current product in if categorilist ", current_product)
+                const updatedProducts2 = products2.map(item => ({
+                    ...item,
+                    order_quantity: 0,
+                    cart_status: "Add to cart",
+                    order_status: 'New',
+                    user_id: currentstate.currentuser.id,
+                    txn_id: Math.floor(1000000000 + Math.random() * 9000000000),
+                    iscategorytocart: true
+
+                }));
+                console.log("Updated products2:", updatedProducts2);
+                const updatedProducts1 = products1.map(item => ({
+                    ...item,
+                    iscategorytocart: item.order_quantity === 0 || item.cart_status === 'Add to Cart'
+
+                }));
+                console.log("updted products 1", updatedProducts1)
+                const updated_state = {
+                    ...currentstate,
+                    category_temp_products: updatedProducts1.concat(updatedProducts2)
+                }
+                dispatch(products_dispatch(updated_state))
+
             }
             else {
                 console.log("inside else of categorilist")
-                current_product = currentstate.productitems.filter(item => item.category === currentstate.iscategorylist)
-                current_product.forEach(product => product.iscategorytocart = true);
-            }
-            console.log("current product in categorilist", current_product)
-            const defaultvalues = {
-                ...currentstate,
-                category_temp_products: current_product
-            }
-            console.log("temp products assigned in state", defaultvalues)
-            dispatch(products_dispatch(defaultvalues))
+                const updatedProducts2 = products2.map(item => ({
+                    ...item,
+                    order_quantity: 0,
+                    cart_status: "Add to cart",
+                    order_status: 'New',
+                    user_id: currentstate.currentuser.id,
+                    txn_id: Math.floor(1000000000 + Math.random() * 9000000000),
+                    iscategorytocart: true
 
-        };
+                }));
+                const updated_state = {
+                    ...currentstate,
+                    category_temp_products: updatedProducts2
+                }
+                dispatch(products_dispatch(updated_state))
+            }
+
+            console.log("final updated products in category_temp_products", currentstate.category_temp_products);
+            console.log("final state in categorylist", currentstate)
+
+        }
 
         fetchProducts(currentstate);
     }, [currentstate.iscategorylist]);
@@ -70,7 +103,7 @@ const Categorieslist = () => {
                                 </div>
                                 <div className='flex flex-row w-full justify-center items-center -mt-[1rem] h-full'>
                                     <h1 className='flex text-black text-xl font-medium top[-3rem] md:ml-[1rem] -mt-[0.5rem] ml-[2rem]'>{product.price}</h1>
-                                    {currentstate.category_temp_products.find(item => item.product_id === product.product_id)?.iscategorytocart ? (
+                                    {(product.iscategorytocart) ? (
                                         <button className='flex bg-white border ml-[2rem] justify-center text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-md shadow-md border-1 border-black text-black font-bold rounded p-2' onClick={() => cartUtils.addtocart(currentstate, product.product_id, dispatch)}>
                                             Add to Cart
                                         </button>
@@ -78,7 +111,7 @@ const Categorieslist = () => {
                                         (
                                             <div className='flex flex-row justify-between ml-[2rem] gap-2 w-[3rem] h-[2rem] items-center'>
                                                 <button className='flex text-3xl text-black' onClick={() => cartUtils.decrementquantity(currentstate, product.product_id, dispatch)}>-</button>
-                                                <input type="text" className='flex text-sm text-black h-[1.5rem] w-[2rem] border border-black text-center' value={currentstate.usertxn.find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === product.product_id)?.order_quantity || 0} />
+                                                <input type="text" className='flex text-sm text-black h-[1.5rem] w-[2rem] border border-black text-center' value={product.order_quantity} />
                                                 <button className='flex text-2xl text-black' onClick={() => cartUtils.incrementquantity(currentstate, product.product_id, dispatch)}>+</button>
                                             </div>
                                         )

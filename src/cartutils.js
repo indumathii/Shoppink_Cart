@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import { add_to_carts, cart_total_value, cartcountcalculation, decrements_quantity, place_order, increments_quantity, loginfailure, loginsuccess, setinitialstate } from './actions';
 import httpclient from './Axios';
 
@@ -17,7 +18,7 @@ export const carttotalvalue = async (currentstate, dispatch) => {
     }, 0);
 
     const cartvalues = {
-        ...temp_state,
+        ...currentstate,
         totalcartvalue: totalvalue,
         currentcart_txns: inCartItems,
     }
@@ -30,16 +31,17 @@ export const carttotalvalue = async (currentstate, dispatch) => {
 
 
 export const cartcountcalc = async (currentstate, dispatch) => {
+    const currentstate1 = useSelector((state) => state)
     if (currentstate.isloggedin) {
         const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
         const res = await httpclient.get('txns');
         const usertxn = res.data;
-        console.log("printing current state in cartcount utils", currentstate)
+        console.log("printing current state in cartcount utils", currentstate1)
         const current_cart_items = usertxn.filter(txn => (txn.cart_status === 'Remove from Cart') && (txn.user_id === currentstate.currentuser.id));
         console.log("printing current cart items", current_cart_items)
         console.log("printing cartcountcalc", current_cart_items.length)
         const cartvalues = {
-            ...currentstate,
+            ...currentstate1,
             cartcount: current_cart_items.length
 
         };
@@ -208,7 +210,9 @@ export const decrementquantity = async (currentstate, p_id, dispatch) => {
 
         const category_txn = {
             ...currentstate.category_temp_products[selected_txn_index_2], // Keep the existing properties
-            iscategorytocart: updated_txn_1.order_quantity > 0 ? false : true
+            iscategorytocart: updated_txn_1.order_quantity > 0 ? false : true,
+            order_quantity: updated_txn_1.order_quantity,
+            cart_status: updated_txn_1.order_quantity > 0 ? 'Remove from Cart' : 'Add to Cart',
 
         };
 
@@ -284,7 +288,12 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
 
             const category_txn = {
                 ...currentstate.category_temp_products[selected_txn_index_2],
-                iscategorytocart: false
+                iscategorytocart: false,
+                order_quantity: 1,
+                cart_status: 'Remove from Cart',
+                order_status: 'New',
+                txn_id: maxId + 1,
+                user_id: tmp_state.currentuser.id,
 
             };
             const updated_category_txn = currentstate.category_temp_products.map((txn, index) => {
@@ -338,7 +347,10 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
                     });
                     const category_txn = {
                         ...currentstate.category_temp_products[selected_txn_index_2],
-                        iscategorytocart: false
+                        iscategorytocart: false,
+                        cart_status: 'Remove from Cart',
+                        order_quantity: 1,
+                        order_status: 'New'
 
                     };
                     console.log("updated false category_txn in else add to cart", category_txn)
@@ -437,7 +449,7 @@ export const loginfunc = async (values, currentstate, dispatch) => {
             console.log("Setting updated login value")
             window.localStorage.setItem('shoppink-store', JSON.stringify(updatedloginvalues))
             const savedstate = JSON.parse(window.localStorage.getItem('shoppink-store'))
-            console.log("printing saved from localstorage in cartutils", savedstate)
+            console.log("printing saved from localstorage in cartutils", updatedloginvalues)
             dispatch(loginsuccess(updatedloginvalues));
             cartcountcalc(currentstate, dispatch)
             carttotalvalue(currentstate, dispatch)
