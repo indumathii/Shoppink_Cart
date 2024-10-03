@@ -57,12 +57,12 @@ const Products = () => {
     }
     const bannerimages = [
         {
-            category: 'Women Dresses',
+            category: 'Dresses',
             c_img: "https://www.beyoung.in/blog/wp-content/uploads/2022/02/header-1.jpg"
         },
         {
-            category: 'Women Dresses',
-            c_img: "https://myraymond.com/cdn/shop/files/PAY_DAY-_website_banner_d92cf258-7496-4178-a175-fa3a93215e87.png?v=1725535588"
+            category: 'Books',
+            c_img: "https://i.pinimg.com/originals/3c/41/da/3c41daef927b657e75f8040991a3171f.jpg"
         },
         {
             category: 'Furnitures',
