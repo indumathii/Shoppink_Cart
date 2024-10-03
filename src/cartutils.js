@@ -31,17 +31,16 @@ export const carttotalvalue = async (currentstate, dispatch) => {
 
 
 export const cartcountcalc = async (currentstate, dispatch) => {
-    const currentstate1 = useSelector((state) => state)
     if (currentstate.isloggedin) {
         const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
         const res = await httpclient.get('txns');
         const usertxn = res.data;
-        console.log("printing current state in cartcount utils", currentstate1)
+        console.log("printing current state in cartcount utils", currentstate)
         const current_cart_items = usertxn.filter(txn => (txn.cart_status === 'Remove from Cart') && (txn.user_id === currentstate.currentuser.id));
         console.log("printing current cart items", current_cart_items)
         console.log("printing cartcountcalc", current_cart_items.length)
         const cartvalues = {
-            ...currentstate1,
+            ...currentstate,
             cartcount: current_cart_items.length
 
         };
@@ -175,9 +174,9 @@ export const incrementquantity = async (currentstate, p_id, dispatch) => {
         const saved_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
         console.log("context values from localstorage updated in increment quantity", saved_state);
         const usr_tns = await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${p_id}`, updated_txn);
-        cartcountcalc(currentstate, dispatch)
+        cartcountcalc(updated_state, dispatch)
         console.log("printing increment quantity after carcountcal dispatch", currentstate)
-        carttotalvalue(currentstate, dispatch)
+        carttotalvalue(updated_state, dispatch)
         console.log("printing increment quantity after cartotalvalue dispatch", currentstate)
         return usr_tns.data;
     }
@@ -243,8 +242,8 @@ export const decrementquantity = async (currentstate, p_id, dispatch) => {
         console.log("context values from localstorage updated in decrement quantity", saved_state);
         console.log("Current user in currenstate decrement", typeof (BigInt(currentstate.currentuser.id)))
         const usr_tns = await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${p_id}`, updated_txn_2);
-        cartcountcalc(currentstate, dispatch)
-        carttotalvalue(currentstate, dispatch)
+        cartcountcalc(updated_state, dispatch)
+        carttotalvalue(updated_state, dispatch)
         return usr_tns.data;
 
 
@@ -317,8 +316,8 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
             const usr_tns = await httpclient.post('txns', txn_items);
             const saved_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
             console.log("context values from localstorage updated afted addtocart", saved_state);
-            cartcountcalc(currentstate, dispatch)
-            carttotalvalue(currentstate, dispatch)
+            cartcountcalc(new_State, dispatch)
+            carttotalvalue(new_State, dispatch)
             return usr_tns.data;
 
             //
@@ -373,8 +372,8 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
                     //cartcountcalc(setcontextvalues)
                     window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));
                     const usr_tns = await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${p_id}`, updated_txn);
-                    cartcountcalc(currentstate, dispatch)
-                    carttotalvalue(currentstate, dispatch)
+                    cartcountcalc(updated_state, dispatch)
+                    carttotalvalue(updated_state, dispatch)
                     return usr_tns.data;
 
 
@@ -451,8 +450,8 @@ export const loginfunc = async (values, currentstate, dispatch) => {
             const savedstate = JSON.parse(window.localStorage.getItem('shoppink-store'))
             console.log("printing saved from localstorage in cartutils", updatedloginvalues)
             dispatch(loginsuccess(updatedloginvalues));
-            cartcountcalc(currentstate, dispatch)
-            carttotalvalue(currentstate, dispatch)
+            cartcountcalc(updatedloginvalues, dispatch)
+            carttotalvalue(updatedloginvalues, dispatch)
 
         } else {
             console.log("Invalid Password");
