@@ -1,5 +1,5 @@
 //import { ADD_TO_CART, REMOVE_FROM_CART, UPDATE_CART_QUANTITY } from './actions';
-import { ADD_TO_CART, CART_COUNT_CALCULATION, CART_TOTAL_VALUE, DECREMENT_QUANTITY, HANDLE_BANNER, HANDLE_HOME, HANDLE_LOGIN, HANDLE_MEMBER_LIST, HANDLE_PLACE_ORDER, HANDLE_SIGNOUT, HANDLE_SUBMIT, INCREMENT_QUANTITY, LOGIN_FAILURE, LOGIN_SUCCESS, PLACE_ORDER, PRODUCTS_DISPATCH, SET_INITIAL_STATE, SHOW_CART, YOUR_ORDERS } from './actions';
+import { ADD_TO_CART, CART_COUNT_CALCULATION, CART_TOTAL_VALUE, DECREMENT_QUANTITY, HANDLE_BANNER, HANDLE_HOME, HANDLE_LOGIN, HANDLE_MEMBER_LIST, HANDLE_PLACE_ORDER, HANDLE_SIGNOUT, HANDLE_SUBMIT, INCREMENT_QUANTITY, LOGIN_FAILURE, LOGIN_SUCCESS, PLACE_ORDER, PRODUCTS_DISPATCH, SET_INITIAL_STATE, SHOW_CART, UPDATE_GENDER, YOUR_ORDERS } from './actions';
 
 const initialState = {
 
@@ -29,7 +29,10 @@ const initialState = {
     yourorders: false,
     isaddtocart: true,
     iscategorytocart: true,
-    isbannertocart: true
+    isbannertocart: true,
+    ismen: false,
+    iswomen: false,
+    isall: true
 
 };
 
@@ -131,6 +134,13 @@ const cartReducer = (state = initialState, action) => {
                 ...state,
                 ...action.payload,
             };
+        case UPDATE_GENDER:
+            console.log("Reducer received action:", action);
+            return {
+                ...state,
+                category_temp_products: action.payload.category_temp_products,
+            };
+
 
         default:
             return state;

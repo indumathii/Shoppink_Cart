@@ -424,6 +424,7 @@ export const loginfunc = async (values, currentstate, dispatch) => {
                 logsubmit: false
             };
             console.log("updated failure values")
+            alert("User not registered")
             dispatch(loginfailure(updatedfailurevalues));
         }
         else if (userFound.password === values.password) {
@@ -455,6 +456,7 @@ export const loginfunc = async (values, currentstate, dispatch) => {
 
         } else {
             console.log("Invalid Password");
+            alert("Invalid Password")
 
         }
 
