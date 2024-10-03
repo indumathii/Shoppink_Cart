@@ -34,11 +34,12 @@ export const cartcountcalc = async (currentstate, dispatch) => {
         const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
         const res = await httpclient.get('txns');
         const usertxn = res.data;
+        console.log("printing current state in cartcount utils", currentstate)
         const current_cart_items = usertxn.filter(txn => (txn.cart_status === 'Remove from Cart') && (txn.user_id === currentstate.currentuser.id));
         console.log("printing current cart items", current_cart_items)
         console.log("printing cartcountcalc", current_cart_items.length)
         const cartvalues = {
-            ...temp_state,
+            ...currentstate,
             cartcount: current_cart_items.length
 
         };

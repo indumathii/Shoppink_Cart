@@ -21,18 +21,28 @@ const Products = () => {
             const response = await httpclient.get('products');
             const products = response.data;
             const productDefaultValues = {
-                ...productvalues,
+                ...currentstate,
                 productitems: products,
 
             };
-            console.log("Products after update in Products.jsx", productDefaultValues);
-            dispatch(products_dispatch(productDefaultValues))
-            cartUtils.cartcountcalc(currentstate, dispatch)
+            const response1 = await httpclient.get('products');
+            const products1 = response1.data;
+            console.log("printing products1 repsonse", products1)
+            const productValues = {
+                ...currentstate,
+                productitems: products1,
+
+            };
+            console.log("Products after update in Products.jsx", productValues);
+            dispatch(products_dispatch(productValues))
+            console.log("printing current state in products", currentstate)
+            window.localStorage.setItem('shoppink-store', JSON.stringify(productValues))
+            //cartUtils.cartcountcalc(currentstate, dispatch)
 
         };
 
         fetchProducts();
-    }, []);
+    }, [dispatch]);
 
 
     const handlebanner = (category) => {

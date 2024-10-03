@@ -49,7 +49,7 @@ const Categorieslist = () => {
         };
 
         fetchProducts(currentstate);
-    }, []);
+    }, [currentstate.iscategorylist]);
     return (
         <div className={`${currentstate.isMenuVisible ? 'relative -z-10' : 'relative'} `}>
 

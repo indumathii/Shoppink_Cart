@@ -12,7 +12,7 @@ import { handle_home } from './actions';
 const Categories = () => {
     const currentstate = useSelector((state) => state);
     const dispatch = useDispatch();
-    const menus = ['Mobiles', 'Dresses', 'Electronics', 'Furnitures', 'Toys', 'Groceries']
+    const menus = ['Mobiles', 'Dresses', 'Electronics', 'Furnitures', 'Toys', 'Groceries', 'Books']
     const handlecategories = (item) => {
         console.log(item)
         const category_values = {
