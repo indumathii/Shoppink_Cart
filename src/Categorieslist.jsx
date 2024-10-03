@@ -53,11 +53,11 @@ const Categorieslist = () => {
                 }));
                 console.log("updted products 1", updatedProducts1)
                 const concat_product = updatedProducts1.concat(updatedProducts2)
-                if (currentstate.ismen) {
+                if (currentstate.iscategorylist === 'Dresses' && currentstate.ismen) {
                     console.log("inside if ismen fetchproducts")
                     current_gender_product = concat_product.filter(item => item.sub_category == 'Men Dresses')
                 }
-                else if (currentstate.iswomen) {
+                else if (currentstate.iscategorylist === 'Dresses' && currentstate.iswomen) {
                     current_gender_product = concat_product.filter(item => item.sub_category == 'Women Dresses')
                 }
                 else {
@@ -84,10 +84,10 @@ const Categorieslist = () => {
 
                 }));
 
-                if (currentstate.ismen) {
+                if (currentstate.iscategorylist === 'Dresses' && currentstate.ismen) {
                     current_gender_product = updatedProducts2.filter(item => item.sub_category == 'Men Dresses')
                 }
-                else if (currentstate.iswomen) {
+                else if (currentstate.iscategorylist === 'Dresses' && currentstate.iswomen) {
                     current_gender_product = updatedProducts2.filter(item => item.sub_category == 'Women Dresses')
                 }
                 else {
