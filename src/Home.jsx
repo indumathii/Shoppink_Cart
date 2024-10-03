@@ -16,6 +16,13 @@ const Home = () => {
     const [contextvalues, setcontextvalues] = useState();
     const currentstate = useSelector((state) => state)
     const dispatch = useDispatch();
+    const [formdata, setformdata] = useState({
+        name: '',
+        mail: '',
+        to_mail: '',
+        message: '',
+        products: ''
+    })
 
     useEffect(() => {
 
@@ -201,6 +208,7 @@ const Home = () => {
                 behavior: 'smooth',
             });*/
             console.log("navigating to your orders")
+            cartUtils.sendemail(formdata, setformdata, currentstate)
 
             navigate('/shoppink/yourorders')
 
@@ -216,7 +224,7 @@ const Home = () => {
                 behavior: 'smooth',
             });*/
             console.log("navigating to home 1")
-
+            //cartUtils.sendemail(formdata, setformdata, currentstate)
             navigate('/home')
 
 

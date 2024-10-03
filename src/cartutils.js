@@ -1,6 +1,36 @@
 import { useSelector } from 'react-redux';
 import { add_to_carts, cart_total_value, cartcountcalculation, decrements_quantity, place_order, increments_quantity, loginfailure, loginsuccess, setinitialstate } from './actions';
 import httpclient from './Axios';
+import emailjs from 'emailjs-com';
+import { useState } from 'react';
+
+
+
+export const sendemail = async (formdata, setformdata, currentstate) => {
+    console.log("inside mail cart items", currentstate.currentcart_txns)
+    const productList = currentstate.category_temp_products.map((item, index) => `${index + 1}. ${item.product_name}`).join('\n');
+    const length = currentstate.category_temp_products.length
+
+
+    alert("sending email")
+    setformdata(prev => ({
+        ...prev,
+        to_name: currentstate.currentuser.firstname,
+        mail: 'neelaindumathi@gmail.com',
+        to_mail: 'neelaindumathi@gmail.com',
+        products: productList,
+        product_length: length
+
+    }));
+    emailjs.send('service_123', 'template_1', formdata, 'c3bXIk5PCNWxt4F1o')
+        .then((response) => {
+            console.log('Email sent successfully:', response.status, response.text, formdata.to_mail, formdata.message);
+        })
+        .catch((error) => {
+            console.error('Failed to send email:', error);
+        });
+}
+
 
 
 
@@ -8,7 +38,7 @@ export const carttotalvalue = async (currentstate, dispatch) => {
     const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
     //const user_txn = temp_state.usertxn
     console.log("currentstate", currentstate.currentuser.id)
-    const response = await httpclient.get(`txns/cart/${currentstate.currentuser.id}`)
+    const response = await httpclient.get(`txns/cart/${currentstate.currentuser.id} `)
     const inCartItems = response.data;
     const addedtocart_items = inCartItems.filter(item => item.cart_status === 'Remove from Cart');
     console.log("products in cart", addedtocart_items)
@@ -59,7 +89,7 @@ export const handleproductsdesc = (currentstate, dispatch, p_id, navigate) => {
 
     };
     dispatch(cartcountcalculation(cartvalues))
-    navigate(`/productsdesc/${p_id}`);
+    navigate(`/ productsdesc / ${p_id} `);
 
 }
 
@@ -114,7 +144,7 @@ export const orderplaced = async (currentstate, dispatch) => {
         ];*/
 
 
-        await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${product.product_id}`, updated_value);
+        await httpclient.put(`txns / ${BigInt(currentstate.currentuser.id)}/${product.product_id}`, updated_value);
 
 
     }
