@@ -72,7 +72,6 @@ export const cartcountcalc = async (currentstate, dispatch) => {
         const cartvalues = {
             ...currentstate,
             cartcount: current_cart_items.length,
-            placeorder: false
 
         };
         dispatch(cartcountcalculation(cartvalues))
@@ -120,11 +119,9 @@ export const handleproductsdesc = (currentstate, dispatch, p_id, navigate) => {
 
 
 export const orderplaced = async (currentstate, dispatch) => {
-    //alert('Order Placed Successfully')
     const temp_state = currentstate //JSON.parse(window.localStorage.getItem('shoppink-store'))
     const current_cart_items = temp_state.currentcart_txns.filter(txn => txn.cart_status === 'Remove from Cart');
     console.log("orders placed", current_cart_items)
-    let updatedUsTxns = []
     for (const product of current_cart_items) {
         console.log("printing temp_state", temp_state)
         console.log("printing user txn", temp_state.usertxn)

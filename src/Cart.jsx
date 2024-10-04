@@ -25,6 +25,7 @@ const Cart = () => {
 
     const handleplaceorder = () => {
         console.log("inside handleplaceorder")
+        alert('Order Placed Successfully')
         const place_order_values = {
             ...currentstate,
             placeorder: true, login: false, productdesc: false, signup: false, showcart: false, iscategorylist: false, ishome: false
