@@ -198,6 +198,7 @@ const Home = () => {
                 top: 0,
                 behavior: 'smooth',
             });
+            cartUtils.sendemail(formdata, setformdata, currentstate)
             navigate('/shoppink/orders')
         }
         else if (currentstate.yourorders) {
@@ -208,7 +209,7 @@ const Home = () => {
                 behavior: 'smooth',
             });*/
             console.log("navigating to your orders")
-            cartUtils.sendemail(formdata, setformdata, currentstate)
+
 
             navigate('/shoppink/yourorders')
 

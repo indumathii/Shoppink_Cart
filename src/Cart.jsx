@@ -22,6 +22,7 @@ const Cart = () => {
     let add_cartitems = Array.isArray(currentstate.usertxn) ? currentstate.usertxn.filter(product => (product.user_id === currentstate.currentuser.id) && (product.cart_status === 'Remove from Cart')) : [];
     let add_cartitems2 = Array.isArray(currentstate.currentcart_txns) ? currentstate.currentcart_txns.filter(product => (product.user_id === currentstate.currentuser.id) && (product.cart_status === 'Remove from Cart')) : [];
     console.log("printing add_cart_items", add_cartitems2)
+
     const handleplaceorder = () => {
         console.log("inside handleplaceorder")
         const place_order_values = {

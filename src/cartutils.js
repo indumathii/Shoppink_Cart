@@ -8,8 +8,8 @@ import { useState } from 'react';
 
 export const sendemail = async (formdata, setformdata, currentstate) => {
     console.log("inside mail cart items", currentstate.currentcart_txns)
-    const productList = currentstate.category_temp_products.map((item, index) => `${index + 1}. ${item.product_name}`).join('\n');
-    const length = currentstate.category_temp_products.length
+    const productList = currentstate.currentcart_txns.map((item, index) => `${index + 1}. ${item.product_name}`).join('\n');
+    const length = currentstate.currentcart_txns.length
 
 
     alert("sending email")
@@ -128,6 +128,8 @@ export const orderplaced = async (currentstate, dispatch) => {
     for (const product of current_cart_items) {
         console.log("printing temp_state", temp_state)
         console.log("printing user txn", temp_state.usertxn)
+        console.log("printing current cart txn", current_cart_items)
+        console.log("printing user id", currentstate.currentuser.id)
         const selected_txn_index = temp_state.usertxn.findIndex(txn => (txn.user_id === currentstate.currentuser.id) && (txn.product_id === product.product_id));
         const updated_value = {
             ...temp_state.usertxn[selected_txn_index],
@@ -144,7 +146,7 @@ export const orderplaced = async (currentstate, dispatch) => {
         ];*/
 
 
-        await httpclient.put(`txns / ${BigInt(currentstate.currentuser.id)}/${product.product_id}`, updated_value);
+        await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${product.product_id}`, updated_value);
 
 
     }
