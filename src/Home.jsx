@@ -115,8 +115,8 @@ const Home = () => {
             currentTime: new Date().toLocaleTimeString(),
             cartcount: 0,
             showcart: false,
-            your_orders: false,
-            place_order: false,
+            yourorders: false,
+            placeorder: false,
             iscategorylist: null,
             ishome: true
 
@@ -192,7 +192,7 @@ const Home = () => {
                 top: 0,
                 behavior: 'smooth',
             });
-            if (currentstate.islogggedin) {
+            if (currentstate.isloggedin) {
                 navigate('/shoppink/orders')
             }
             else {
@@ -201,17 +201,16 @@ const Home = () => {
         }
         else if (currentstate.yourorders) {
             console.log('inside yourorders')
-
-            /*window.scrollTo({
-                top: 0,
-                behavior: 'smooth',
-            });*/
             console.log("navigating to your orders")
-
-
-            navigate('/shoppink/yourorders')
-
-
+            if (currentstate.isloggedin) {
+                console.log("inside if or yourorder")
+                navigate('/shoppink/yourorders')
+            }
+            else {
+                navigate('/home')
+                console.log("inside else yourorders")
+                console.log("isloggedin", currentstate.isloggedin)
+            }
 
         }
 
@@ -238,7 +237,7 @@ const Home = () => {
 
         //cartUtils.cartcountcalc(currentstate, dispatch)
 
-    }, [currentstate.login, currentstate.signup, currentstate.logsubmit, currentstate.signupsubmit, currentstate.productsdesc, currentstate.showcart, currentstate.cartcount, currentstate.ishome, currentstate.productitems, currentstate.settotalcartvalue, currentstate.totalcartvalue, currentstate.placeorder, currentstate.iscategorylist]);
+    }, [currentstate.login, currentstate.signup, currentstate.logsubmit, currentstate.signupsubmit, currentstate.productsdesc, currentstate.showcart, currentstate.ishome, currentstate.productitems, currentstate.placeorder, currentstate.iscategorylist, currentstate.isloggedin]);
 
 
 

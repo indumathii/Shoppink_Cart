@@ -8,8 +8,10 @@ import { useState } from 'react';
 
 export const sendemail = async (currentstate, dispatch) => {
     console.log("inside mail cart items", currentstate.currentcart_txns)
-    const productList = currentstate.currentcart_txns.map((item, index) => `${index + 1}. ${item.product_name}`).join('\n');
-    const length = currentstate.currentcart_txns.length
+    const productList_temp = currentstate.currentcart_txns.filter(product => (product.user_id === currentstate.currentuser.id) && (product.cart_status === 'Remove from Cart'));
+    console.log("printing produclisttemp", productList_temp)
+    const productList = productList_temp.map((item, index) => `${index + 1}. ${item.product_name}`).join('\n');
+    const length = productList_temp.length
     alert("sending email")
     const new_data = {
         to_name: currentstate.currentuser.firstname,
@@ -105,12 +107,14 @@ export const orderplaced = async (currentstate, dispatch) => {
         console.log("printing current cart txn", current_cart_items)
         console.log("printing user id", currentstate.currentuser.id)
         const selected_txn_index = temp_state.usertxn.findIndex(txn => (txn.user_id === currentstate.currentuser.id) && (txn.product_id === product.product_id));
+        const selected_txn_index_2 = temp_state.currentcart_txns.findIndex(txn => (txn.user_id === currentstate.currentuser.id) && (txn.product_id === product.product_id));
         const updated_value = {
             ...temp_state.usertxn[selected_txn_index],
             order_status: 'Placed',
             cart_status: 'Add to Cart'
 
         }
+
         console.log("printin updated value in order placed", updated_value)
         await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${product.product_id}`, updated_value);
 
