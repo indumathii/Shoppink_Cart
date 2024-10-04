@@ -137,21 +137,29 @@ export const orderplaced = async (currentstate, dispatch) => {
 
 
 
-export const incrementquantity = async (currentstate, p_id, dispatch) => {
+export const incrementquantity = async (currentstate, module, key, p_id, dispatch) => {
     console.log("increment")
-    const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
-    //const user_txn = temp_state.usertxn
+    //const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
+    console.log("module", module)
+    console.log("key", key)
+    console.log("p_id", p_id)
+    let updatedstate = {}
     const res = await httpclient.get('txns');
     const user_txn = res.data;
     console.log("currentstate user id", currentstate.currentuser.id)
     console.log("product id", p_id)
     const selected_txn_index = user_txn.findIndex(txn => (txn.user_id === currentstate.currentuser.id) && (txn.product_id === p_id));
+    const selected_txn_index_2 = module.findIndex(txn => txn.product_id === p_id);
     console.log("selected index", selected_txn_index)
-    console.log("before increment", user_txn[selected_txn_index])
-    if (user_txn[selected_txn_index].order_quantity >= 5) {
+    console.log("selected index user txn", user_txn[selected_txn_index])
+    console.log("Selected index 2", selected_txn_index_2)
+    console.log("module selected index of 2", module[selected_txn_index_2])
+
+    if (user_txn[selected_txn_index].order_quantity >= 5 || module[selected_txn_index_2].order_quantity >= 5) {
         alert("Sorry, you have reached the maximum limit!");
     }
     else {
+        console.log("inside else of increment")
         const updated_txn = {
             ...user_txn[selected_txn_index],
             order_quantity: user_txn[selected_txn_index].order_quantity + 1
@@ -161,31 +169,72 @@ export const incrementquantity = async (currentstate, p_id, dispatch) => {
             return index === selected_txn_index ? updated_txn : txn;
 
         });
-        const temp_product_1 = {
-            ...currentstate.temp_products[0],
-            cart_status: 'Remove from Cart',
-            isaddtocart: false,
-            order_quantity: currentstate.temp_products[0].order_quantity + 1,
+        if (key === 'product_desc') {
+            console.log("inside if of product desc module of increment")
+            const temp_product_1 = {
+                ...currentstate.temp_products[0],
+                cart_status: 'Remove from Cart',
+                isaddtocart: false,
+                order_quantity: currentstate.temp_products[0].order_quantity + 1,
+
+            }
+
+            const updatedstate = {
+                ...currentstate,
+                usertxn: updated_user_txn,
+                cartcount: currentstate.cartcount + 1,
+                isaddtocart: false,
+                temp_products: temp_product_1
+            };
+            dispatch(increments_quantity(updatedstate))
 
         }
+        else if (key === 'cart') {
+            console.log("inside else if of cart module of increment")
+            const category_txn = {
+                ...currentstate.category_temp_products[selected_txn_index_2],
+                iscategorytocart: false,
+                order_quantity: currentstate.category_temp_products[selected_txn_index_2] + 1,
+                cart_status: 'Remove from Cart',
+                order_status: 'New',
+            };
 
+            const updated_category_txn = currentstate.category_temp_products.map((txn, index) => {
+                return index === selected_txn_index_2 ? category_txn : txn;
 
-        const updated_state = {
-            ...temp_state,
-            usertxn: updated_user_txn,
-            temp_products: temp_product_1
-        };
+            });
 
-        dispatch(increments_quantity(updated_state))
-        console.log("printing increment quantity states aftr dispatch", updated_state)
+            updatedstate = {
+                ...currentstate,
+                usertxn: updated_user_txn,
+                cartcount: currentstate.cartcount + 1,
+                isaddtocart: false,
+                category_temp_products: updated_category_txn,
+            };
+            dispatch(increments_quantity(updatedstate));
+
+        }
+        else {
+            console.log("inside user txn module of increment")
+
+            const updated_state = {
+                ...currentstate,
+                usertxn: updated_user_txn,
+                cartcount: currentstate.cartcount + 1,
+                isaddtocart: false,
+            };
+            dispatch(increments_quantity(updatedstate))
+        }
+
+        console.log("printing increment quantity states aftr dispatch", updatedstate)
         //cartcountcalc(currentstate, dispatch)
-        window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));
+        window.localStorage.setItem('shoppink-store', JSON.stringify(updatedstate));
         const saved_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
         console.log("context values from localstorage updated in increment quantity", saved_state);
         const usr_tns = await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${p_id}`, updated_txn);
-        cartcountcalc(updated_state, dispatch)
+        cartcountcalc(updatedstate, dispatch)
         console.log("printing increment quantity after carcountcal dispatch", currentstate)
-        carttotalvalue(updated_state, dispatch)
+        carttotalvalue(updatedstate, dispatch)
         console.log("printing increment quantity after cartotalvalue dispatch", currentstate)
         return usr_tns.data;
     }
@@ -278,8 +327,6 @@ export const addtocart = async (currentstate, module, key, p_id, dispatch) => {
     console.log("dispatch", dispatch)
     console.log("module", module)
     let updatedstate = {}
-    //const tmp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
-    //const temp_usertxn = tmp_state.usertxn
     const res = await httpclient.get('txns');
     const temp_usertxn = res.data;
     console.log("temp_usertxn", temp_usertxn)
