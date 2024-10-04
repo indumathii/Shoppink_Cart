@@ -96,30 +96,6 @@ export const handleproductsdesc = (currentstate, dispatch, p_id, navigate) => {
 }
 
 
-
-/*export const emptycart = (setcontextvalues) => {
-    setcontextvalues(prevState => ({
-        ...prevState,
-        productitems: prevState.productitems.map(item => {
-            const new_P_Status = 'Add to Cart';
-
-            console.log("inside empty cart function in cartutils")
-
-
-            return {
-                ...item,
-                p_status: new_P_Status,
-
-
-            };
-        })
-    }))*/
-
-
-
-
-
-
 export const orderplaced = async (currentstate, dispatch) => {
     const temp_state = currentstate //JSON.parse(window.localStorage.getItem('shoppink-store'))
     const current_cart_items = temp_state.currentcart_txns.filter(txn => txn.cart_status === 'Remove from Cart');
@@ -185,10 +161,19 @@ export const incrementquantity = async (currentstate, p_id, dispatch) => {
             return index === selected_txn_index ? updated_txn : txn;
 
         });
+        const temp_product_1 = {
+            ...currentstate.temp_products[0],
+            cart_status: 'Remove from Cart',
+            isaddtocart: false,
+            order_quantity: currentstate.temp_products[0].order_quantity + 1,
+
+        }
+
 
         const updated_state = {
             ...temp_state,
-            usertxn: updated_user_txn
+            usertxn: updated_user_txn,
+            temp_products: temp_product_1
         };
 
         dispatch(increments_quantity(updated_state))
@@ -230,6 +215,14 @@ export const decrementquantity = async (currentstate, p_id, dispatch) => {
             order_quantity: updated_txn_1.order_quantity
 
         };
+        const temp_product_1 = {
+            ...currentstate.temp_products[0],
+            cart_status: updated_txn_1.order_quantity > 0 ? 'Remove from Cart' : 'Add to Cart',
+            isaddtocart: updated_txn_1.order_quantity > 0 ? false : true,
+            order_quantity: updated_txn_1.order_quantity,
+            order_status: 'New'
+        }
+
 
         const category_txn = {
             ...currentstate.category_temp_products[selected_txn_index_2], // Keep the existing properties
@@ -253,10 +246,11 @@ export const decrementquantity = async (currentstate, p_id, dispatch) => {
         });
 
         const updated_state = {
-            ...temp_state,
+            ...currentstate,
             usertxn: updated_user_txn,
             isaddtocart: updated_txn_1.order_quantity > 0 ? false : true,
-            category_temp_products: updated_category_txn
+            category_temp_products: updated_category_txn,
+            temp_products: temp_product_1
 
         };
         dispatch(decrements_quantity(updated_state))
@@ -269,11 +263,6 @@ export const decrementquantity = async (currentstate, p_id, dispatch) => {
         cartcountcalc(updated_state, dispatch)
         carttotalvalue(updated_state, dispatch)
         return usr_tns.data;
-
-
-
-        //cartcountcalc(currentstate, dispatch)
-
 
     }
 }
@@ -319,6 +308,15 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
                 user_id: tmp_state.currentuser.id,
 
             };
+
+            const temp_product_1 = {
+                ...currentstate.temp_products[0],
+                cart_status: 'Remove from Cart',
+                isaddtocart: false,
+                order_quantity: 1,
+                order_status: 'New'
+            }
+
             const updated_category_txn = currentstate.category_temp_products.map((txn, index) => {
                 return index === selected_txn_index_2 ? category_txn : txn;
 
@@ -328,7 +326,8 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
                 usertxn: new_added_txns,
                 cartcount: tmp_state.cartcount + 1,
                 isaddtocart: false,
-                category_temp_products: updated_category_txn
+                category_temp_products: updated_category_txn,
+                temp_products: temp_product_1
 
             }
             console.log("printing new State", new_State)
@@ -349,8 +348,9 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
             //cartcountcalc(contextvalues, setcontextvalues)
         }
         else if (temp_usertxn[selected_txn_index].cart_status === 'Add to Cart') {
-            console.log("inside else if loop of selected_txn_2")
-            if (temp_usertxn[selected_txn_index].order_status === 'Placed' || currentstate.category_temp_products[selected_txn_index_2].order_status === 'Placed') {
+            console.log("inside else if loop of selected_txn", selected_txn_index)
+            console.log("inside else if loop of selected_txn", temp_usertxn[selected_txn_index])
+            if (temp_usertxn[selected_txn_index].order_status === 'Placed' || currentstate.temp_products[0].order_status === 'Placed' || currentstate.category_temp_products[selected_txn_index_2].order_status === 'Placed') {
                 alert("You have already ordered this item, Please select any other item")
             }
             else {
@@ -368,6 +368,15 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
                     const updated_user_txn = temp_usertxn.map((txn, index) => {
                         return index === selected_txn_index ? updated_txn : txn;
                     });
+
+                    const temp_product_1 = {
+                        ...currentstate.temp_products[0],
+                        cart_status: 'Remove from Cart',
+                        isaddtocart: false,
+                        order_quantity: 1,
+                        order_status: 'New'
+                    }
+
                     const category_txn = {
                         ...currentstate.category_temp_products[selected_txn_index_2],
                         iscategorytocart: false,
@@ -386,7 +395,8 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
                         ...tmp_state,
                         usertxn: updated_user_txn,
                         isaddtocart: false,
-                        category_temp_products: updated_category_txn
+                        category_temp_products: updated_category_txn,
+                        temp_products: temp_product_1
 
                     };
                     dispatch(add_to_carts(updated_state));

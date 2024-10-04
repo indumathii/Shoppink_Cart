@@ -22,31 +22,69 @@ const ProductsDescription = () => {
         const fetchProducts = async (currentstate) => {
             console.log("current state in producdesc", currentstate)
             //const currentstate.temp_products[0]. = currentstate.productitems.filter(item => item.product_id === parseInt(p_id))
-            const response = await httpclient.get(`txns/cart/${currentstate.currentuser.id}`)
-            const products_tmp = response.data;
-            const products = products_tmp.filter(item => item.product_id === parseInt(p_id))
-            console.log("products res data", products)
-            console.log("printing length of products", Object.keys(products).length)
-            if (Object.keys(products).length > 0) {
-                console.log("inside if of desc")
-                current_product = products_tmp.filter(item => item.product_id === parseInt(p_id))
-                console.log("current product in if desc", current_product)
+
+            if (currentstate.isloggedin) {
+                const response = await httpclient.get(`txns/cart/${currentstate.currentuser.id}`)
+                const products_tmp = response.data;
+                const products = products_tmp.filter(item => item.product_id === parseInt(p_id))
+                console.log("products res data", products)
+                console.log("printing length of products", Object.keys(products).length)
+                if (Object.keys(products).length > 0) {
+                    console.log("inside if of desc")
+                    const current_product_tmp = products_tmp.filter(item => item.product_id === parseInt(p_id))
+                    console.log("current product in if desc", current_product)
+                    current_product = current_product_tmp.map(item => ({
+                        ...item,
+                        isaddtocart: (item.order_quantity > 0 && item.cart_status == 'Remove from Cart') ? false : true
+                    }));
+                    const defaultvalues = {
+                        ...currentstate,
+                        temp_products: current_product
+                    }
+
+                    console.log("current product", current_product)
+                    dispatch(products_dispatch(defaultvalues))
+                }
+                else {
+                    const current_product_tmp = currentstate.productitems.filter(item => item.product_id === parseInt(p_id))
+                    current_product = current_product_tmp.map(item => ({
+                        ...item,
+                        cart_status: 'Add to Cart',
+                        order_status: 'New',
+                        order_quantity: 0,
+                        isaddtocart: true
+                    }));
+                    const defaultvalues = {
+                        ...currentstate,
+                        temp_products: current_product
+                    }
+                    console.log("current product tmp", current_product_tmp)
+                    console.log("current product", current_product)
+                    dispatch(products_dispatch(defaultvalues))
+                }
             }
             else {
-                console.log("inside else of desc")
-                current_product = currentstate.productitems.filter(item => item.product_id === parseInt(p_id))
+                console.log("inside else of desc iloggedin no")
+                const current_product_tmp = currentstate.productitems.filter(item => item.product_id === parseInt(p_id))
+                current_product = current_product_tmp.map(item => ({
+                    ...item,
+                    cart_status: 'Add to Cart',
+                    order_status: 'New',
+                    order_quantity: 0,
+                    isaddtocart: true
+                }));
+                const defaultvalues = {
+                    ...currentstate,
+                    temp_products: current_product
+                }
+                console.log("current product tmp", current_product_tmp)
+                console.log("current product", current_product)
+                dispatch(products_dispatch(defaultvalues))
             }
-            console.log("current product in product desc", current_product)
-            const defaultvalues = {
-                ...currentstate,
-                temp_products: current_product
-            }
-            dispatch(products_dispatch(defaultvalues))
-
         };
 
         fetchProducts(currentstate);
-    }, []);
+    }, [currentstate.temp_products.cart_status, currentstate.temp_products.order_quantity]);
 
     return (
         <div className={`${currentstate.isMenuVisible ? 'relative -z-10' : 'relative'}`}>
@@ -71,18 +109,30 @@ const ProductsDescription = () => {
                                     <p className='flex mt-[1rem] text-left'>{currentstate.temp_products[0].product_description}</p>
                                     <div className='flex mt-[5rem] items-start justify-center -ml-[1rem]'>
                                         <h1 className='flex text-black text-2xl font-medium md:ml-[1rem]'>{currentstate.temp_products[0].price}</h1>
-                                        {currentstate.isaddtocart ? (
-                                            <button className='flex bg-white border ml-[2rem] justify-center md:text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-md shadow-md border-1 border-black text-black font-bold rounded p-3' onClick={() => cartUtils.addtocart(currentstate, parseInt(p_id), dispatch)}>
-                                                {currentstate.usertxn.find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === p_id)?.order_quantity > 0 && currentstate.temp_products[0].find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === parseInt(p_id))?.order_status !== 'Placed' ? 'Remove from Cart' : 'Add to Cart'}
-                                            </button>
-                                        ) :
-                                            (
-                                                <div className='flex flex-row justify-between ml-[2rem] gap-2 w-[3rem] h-[2rem] items-center'>
-                                                    <button className='flex text-3xl text-black' onClick={() => cartUtils.decrementquantity(currentstate, parseInt(p_id), dispatch)}>-</button>
-                                                    <input type="text" className='flex text-md text-black h-[1.5rem] w-[2rem] border border-black text-center' value={currentstate.usertxn.find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === parseInt(p_id))?.order_quantity || 0} />
-                                                    <button className='flex text-2xl text-black' onClick={() => cartUtils.incrementquantity(currentstate, parseInt(p_id), dispatch)}>+</button>
-                                                </div>
-                                            )
+                                        {currentstate.isloggedin ? (
+                                            currentstate.temp_products[0].isaddtocart ? (
+                                                <button className='flex bg-white border ml-[2rem] justify-center md:text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-md shadow-md border-1 border-black text-black font-bold rounded p-3' onClick={() => cartUtils.addtocart(currentstate, parseInt(p_id), dispatch)}>
+                                                    {currentstate.usertxn.find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === p_id)?.order_quantity > 0 && currentstate.temp_products[0].find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === parseInt(p_id))?.order_status !== 'Placed' ? 'Remove from Cart' : 'Add to Cart'}
+                                                </button>
+                                            ) :
+                                                (
+                                                    <div className='flex flex-row justify-between ml-[2rem] gap-2 w-[3rem] h-[2rem] items-center'>
+                                                        <button className='flex text-3xl text-black' onClick={() => cartUtils.decrementquantity(currentstate, parseInt(p_id), dispatch)}>-</button>
+                                                        <input type="text" className='flex text-md text-black h-[1.5rem] w-[2rem] border border-black text-center' value={currentstate.usertxn.find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === parseInt(p_id))?.order_quantity || 0} />
+                                                        <button className='flex text-2xl text-black' onClick={() => cartUtils.incrementquantity(currentstate, parseInt(p_id), dispatch)}>+</button>
+                                                    </div>
+                                                )) : (currentstate.temp_products[0].isaddtocart ? (
+                                                    <button className='flex bg-white border ml-[2rem] justify-center md:text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-md shadow-md border-1 border-black text-black font-bold rounded p-3' onClick={() => cartUtils.addtocart(currentstate, parseInt(p_id), dispatch)}>
+                                                        Add to Cart
+                                                    </button>
+                                                ) :
+                                                    (
+                                                        <div className='flex flex-row justify-between ml-[2rem] gap-2 w-[3rem] h-[2rem] items-center'>
+                                                            <button className='flex text-3xl text-black' onClick={() => cartUtils.decrementquantity(currentstate, parseInt(p_id), dispatch)}>-</button>
+                                                            <input type="text" className='flex text-md text-black h-[1.5rem] w-[2rem] border border-black text-center' value='2' />
+                                                            <button className='flex text-2xl text-black' onClick={() => cartUtils.incrementquantity(currentstate, parseInt(p_id), dispatch)}>+</button>
+                                                        </div>
+                                                    ))
                                         }
                                     </div>
                                 </div>
