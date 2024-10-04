@@ -270,20 +270,27 @@ export const decrementquantity = async (currentstate, p_id, dispatch) => {
 
 
 
-export const addtocart = async (currentstate, p_id, dispatch) => {
+export const addtocart = async (currentstate, module, key, p_id, dispatch) => {
     console.log("addtocart clicked")
-    const tmp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
+    console.log("Key", key)
+    console.log("currentstate", currentstate)
+    console.log("p_id", p_id)
+    console.log("dispatch", dispatch)
+    console.log("module", module)
+    let updatedstate = {}
+    //const tmp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
     //const temp_usertxn = tmp_state.usertxn
     const res = await httpclient.get('txns');
     const temp_usertxn = res.data;
     console.log("temp_usertxn", temp_usertxn)
-    if (tmp_state.isloggedin) {
+    if (currentstate.isloggedin) {
         console.log("user logged in")
-
-        const selected_txn_index = temp_usertxn.findIndex(txns => (txns.user_id === tmp_state.currentuser.id) && (txns.product_id === p_id));
-        const selected_txn_index_2 = currentstate.category_temp_products.findIndex(txn => txn.product_id === p_id);
+        const selected_txn_index = temp_usertxn.findIndex(txns => (txns.user_id === currentstate.currentuser.id) && (txns.product_id === p_id));
+        const selected_txn_index_2 = module.findIndex(txn => txn.product_id === p_id);
+        console.log("selected index item 2", selected_txn_index)
+        console.log("selected index item ", temp_usertxn[selected_txn_index])
         console.log("selected index item 2", selected_txn_index_2)
-        console.log("selected index item 2", currentstate.category_temp_products[selected_txn_index_2])
+        console.log("selected index item 2", module[selected_txn_index_2])
         if (selected_txn_index === -1) {
             console.log("inside if loop of selected_txn", temp_usertxn[selected_txn_index])
             const maxId = temp_usertxn.length > 0 ? Math.max(...temp_usertxn.map(obj => obj.txn_id)) : 0;
@@ -343,18 +350,15 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
             carttotalvalue(new_State, dispatch)
             return usr_tns.data;
 
-            //
-
-            //cartcountcalc(contextvalues, setcontextvalues)
         }
         else if (temp_usertxn[selected_txn_index].cart_status === 'Add to Cart') {
             console.log("inside else if loop of selected_txn", selected_txn_index)
             console.log("inside else if loop of selected_txn", temp_usertxn[selected_txn_index])
-            if (temp_usertxn[selected_txn_index].order_status === 'Placed' || currentstate.temp_products[0].order_status === 'Placed' || currentstate.category_temp_products[selected_txn_index_2].order_status === 'Placed') {
-                alert("You have already ordered this item, Please select any other item")
+            if (temp_usertxn[selected_txn_index].order_status === 'Placed' || module[selected_txn_index_2].order_status === 'Placed') {
+                alert("You have recently ordered this item, Please select any other item")
             }
             else {
-                console.log("item in add to cart status", currentstate.category_temp_products[selected_txn_index_2])
+                console.log("item in add to cart status", module[selected_txn_index_2])
                 if (selected_txn_index !== -1 || selected_txn_index_2 !== -1) {
                     const updated_txn = {
                         ...temp_usertxn[selected_txn_index], // Keep the existing properties
@@ -368,47 +372,68 @@ export const addtocart = async (currentstate, p_id, dispatch) => {
                     const updated_user_txn = temp_usertxn.map((txn, index) => {
                         return index === selected_txn_index ? updated_txn : txn;
                     });
+                    if (key === 'product_desc') {
+                        console.log("inside product_desc if module")
+                        const temp_product_1 = {
+                            ...module[selected_txn_index_2],
+                            cart_status: 'Remove from Cart',
+                            isaddtocart: false,
+                            order_quantity: 1,
+                            order_status: 'New'
+                        }
+                        updatedstate = {
+                            ...currentstate,
+                            usertxn: updated_user_txn,
+                            isaddtocart: false,
+                            temp_products: temp_product_1
 
-                    const temp_product_1 = {
-                        ...currentstate.temp_products[0],
-                        cart_status: 'Remove from Cart',
-                        isaddtocart: false,
-                        order_quantity: 1,
-                        order_status: 'New'
+                        };
+                        dispatch(add_to_carts(updatedstate));
+                    }
+                    else if (key === 'cart') {
+                        console.log("inside cart else if module")
+                        const category_txn = {
+                            ...currentstate.category_temp_products[selected_txn_index_2],
+                            iscategorytocart: false,
+                            cart_status: 'Remove from Cart',
+                            order_quantity: 1,
+                            order_status: 'New'
+
+                        };
+
+                        console.log("updated false category_txn in else add to cart", category_txn)
+                        const updated_category_txn = currentstate.category_temp_products.map((txn, index) => {
+                            return index === selected_txn_index_2 ? category_txn : txn;
+
+                        });
+
+                        updatedstate = {
+                            ...currentstate,
+                            usertxn: updated_user_txn,
+                            isaddtocart: false,
+                            category_temp_products: updated_category_txn,
+
+
+                        };
+                        dispatch(add_to_carts(updatedstate));
+
+                    }
+                    else {
+
+                        console.log("inside addtocart no mdoule else loop")
+                        updated_state = {
+                            ...currentstate,
+                            usertxn: updated_user_txn,
+
+                        };
+
+                        dispatch(add_to_carts(updatedstate));
                     }
 
-                    const category_txn = {
-                        ...currentstate.category_temp_products[selected_txn_index_2],
-                        iscategorytocart: false,
-                        cart_status: 'Remove from Cart',
-                        order_quantity: 1,
-                        order_status: 'New'
-
-                    };
-                    console.log("updated false category_txn in else add to cart", category_txn)
-                    const updated_category_txn = currentstate.category_temp_products.map((txn, index) => {
-                        return index === selected_txn_index_2 ? category_txn : txn;
-
-                    });
-
-                    const updated_state = {
-                        ...tmp_state,
-                        usertxn: updated_user_txn,
-                        isaddtocart: false,
-                        category_temp_products: updated_category_txn,
-                        temp_products: temp_product_1
-
-                    };
-                    dispatch(add_to_carts(updated_state));
-
-                    //cartcountcalc(currentstate, dispatch)
-
-                    //cartcountcalc(setcontextvalues)
-                    window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));
-                    const usr_tns = await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${p_id}`, updated_txn);
-                    cartcountcalc(updated_state, dispatch)
-                    carttotalvalue(updated_state, dispatch)
-                    return usr_tns.data;
+                    window.localStorage.setItem('shoppink-store', JSON.stringify(updatedstate));
+                    await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${p_id}`, updated_txn);
+                    cartcountcalc(updatedstate, dispatch)
+                    carttotalvalue(updatedstate, dispatch)
 
 
 

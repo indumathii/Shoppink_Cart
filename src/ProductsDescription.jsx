@@ -111,7 +111,7 @@ const ProductsDescription = () => {
                                         <h1 className='flex text-black text-2xl font-medium md:ml-[1rem]'>{currentstate.temp_products[0].price}</h1>
                                         {currentstate.isloggedin ? (
                                             currentstate.temp_products[0].isaddtocart ? (
-                                                <button className='flex bg-white border ml-[2rem] justify-center md:text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-md shadow-md border-1 border-black text-black font-bold rounded p-3' onClick={() => cartUtils.addtocart(currentstate, parseInt(p_id), dispatch)}>
+                                                <button className='flex bg-white border ml-[2rem] justify-center md:text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-md shadow-md border-1 border-black text-black font-bold rounded p-3' onClick={() => cartUtils.addtocart(currentstate, currentstate.temp_products, 'product_desc', parseInt(p_id), dispatch)}>
                                                     {currentstate.usertxn.find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === p_id)?.order_quantity > 0 && currentstate.temp_products[0].find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === parseInt(p_id))?.order_status !== 'Placed' ? 'Remove from Cart' : 'Add to Cart'}
                                                 </button>
                                             ) :
@@ -122,7 +122,7 @@ const ProductsDescription = () => {
                                                         <button className='flex text-2xl text-black' onClick={() => cartUtils.incrementquantity(currentstate, parseInt(p_id), dispatch)}>+</button>
                                                     </div>
                                                 )) : (currentstate.temp_products[0].isaddtocart ? (
-                                                    <button className='flex bg-white border ml-[2rem] justify-center md:text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-md shadow-md border-1 border-black text-black font-bold rounded p-3' onClick={() => cartUtils.addtocart(currentstate, parseInt(p_id), dispatch)}>
+                                                    <button className='flex bg-white border ml-[2rem] justify-center md:text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-md shadow-md border-1 border-black text-black font-bold rounded p-3' onClick={() => cartUtils.addtocart(currentstate, currentstate.temp_products, 'product_desc', parseInt(p_id), dispatch)}>
                                                         Add to Cart
                                                     </button>
                                                 ) :
