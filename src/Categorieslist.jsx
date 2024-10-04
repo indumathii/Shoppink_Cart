@@ -23,17 +23,16 @@ const Categorieslist = () => {
             console.log("current state in Categorieslist", currentstate)
             console.log("current state of Categorieslist", currentstate.iscategorylist)
             //const currentstate.temp_products[0]. = currentstate.productitems.filter(item => item.product_id === product.product_id)
-            const response = await httpclient.get(`txns/cart/${currentstate.currentuser.id}`)
-            const products_json = response.data;
-            const products1 = products_json.filter(item => item.category === currentstate.iscategorylist)
-            const products2 = currentstate.productitems.filter(item => {
-                return item.category === currentstate.iscategorylist &&
-                    !products1.some(product => product.product_id === item.product_id);
-            });
-            console.log("products res data in categories list json", products1)
-            console.log("products res data in categories list products2", products2)
-            console.log("printing length of products json", Object.keys(products1).length)
+
             if (currentstate.isloggedin) {
+                const response = await httpclient.get(`txns/cart/${currentstate.currentuser.id}`)
+                const products_json = response.data;
+                const products1 = products_json.filter(item => item.category === currentstate.iscategorylist)
+
+                const products2 = currentstate.productitems.filter(item => {
+                    return item.category === currentstate.iscategorylist &&
+                        !products1.some(product => product.product_id === item.product_id);
+                });
                 console.log("user logged in category")
                 if (Object.keys(products1).length > 0) {
                     console.log("inside if of categorilist")
@@ -42,8 +41,6 @@ const Categorieslist = () => {
                         order_quantity: 0,
                         cart_status: "Add to cart",
                         order_status: 'New',
-                        user_id: currentstate.currentuser.id,
-                        txn_id: Math.floor(1000000000 + Math.random() * 9000000000),
                         iscategorytocart: true
 
                     }));
@@ -80,8 +77,6 @@ const Categorieslist = () => {
                         order_quantity: 0,
                         cart_status: "Add to cart",
                         order_status: 'New',
-                        user_id: currentstate.currentuser.id,
-                        txn_id: Math.floor(1000000000 + Math.random() * 9000000000),
                         iscategorytocart: true
 
                     }));
@@ -109,6 +104,9 @@ const Categorieslist = () => {
 
             else {
                 console.log("user not logged in")
+                const products2 = currentstate.productitems.filter(item => {
+                    return item.category === currentstate.iscategorylist
+                });
                 const updatedProducts2 = products2.map(item => ({
                     ...item,
                     order_quantity: 0,
@@ -206,27 +204,27 @@ const Categorieslist = () => {
                                     {currentstate.isloggedin ? (
 
                                         (product.iscategorytocart) ? (
-                                            <button className='flex bg-white border ml-[2rem] justify-center text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-md shadow-md border-1 border-black text-black font-bold rounded p-2' onClick={() => cartUtils.addtocart(currentstate, currentstate.temp_products, 'cart', product.product_id, dispatch)}>
+                                            <button className='flex bg-white border ml-[2rem] justify-center text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-md shadow-md border-1 border-black text-black font-bold rounded p-2' onClick={() => cartUtils.addtocart(currentstate, currentstate.category_temp_products, 'cart', product.product_id, dispatch)}>
                                                 Add to Cart
                                             </button>
                                         ) :
                                             (
                                                 <div className='flex flex-row justify-between ml-[2rem] gap-2 w-[3rem] h-[2rem] items-center'>
-                                                    <button className='flex text-3xl text-black' onClick={() => cartUtils.decrementquantity(currentstate, currentstate.temp_products, 'cart', product.product_id, dispatch)}>-</button>
+                                                    <button className='flex text-3xl text-black' onClick={() => cartUtils.decrementquantity(currentstate, currentstate.category_temp_products, 'cart', product.product_id, dispatch)}>-</button>
                                                     <input type="text" className='flex text-sm text-black h-[1.5rem] w-[2rem] border border-black text-center' value={product.order_quantity} />
-                                                    <button className='flex text-2xl text-black' onClick={() => cartUtils.incrementquantity(currentstate, currentstate.temp_products, 'cart', product.product_id, dispatch)}>+</button>
+                                                    <button className='flex text-2xl text-black' onClick={() => cartUtils.incrementquantity(currentstate, currentstate.category_temp_products, 'cart', product.product_id, dispatch)}>+</button>
                                                 </div>
                                             )) : (
                                         (product.iscategorytocart) ? (
-                                            <button className='flex bg-white border ml-[2rem] justify-center text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-md shadow-md border-1 border-black text-black font-bold rounded p-2' onClick={() => cartUtils.addtocart(currentstate, currentstate.temp_products, 'cart', product.product_id, dispatch)}>
+                                            <button className='flex bg-white border ml-[2rem] justify-center text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-md shadow-md border-1 border-black text-black font-bold rounded p-2' onClick={() => cartUtils.addtocart(currentstate, currentstate.category_temp_products, 'cart', product.product_id, dispatch)}>
                                                 Add to Cart
                                             </button>
                                         ) :
                                             (
                                                 <div className='flex flex-row justify-between ml-[2rem] gap-2 w-[3rem] h-[2rem] items-center'>
-                                                    <button className='flex text-3xl text-black' onClick={() => cartUtils.decrementquantity(currentstate, currentstate.temp_products, 'cart', product.product_id, dispatch)}>-</button>
+                                                    <button className='flex text-3xl text-black' onClick={() => cartUtils.decrementquantity(currentstate, currentstate.category_temp_products, 'cart', product.product_id, dispatch)}>-</button>
                                                     <input type="text" className='flex text-sm text-black h-[1.5rem] w-[2rem] border border-black text-center' value={product.order_quantity} />
-                                                    <button className='flex text-2xl text-black' onClick={() => cartUtils.incrementquantity(currentstate, currentstate.temp_products, 'cart', product.product_id, dispatch)}>+</button>
+                                                    <button className='flex text-2xl text-black' onClick={() => cartUtils.incrementquantity(currentstate, currentstate.category_temp_products, 'cart', product.product_id, dispatch)}>+</button>
                                                 </div>
                                             )
 

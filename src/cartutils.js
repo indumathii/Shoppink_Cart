@@ -149,7 +149,7 @@ export const incrementquantity = async (currentstate, module, key, p_id, dispatc
     console.log("currentstate user id", currentstate.currentuser.id)
     console.log("product id", p_id)
     const selected_txn_index = user_txn.findIndex(txn => (txn.user_id === currentstate.currentuser.id) && (txn.product_id === p_id));
-    const selected_txn_index_2 = module.findIndex(txn => txn.product_id === p_id);
+    const selected_txn_index_2 = module.findIndex(txn => (txn.user_id === currentstate.currentuser.id) && (txn.product_id === p_id));
     console.log("selected index", selected_txn_index)
     console.log("selected index user txn", user_txn[selected_txn_index])
     console.log("Selected index 2", selected_txn_index_2)
@@ -193,7 +193,7 @@ export const incrementquantity = async (currentstate, module, key, p_id, dispatc
             const category_txn = {
                 ...module[selected_txn_index_2],
                 iscategorytocart: false,
-                order_quantity: currentstate.category_temp_products[selected_txn_index_2] + 1,
+                order_quantity: currentstate.category_temp_products[selected_txn_index_2].order_quantity + 1,
                 cart_status: 'Remove from Cart',
                 order_status: 'New',
             };
@@ -355,7 +355,7 @@ export const addtocart = async (currentstate, module, key, p_id, dispatch) => {
         console.log("user logged in")
         const selected_txn_index = temp_usertxn.findIndex(txns => (txns.user_id === currentstate.currentuser.id) && (txns.product_id === p_id));
         const selected_txn_index_2 = module.findIndex(txn => txn.product_id === p_id);
-        console.log("selected index item 2", selected_txn_index)
+        console.log("selected index item ", selected_txn_index)
         console.log("selected index item ", temp_usertxn[selected_txn_index])
         console.log("selected index item 2", selected_txn_index_2)
         console.log("selected index item 2", module[selected_txn_index_2])
