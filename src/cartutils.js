@@ -392,15 +392,16 @@ export const addtocart = async (currentstate, module, key, p_id, dispatch) => {
                 dispatch(add_to_carts(updatedstate));
             }
             else if (key === 'cart') {
-                console.log("inside else if if cart module")
+                console.log("inside  if if cart module")
+                console.log("Current category txn", currentstate.category_temp_products)
                 const category_txn = {
                     ...module[selected_txn_index_2],
                     iscategorytocart: false,
                     order_quantity: 1,
                     cart_status: 'Remove from Cart',
                     order_status: 'New',
-                    txn_id: maxId + 1,
-                    user_id: tmp_state.currentuser.id,
+                    txn_id: txn_items.txn_id,
+                    user_id: currentstate.currentuser.id,
 
                 };
 
@@ -416,6 +417,8 @@ export const addtocart = async (currentstate, module, key, p_id, dispatch) => {
                     isaddtocart: false,
                     category_temp_products: updated_category_txn,
                 };
+
+                console.log("updated state after addedtocart inside cart category", updatedstate)
                 dispatch(add_to_carts(updatedstate));
 
             }
