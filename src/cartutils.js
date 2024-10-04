@@ -13,7 +13,7 @@ export const sendemail = async (currentstate, dispatch) => {
     alert("sending email")
     const new_data = {
         to_name: currentstate.currentuser.firstname,
-        mail: 'neelaindumathi@gmail.com',
+        mail: 'induakshay2209@gmail.com',
         to_mail: 'neelaindumathi@gmail.com',
         products: productList,
         product_length: length
@@ -24,7 +24,7 @@ export const sendemail = async (currentstate, dispatch) => {
     }
     dispatch(setinitialstate(updated_data))
     console.log("form data ", updated_data)
-    emailjs.send('service_123', 'template_1', new_data, 'c3bXIk5PCNWxt4F1o')
+    emailjs.send('service_123', 'template_1', new_data, 'N4jTOjs3Io0WCOvio')
         .then((response) => {
             console.log('Email sent successfully:', response.status, response.text, formdata.to_mail, formdata.message);
         })

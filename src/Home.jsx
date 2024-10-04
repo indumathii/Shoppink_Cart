@@ -192,8 +192,12 @@ const Home = () => {
                 top: 0,
                 behavior: 'smooth',
             });
-            //cartUtils.sendemail(currentstate, dispatch)
-            navigate('/shoppink/orders')
+            if (currentstate.islogggedin) {
+                navigate('/shoppink/orders')
+            }
+            else {
+                navigate('/home')
+            }
         }
         else if (currentstate.yourorders) {
             console.log('inside yourorders')
