@@ -38,9 +38,8 @@ export const sendemail = async (currentstate, dispatch) => {
 
 export const carttotalvalue = async (currentstate, dispatch) => {
     const temp_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
-    //const user_txn = temp_state.usertxn
     console.log("currentstate", currentstate.currentuser.id)
-    const response = await httpclient.get(`txns/cart/${currentstate.currentuser.id} `)
+    const response = await httpclient.get(`txns/cart/${currentstate.currentuser.id}`)
     const inCartItems = response.data;
     const addedtocart_items = inCartItems.filter(item => item.cart_status === 'Remove from Cart');
     console.log("products in cart", addedtocart_items)
@@ -178,10 +177,9 @@ export const incrementquantity = async (currentstate, module, key, p_id, dispatc
                 order_quantity: currentstate.temp_products[0].order_quantity + 1,
             }
 
-            const updatedstate = {
+            updatedstate = {
                 ...currentstate,
                 usertxn: updated_user_txn,
-                cartcount: currentstate.cartcount + 1,
                 isaddtocart: false,
                 temp_products: temp_product_1
             };
@@ -206,7 +204,6 @@ export const incrementquantity = async (currentstate, module, key, p_id, dispatc
             updatedstate = {
                 ...currentstate,
                 usertxn: updated_user_txn,
-                cartcount: currentstate.cartcount + 1,
                 isaddtocart: false,
                 category_temp_products: updated_category_txn,
             };
@@ -216,16 +213,16 @@ export const incrementquantity = async (currentstate, module, key, p_id, dispatc
         else {
             console.log("inside user txn module of increment")
 
-            const updatedstate = {
+            updatedstate = {
                 ...currentstate,
                 usertxn: updated_user_txn,
-                cartcount: currentstate.cartcount + 1,
                 isaddtocart: false,
             };
             dispatch(increments_quantity(updatedstate))
+            console.log("printing increment quantity states aftr dispatch", updatedstate)
         }
 
-        console.log("printing increment quantity states aftr dispatch", updatedstate)
+
         //cartcountcalc(currentstate, dispatch)
         window.localStorage.setItem('shoppink-store', JSON.stringify(updatedstate));
         const saved_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
@@ -317,7 +314,7 @@ export const decrementquantity = async (currentstate, module, key, p_id, dispatc
         }
         else {
             console.log("inside else of general usr txn decrement")
-            const updatedstate = {
+            updatedstate = {
                 ...currentstate,
                 usertxn: updated_user_txn,
                 isaddtocart: updated_txn_1.order_quantity > 0 ? false : true,
