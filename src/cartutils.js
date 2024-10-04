@@ -296,58 +296,78 @@ export const addtocart = async (currentstate, module, key, p_id, dispatch) => {
             const maxId = temp_usertxn.length > 0 ? Math.max(...temp_usertxn.map(obj => obj.txn_id)) : 0;
             const txn_items = {
                 txn_id: maxId + 1,
-                user_id: tmp_state.currentuser.id,
+                user_id: currentstate.currentuser.id,
                 product_id: p_id,
                 order_quantity: 1,
                 cart_status: 'Remove from Cart',
                 order_status: 'New'
             }
             console.log("new added item", txn_items)
-            const new_added_txns = [...tmp_state.usertxn, txn_items]
+            const new_added_txns = [...currentstate.usertxn, txn_items]
+            if (key === 'product_desc') {
+                console.log("inside if if if product desc module")
+                const temp_product_1 = {
+                    ...currentstate.temp_products[0],
+                    cart_status: 'Remove from Cart',
+                    isaddtocart: false,
+                    order_quantity: 1,
+                    order_status: 'New'
+                }
 
-            const category_txn = {
-                ...currentstate.category_temp_products[selected_txn_index_2],
-                iscategorytocart: false,
-                order_quantity: 1,
-                cart_status: 'Remove from Cart',
-                order_status: 'New',
-                txn_id: maxId + 1,
-                user_id: tmp_state.currentuser.id,
-
-            };
-
-            const temp_product_1 = {
-                ...currentstate.temp_products[0],
-                cart_status: 'Remove from Cart',
-                isaddtocart: false,
-                order_quantity: 1,
-                order_status: 'New'
+                updatedstate = {
+                    ...currentstate,
+                    usertxn: new_added_txns,
+                    cartcount: currentstate.cartcount + 1,
+                    isaddtocart: false,
+                    temp_products: temp_product_1
+                };
+                dispatch(add_to_carts(updatedstate));
             }
+            else if (key === 'cart') {
+                console.log("inside else if if cart module")
+                const category_txn = {
+                    ...currentstate.category_temp_products[selected_txn_index_2],
+                    iscategorytocart: false,
+                    order_quantity: 1,
+                    cart_status: 'Remove from Cart',
+                    order_status: 'New',
+                    txn_id: maxId + 1,
+                    user_id: tmp_state.currentuser.id,
 
-            const updated_category_txn = currentstate.category_temp_products.map((txn, index) => {
-                return index === selected_txn_index_2 ? category_txn : txn;
+                };
 
-            });
-            const new_State = {
-                ...tmp_state,
-                usertxn: new_added_txns,
-                cartcount: tmp_state.cartcount + 1,
-                isaddtocart: false,
-                category_temp_products: updated_category_txn,
-                temp_products: temp_product_1
+                const updated_category_txn = currentstate.category_temp_products.map((txn, index) => {
+                    return index === selected_txn_index_2 ? category_txn : txn;
+
+                });
+
+                updatedstate = {
+                    ...currentstate,
+                    usertxn: new_added_txns,
+                    cartcount: currentstate.cartcount + 1,
+                    isaddtocart: false,
+                    category_temp_products: updated_category_txn,
+                };
+                dispatch(add_to_carts(updatedstate));
 
             }
-            console.log("printing new State", new_State)
+            else {
+                console.log("inside else of 1st if add to cart module")
+                updatedstate = {
+                    ...currentstate,
+                    usertxn: new_added_txns,
+                    cartcount: currentstate.cartcount + 1,
+                    isaddtocart: false,
 
+                };
+                dispatch(add_to_carts(updatedstate));
 
-            dispatch(add_to_carts(new_State));
-
-            window.localStorage.setItem('shoppink-store', JSON.stringify(new_State))
+            } window.localStorage.setItem('shoppink-store', JSON.stringify(updatedstate))
             const usr_tns = await httpclient.post('txns', txn_items);
             const saved_state = JSON.parse(window.localStorage.getItem('shoppink-store'))
             console.log("context values from localstorage updated afted addtocart", saved_state);
-            cartcountcalc(new_State, dispatch)
-            carttotalvalue(new_State, dispatch)
+            cartcountcalc(updatedstate, dispatch)
+            carttotalvalue(updatedstate, dispatch)
             return usr_tns.data;
 
         }

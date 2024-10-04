@@ -84,7 +84,7 @@ const ProductsDescription = () => {
         };
 
         fetchProducts(currentstate);
-    }, [currentstate.temp_products.cart_status, currentstate.temp_products.order_quantity]);
+    }, [currentstate.temp_products.cart_status, currentstate.temp_products.order_quantity, currentstate.isloggedin]);
 
     return (
         <div className={`${currentstate.isMenuVisible ? 'relative -z-10' : 'relative'}`}>
