@@ -199,7 +199,6 @@ const Home = () => {
                 behavior: 'smooth',
             });
             //cartUtils.sendemail(formdata, setformdata, currentstate)
-            cartUtils.orderplaced(currentstate, dispatch)
             navigate('/shoppink/orders')
         }
         else if (currentstate.yourorders) {

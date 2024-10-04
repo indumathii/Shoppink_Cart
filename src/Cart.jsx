@@ -32,7 +32,7 @@ const Cart = () => {
 
         }
         dispatch(handle_place_order(place_order_values))
-
+        cartUtils.orderplaced(currentstate, dispatch)
 
 
     }
