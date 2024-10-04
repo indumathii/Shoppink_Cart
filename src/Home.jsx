@@ -16,13 +16,7 @@ const Home = () => {
     const [contextvalues, setcontextvalues] = useState();
     const currentstate = useSelector((state) => state)
     const dispatch = useDispatch();
-    const [formdata, setformdata] = useState({
-        name: '',
-        mail: '',
-        to_mail: '',
-        message: '',
-        products: ''
-    })
+
 
     useEffect(() => {
 
@@ -198,7 +192,7 @@ const Home = () => {
                 top: 0,
                 behavior: 'smooth',
             });
-            //cartUtils.sendemail(formdata, setformdata, currentstate)
+            //cartUtils.sendemail(currentstate, dispatch)
             navigate('/shoppink/orders')
         }
         else if (currentstate.yourorders) {

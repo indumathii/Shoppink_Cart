@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import * as cartUtils from './cartutils';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,6 +33,7 @@ const Cart = () => {
         }
         dispatch(handle_place_order(place_order_values))
         cartUtils.orderplaced(currentstate, dispatch)
+        cartUtils.sendemail(currentstate, dispatch)
 
 
     }

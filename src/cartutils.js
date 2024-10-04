@@ -6,23 +6,25 @@ import { useState } from 'react';
 
 
 
-export const sendemail = async (formdata, setformdata, currentstate) => {
+export const sendemail = async (currentstate, dispatch) => {
     console.log("inside mail cart items", currentstate.currentcart_txns)
     const productList = currentstate.currentcart_txns.map((item, index) => `${index + 1}. ${item.product_name}`).join('\n');
     const length = currentstate.currentcart_txns.length
-
-
     alert("sending email")
-    setformdata(prev => ({
-        ...prev,
+    const new_data = {
         to_name: currentstate.currentuser.firstname,
         mail: 'neelaindumathi@gmail.com',
         to_mail: 'neelaindumathi@gmail.com',
         products: productList,
         product_length: length
-
-    }));
-    emailjs.send('service_123', 'template_1', formdata, 'c3bXIk5PCNWxt4F1o')
+    }
+    const updated_data = {
+        ...currentstate,
+        formdata: new_data
+    }
+    dispatch(setinitialstate(updated_data))
+    console.log("form data ", updated_data)
+    emailjs.send('service_123', 'template_1', new_data, 'c3bXIk5PCNWxt4F1o')
         .then((response) => {
             console.log('Email sent successfully:', response.status, response.text, formdata.to_mail, formdata.message);
         })

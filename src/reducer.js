@@ -33,7 +33,8 @@ const initialState = {
     ismen: false,
     iswomen: false,
     isall: true,
-    ismail: false
+    ismail: false,
+    formdata: {}
 
 };
 
