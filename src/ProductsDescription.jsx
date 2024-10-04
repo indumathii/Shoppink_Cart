@@ -117,7 +117,7 @@ const ProductsDescription = () => {
                                             ) :
                                                 (
                                                     <div className='flex flex-row justify-between ml-[2rem] gap-2 w-[3rem] h-[2rem] items-center'>
-                                                        <button className='flex text-3xl text-black' onClick={() => cartUtils.decrementquantity(currentstate, parseInt(p_id), dispatch)}>-</button>
+                                                        <button className='flex text-3xl text-black' onClick={() => cartUtils.decrementquantity(currentstate, currentstate.temp_products, 'product_desc', parseInt(p_id), dispatch)}>-</button>
                                                         <input type="text" className='flex text-md text-black h-[1.5rem] w-[2rem] border border-black text-center' value={currentstate.usertxn.find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === parseInt(p_id))?.order_quantity || 0} />
                                                         <button className='flex text-2xl text-black' onClick={() => cartUtils.incrementquantity(currentstate, currentstate.temp_products, 'product_desc', parseInt(p_id), dispatch)}>+</button>
                                                     </div>
@@ -128,7 +128,7 @@ const ProductsDescription = () => {
                                                 ) :
                                                     (
                                                         <div className='flex flex-row justify-between ml-[2rem] gap-2 w-[3rem] h-[2rem] items-center'>
-                                                            <button className='flex text-3xl text-black' onClick={() => cartUtils.decrementquantity(currentstate, parseInt(p_id), dispatch)}>-</button>
+                                                            <button className='flex text-3xl text-black' onClick={() => cartUtils.decrementquantity(currentstate, currentstate.temp_products, 'product_desc', parseInt(p_id), dispatch)}>-</button>
                                                             <input type="text" className='flex text-md text-black h-[1.5rem] w-[2rem] border border-black text-center' value='2' />
                                                             <button className='flex text-2xl text-black' onClick={() => cartUtils.incrementquantity(currentstate, currentstate.temp_products, 'product_desc', parseInt(p_id), dispatch)}>+</button>
                                                         </div>
