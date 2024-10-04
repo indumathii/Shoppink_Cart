@@ -32,7 +32,8 @@ const initialState = {
     isbannertocart: true,
     ismen: false,
     iswomen: false,
-    isall: true
+    isall: true,
+    ismail: false
 
 };
 

@@ -199,6 +199,7 @@ const Home = () => {
                 behavior: 'smooth',
             });
             //cartUtils.sendemail(formdata, setformdata, currentstate)
+            cartUtils.orderplaced(currentstate, dispatch)
             navigate('/shoppink/orders')
         }
         else if (currentstate.yourorders) {
@@ -238,7 +239,7 @@ const Home = () => {
         }
         console.log(currentstate.isMenuVisible)
 
-
+        //cartUtils.cartcountcalc(currentstate, dispatch)
 
     }, [currentstate.login, currentstate.signup, currentstate.logsubmit, currentstate.signupsubmit, currentstate.productsdesc, currentstate.showcart, currentstate.cartcount, currentstate.ishome, currentstate.productitems, currentstate.settotalcartvalue, currentstate.totalcartvalue, currentstate.placeorder, currentstate.iscategorylist]);
 

@@ -71,7 +71,8 @@ export const cartcountcalc = async (currentstate, dispatch) => {
         console.log("printing cartcountcalc", current_cart_items.length)
         const cartvalues = {
             ...currentstate,
-            cartcount: current_cart_items.length
+            cartcount: current_cart_items.length,
+            placeorder: false
 
         };
         dispatch(cartcountcalculation(cartvalues))
@@ -95,8 +96,7 @@ export const handleproductsdesc = (currentstate, dispatch, p_id, navigate) => {
 
 
 
-export const emptycart = (setcontextvalues) => {
-    /*alert("Order Placed Successfully")
+/*export const emptycart = (setcontextvalues) => {
     setcontextvalues(prevState => ({
         ...prevState,
         productitems: prevState.productitems.map(item => {
@@ -115,12 +115,12 @@ export const emptycart = (setcontextvalues) => {
     }))*/
 
 
-}
+
 
 
 
 export const orderplaced = async (currentstate, dispatch) => {
-    alert('Order Placed Successfully')
+    //alert('Order Placed Successfully')
     const temp_state = currentstate //JSON.parse(window.localStorage.getItem('shoppink-store'))
     const current_cart_items = temp_state.currentcart_txns.filter(txn => txn.cart_status === 'Remove from Cart');
     console.log("orders placed", current_cart_items)
@@ -137,15 +137,7 @@ export const orderplaced = async (currentstate, dispatch) => {
             cart_status: 'Add to Cart'
 
         }
-        /*console.log("updated user value in place order", updated_value)
-
-        updatedUsTxns = [
-            ...temp_state.usertxn.slice(0, selected_txn_index - 1),
-            { ...temp_state.usertxn[1], ...updated_value },
-            ...temp_state.usertxn.slice(selected_txn_index)
-        ];*/
-
-
+        console.log("printin updated value in order placed", updated_value)
         await httpclient.put(`txns/${BigInt(currentstate.currentuser.id)}/${product.product_id}`, updated_value);
 
 
@@ -160,6 +152,7 @@ export const orderplaced = async (currentstate, dispatch) => {
         placeorder: true,
         currentcart_txns: current_cart_items
     };
+    cartcountcalc(updated_state, dispatch)
     console.log("updated user transaction in order placed", updated_state)
     dispatch(place_order(updated_state))
     window.localStorage.setItem('shoppink-store', JSON.stringify(updated_state));

@@ -6,7 +6,8 @@ import { useSelector } from 'react-redux';
 
 const Orders = () => {
     const currentstate = useSelector((state) => state);
-    const cartitems = currentstate.currentcart_txns;
+    const cartitems = currentstate.currentcart_txns.filter(txns => txns.cart_status = 'Remove from Cart');
+    console.log("inside orders current cart txns", cartitems)
     const address = 'B204,Happiness Towers,Pacifica Aurum,Padur,Chennai-603103.'
     const contact = '+91 6383736132'
     const username = 'Indumathi.S'
