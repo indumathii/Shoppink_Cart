@@ -26,42 +26,26 @@ function App() {
   window.localStorage.removeItem('shoppink-state')
 
   return (
-    <Router>
+    <div>
 
-      {/*
-<Route path="/shoppink/signup" element={<SignupForm />} />
+      <Router>
+        <Home />
+        <main>
+          <Routes>
+            <Route path="/shoppink/login" element={<Login />} />
+            <Route path="/home" element={<Products />} />
+            <Route path="/shoppink/cart" element={<Cart />} />
+            <Route path="/shoppink/orders" element={<Orders />} />
+            <Route path="/shoppink/yourorders" element={<YourOrder />} />
+            <Route path="productsdesc/:p_id" element={<ProductsDescription />} />
+            <Route path="/shoppink/categories/:item" element={<Categorieslist />} />
+            <Route path="/shoppink/signup" element={<SignupForm />} />
+          </Routes>
+        </main>
+        <Footer />
+      </Router>
 
-          
-          
-          
-          
-        */
-
-      }
-      <Home />
-
-
-      <Routes>
-        <Route path="/shoppink/login" element={<Login />} />
-        <Route path="/home" element={<Products />} />
-        <Route path="/shoppink/cart" element={<Cart />} />
-        <Route path="/shoppink/orders" element={<Orders />} />
-        <Route path="/shoppink/yourorders" element={<YourOrder />} />
-        <Route path="productsdesc/:p_id" element={<ProductsDescription />} />
-        <Route path="/shoppink/categories/:item" element={<Categorieslist />} />
-
-
-        {/*
-          
-          
-          
-          
-          <Route path="/dummy" element={<Dummy />} />*/}
-      </Routes>
-
-      <Footer />
-
-    </Router>
+    </div>
 
 
 
