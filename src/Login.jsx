@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faLock, faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons';
 import * as cartUtils from './cartutils';
 import { useDispatch, useSelector } from 'react-redux';
+import { products_dispatch } from './actions';
 
 
 const Login = () => {
@@ -29,42 +30,51 @@ const Login = () => {
     const [cshowpassword, csetshowpassword] = useState(true);
     const handleTogglePassword = () => {
 
-        // setshowpassword(prev => !showpassword)
+        setshowpassword(prev => !showpassword)
 
     }
 
     const handlecopy = (event) => {
-        //event.preventDefault();
+        event.preventDefault();
 
     }
     const handlesubmit = async (values, currentstate, dispatch) => {
         console.log("handlesubmit clicked", values)
-        //setcontextvalues(prev => ({ ...prev, login: false, signup: false }))
+        const submit_values = {
+            ...currentstate,
+            login: false, signup: false, ishome: true
 
-        /*setlogin_userdetails(prev => ({
+        }
+        dispatch(products_dispatch(submit_values))
+        setlogin_userdetails(prev => ({
             ...prev,
             email: values.email,
             password: values.password
-        }))*/
+        }))
         console.log("dummy")
-
 
         cartUtils.loginfunc(values, currentstate, dispatch)
 
     }
     const handlesignup = () => {
+        const signup_values = {
+            ...currentstate,
+            login: false, signup: true, currentuser: null
+        }
+        dispatch(products_dispatch(signup_values))
 
-        // setcontextvalues(prev => ({ ...prev, login: false, signup: true, currentuser: null }))
     }
     const handlecancel = () => {
+        const cancel_values = {
+            ...currentstate,
+            ishome: true, login: false, signup: false, currentuser: null,
+        }
+        dispatch(products_dispatch(cancel_values))
 
-        // setcontextvalues(prev => ({ ...prev, login: false, signup: false, currentuser: null }))
 
     }
 
-    /*useEffect(() => {
-        console.log("Updated contextvalues:", contextvalues);
-    }, [contextvalues]);*/
+
 
     return (
         <>

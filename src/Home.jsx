@@ -289,7 +289,7 @@ const Home = () => {
                     </nav>
                     {currentstate.ismemberlist && (
 
-                        <div className='flex  z-10 flex-col fixed text-white mt-[4rem] md:mt-[1rem] text-sm md:text-xl ml-[12rem] md:ml-[67rem] bg-slate-900 h-[20rem] w-[11.95rem]'>
+                        <div className='flex  z-10 flex-col fixed ml-[13rem] text-white mt-[4rem] md:mt-[1.5rem] text-sm md:text-xl ml-[12rem] md:ml-[38rem] lg:ml-[52rem] lg:mt-[1.5rem] xl:ml-[68rem] bg-slate-900 h-[20rem] w-[11.95rem]'>
                             <div className='flex flex-row  w-full h-[45px] hover:bg-pink-500 hover:cursor-pointer items-center justify-center p-2 text-white' onClick={handleuserorders}>
                                 <FontAwesomeIcon icon={faBox} className='transform mt-[0.3rem] text-sm mr-2 rotate-180 items-center' />
                                 <span className='flex'>Your Orders</span>
