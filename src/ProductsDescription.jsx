@@ -88,27 +88,27 @@ const ProductsDescription = () => {
 
     return (
         <div className={`${currentstate.isMenuVisible ? 'relative -z-10' : 'relative'}`}>
-            <div className='h-[80vh] inset-0 w-[90vw] md:w-[80vw] sm:w-[80vw] md:mt-15 bg-pink-200 mx-auto mt-[7rem] md:mt-[5rem]'>
+            <div className='h-min-screen inset-0 w-[80vw] md:w-[80vw] sm:w-[80vw] md:mt-15 bg-pink-200 mx-auto mt-[7rem] md:mt-[5rem]'>
                 <div className='h-full w-full p-10 flex'>
                     <div className='flex flex-col sm:flex-col lg:flex-row items-start'>
                         {currentstate.temp_products.length > 0 && (
                             <>
                                 <img className='flex h-[30vh] sm:h-[25vh] md:h-[25vh] lg:h-[35vh]' src={currentstate.temp_products[0].image_link} alt={currentstate.temp_products[0].product_name} />
-                                <div className='flex flex-col ml-[2rem] items-start'>
-                                    <h1 className='flex text-black text-xl font-bold'>{currentstate.temp_products[0].product_name}</h1>
-                                    <div className='product-rating text-xs mt-[0.5rem] text-left' id={currentstate.temp_products[0].product_id}>
+                                <div className='flex flex-col md:ml-[2rem] items-start'>
+                                    <h1 className='flex text-indigo-800 text-xl font-bold'>{currentstate.temp_products[0].product_name}</h1>
+                                    <div className='product-rating text-sm mt-[0.5rem] text-left' id={currentstate.temp_products[0].product_id}>
                                         {(() => {
                                             const stars = [];
                                             for (let i = 0; i < currentstate.temp_products[0].rating; i++) {
-                                                stars.push(<FontAwesomeIcon key={i} icon={faStar} style={{ color: '#CC5500' }} />);
+                                                stars.push(<FontAwesomeIcon key={i} icon={faStar} style={{ color: '#006400' }} />);
                                             }
                                             return stars;
                                         })()}
                                     </div>
-                                    <h1 className='flex text-xs italic text-left'>{currentstate.temp_products[0].sales}</h1>
+                                    <h1 className='flex text-sm font-bold italic text-left'>{currentstate.temp_products[0].sales}</h1>
                                     <p className='flex mt-[1rem] text-left'>{currentstate.temp_products[0].product_description}</p>
                                     <div className='flex mt-[5rem] items-start justify-center -ml-[1rem]'>
-                                        <h1 className='flex text-black text-2xl font-medium md:ml-[1rem]'>{currentstate.temp_products[0].price}</h1>
+                                        <h1 className='flex text-black text-2xl font-medium md:ml-[5rem] justify-between'>{currentstate.temp_products[0].price}</h1>
                                         {currentstate.isloggedin ? (
                                             currentstate.temp_products[0].isaddtocart ? (
                                                 <button className='flex bg-white border ml-[2rem] justify-center md:text-xs md:ml-[0.5rem] lg:ml-[3rem] -mt-[0.25rem] text-md shadow-md border-1 border-black text-black font-bold rounded p-3' onClick={() => cartUtils.addtocart(currentstate, currentstate.temp_products, 'product_desc', parseInt(p_id), dispatch)}>
