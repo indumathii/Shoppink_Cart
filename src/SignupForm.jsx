@@ -7,10 +7,13 @@ import * as cartUtils from './cartutils';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { Context } from './App';
+import { useDispatch, useSelector } from 'react-redux';
+import { products_dispatch } from './actions';
 
 
 const SignupForm = () => {
-    const { contextvalues, setcontextvalues } = useContext(Context);
+    const dispatch = useDispatch();
+    const currentstate = useSelector((state) => state)
 
     const validationSchema2 = Yup.object({
         email: Yup.string().email('Invalid email address').required('Email is required'),
@@ -50,21 +53,24 @@ const SignupForm = () => {
 
     }
     const handlesignupsubmit = (values) => {
-        setcontextvalues(prev => ({
-            ...prev,
-            login: false, signupsubmit: true, currentuser: values
-        }))
+        const submit_values = {
+            ...currentstate,
+            login: false, signupsubmit: true, currentuser: values, ishome: true
+
+        }
+        dispatch(products_dispatch(submit_values))
 
         cartUtils.signupfunc(values)
 
     }
 
     const handlesignupcancel = () => {
+        const cancel_values = {
+            ...currentstate,
+            ishome: true, login: false, signup: false, currentuser: null
 
-        setcontextvalues(prev => ({
-            ...prev, showcart: true,
-            login: false, signup: false, currentuser: false
-        }))
+        }
+        dispatch(products_dispatch(cancel_values))
 
 
     }
@@ -73,18 +79,22 @@ const SignupForm = () => {
     return (
         <>
             {
-                contextvalues.signupsubmit && contextvalues.signup ? (
+                currentstate.signupsubmit && currentstate.signup ? (
                     <div className='flex fixed  inset-0 bg-[linear-gradient(45deg,_#4db6ac,_#80cbc4,_#4fc3f7,_#64b5f6,_#9575cd)] mx-auto w-full h-full justify-center '>
                         <div className='flex fixed flex-col mt-[5rem] inset z-100 text-black bg-white md:top-[7rem] w-[20rem] border border-1 border-black md:w-[25rem] md:h-[10rem] text-xl font-bold items-center justify-center items-center rounded rounded-md'>
-                            <div className='text-blue-800 p-4 -mt-[1rem]'>Hi {contextvalues.currentuser.firstname}, </div>
+                            <div className='text-blue-800 p-4 -mt-[1rem]'>Hi {currentstate.currentuser.firstname}, </div>
                             <p className='text-green-800 p-4 -mt-[1rem]'>Your Registration is Successful!! <br></br>Kindly click here to</p>
 
 
                             <div className='flex -mt-[1rem] hover:cursor-pointer underline hover:text-red-700 text-blue-500 hover:scale-110' onClick={() => {
-                                setcontextvalues(prev => ({
-                                    ...prev,
+                                const submit_values = {
+                                    ...currentstate,
                                     login: true, signupsubmit: false, signup: false
-                                }))
+
+                                }
+                                dispatch(products_dispatch(submit_values))
+
+
                             }}>Login</div>
                         </div>
 
