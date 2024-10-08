@@ -63,7 +63,7 @@ const Cart = () => {
                                                     )?.order_quantity > 0) && (
                                                         <div key={index} className='flex flex-row justify-between ml-[2rem] gap-2 w-[3rem] h-[2rem]  items-center'>
                                                             <button className='flex text-3xl -mt-[0.5rem]' onClick={() => cartUtils.decrementquantity(currentstate, currentstate.usertxn, 'user_txn', product.product_id, dispatch)} >-</button>
-                                                            <input type="text" className='flex text-md h-[1.5rem] w-[2rem] border border-black text-center' value={currentstate.usertxn.find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === product.product_id)?.order_quantity || 0} />
+                                                            <input type="text" className='flex text-sm font-bold h-[1.5rem] w-[2rem] border border-black text-center' value={currentstate.usertxn.find(txn => txn.user_id === currentstate.currentuser.id && txn.product_id === product.product_id)?.order_quantity || 0} />
                                                             <button className='flex text-2xl -mt-[0.5rem]' onClick={() => cartUtils.incrementquantity(currentstate, currentstate.usertxn, 'user_txn', product.product_id, dispatch)}>+</button>
                                                         </div>
                                                     )
